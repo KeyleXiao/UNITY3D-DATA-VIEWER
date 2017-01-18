@@ -1,9 +1,11 @@
 # UNITY3D-DATA-VIEWER
-UNITY3D EDITOR DATA_VIEWER .  ／  UNITY3D 可视化数据编辑器 .
+UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
 # Version 1
 
 ## Video on YouTube
+
+> 对数据进行增删改查 / Operation data with CRUD
 
 [![Demo alpha](http://img.youtube.com/vi/_uk8XBJPZwA/0.jpg)](https://www.youtube.com/embed/_uk8XBJPZwA)
 
