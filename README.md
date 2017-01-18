@@ -9,7 +9,7 @@ UNITY3D EDITOR DATA_VIEWER .  ／  UNITY3D 可视化数据编辑器 .
 
 ## Demo Code
 
-``` 
+``` cs
 namespace SmartDataViewerV1
 {
 	[ConfigEditor("通用编辑")]
@@ -66,8 +66,7 @@ namespace SmartDataViewerV1
 
 > 使用如下代码 制作编辑器界面
 
-``` 
-
+```  cs
 namespace SmartDataViewerV1.Editor
 {
 	public class OpenFilterOptionConfigEditor : ConfigEditorSchema<FilterOption>
