@@ -4,7 +4,7 @@ UNITY3D EDITOR DATA_VIEWER .  ／  UNITY3D 可视化数据编辑器 .
 # Version 1
 
 ## Video on YouTube
-[演示视频/Demo Video](http://https://youtu.be/_uk8XBJPZwA)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_uk8XBJPZwA" frameborder="0" allowfullscreen></iframe>
 
 ## Demo Code
 
