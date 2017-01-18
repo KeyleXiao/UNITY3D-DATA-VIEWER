@@ -64,7 +64,7 @@ namespace SmartDataViewerV1
 ```
 
 
-> 使用如下代码 制作编辑器界面
+> 使用如下代码 制作编辑器界面 / Use this code and you made a editor view now 
 
 ```  cs
 namespace SmartDataViewerV1.Editor
