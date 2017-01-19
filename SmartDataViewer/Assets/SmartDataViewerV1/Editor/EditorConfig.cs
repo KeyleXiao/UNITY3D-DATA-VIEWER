@@ -22,7 +22,7 @@ namespace SmartDataViewerV1.Editor
 	{
 		public static string NickName = @"别名";
 		public static string Delete = @"删除当前";
-		public static string Contract = @"Version 1.0 Alpha          Author:Keyle          Contact:keyle_xiao@hotmail.com";
+		public static string Contract = @"Version 1.0 Alpha | Author:Keyle | Contact:keyle_xiao@hotmail.com";
 		public static string OnePageMaxNumber = "单页最大数量";
 		public static string PageInfoFormate = @"|{0}|页-共|{1}|页";
 	}
