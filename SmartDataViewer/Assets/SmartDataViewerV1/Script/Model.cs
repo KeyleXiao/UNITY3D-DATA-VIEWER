@@ -5,7 +5,10 @@ namespace SmartDataViewerV1
 	[Serializable]
 	public class Model
 	{
-		public Model() { }
+		public Model()
+		{
+			NickName = string.Empty;
+		}
 
 		[ConfigEditorField(99, true)]
 		public int ID;

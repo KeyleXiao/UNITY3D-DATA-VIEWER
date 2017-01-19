@@ -63,6 +63,11 @@ namespace SmartDataViewerV1
 	[Serializable]
 	public class FilterOption : Model
 	{
+		public FilterOption() : base()
+		{
+			arg1 = string.Empty;
+		}
+
 		[ConfigEditorField(2, true)]
 		public FilterModel filter_mode;
 
@@ -78,6 +83,10 @@ namespace SmartDataViewerV1
 
 		[ConfigEditorField(4, true)]
 		public bool Enable;
+
+		[ConfigEditorField(7, true, "asdasds")]
+		public string arg1;
+
 	}
 
 	public enum EnumStatus

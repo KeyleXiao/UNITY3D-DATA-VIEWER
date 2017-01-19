@@ -30,10 +30,15 @@ namespace SmartDataViewerV1.Editor
 		public int order { get; set; }
 	}
 
+
+	/// TODO: 抽象T 增加非继承自Model的类型
 	public class ConfigEditorSchema<T> : EditorWindow where T : Model, new()
 	{
 		protected ConfigEditorAttribute configSetting { get; set; }
+
+		/// TODO: 抽象 ConfigBase 增加对 NewstoneJson ， Protobuff的支持
 		protected ConfigBase<T> config_current { get; set; }
+
 		protected int Index { get; set; }
 		protected Vector2 posv { get; set; }
 		protected List<int> deleteList = new List<int>();
@@ -42,6 +47,9 @@ namespace SmartDataViewerV1.Editor
 		protected int PageIndex = 0;
 		protected bool initialized { get; set; }
 		protected List<FieldInfo> fieldinfos { get; set; }
+
+
+		/// TODO: 抽象Chache作为一个接口
 		protected List<ConfigEditorSchemaChache> Chache { get; set; }
 
 		public void SetConfigType(ConfigBase<T> tp)
@@ -89,6 +97,8 @@ namespace SmartDataViewerV1.Editor
 			return t;
 		}
 
+
+		/// TODO: 这里需要重构 将类型 与 控件的关系抽象
 		public virtual void RenderRawLine(ConfigEditorSchemaChache data, object value, T raw)
 		{
 			if (data.config_editor_field == null)
@@ -97,7 +107,13 @@ namespace SmartDataViewerV1.Editor
 				return;
 			}
 
-			if (value.GetType().IsEnum)
+			if (value == null)
+			{
+				Debug.LogError("you must impleted the default construct class : " + raw.GetType().Name);
+				return;
+			}
+
+			if (value is Enum)
 			{
 				if (data.config_editor_field.CanEditor)
 				{
@@ -263,6 +279,7 @@ namespace SmartDataViewerV1.Editor
 				foreach (var schema in Chache)
 				{
 					var rawData = schema.field_info.GetValue(item);
+
 					RenderRawLine(schema, rawData, item);
 					GUILayout.Space(20);
 				}
