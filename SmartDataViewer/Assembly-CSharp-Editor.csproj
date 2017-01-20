@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{5A675FA4-D9F8-CC8E-6882-10AEBBCC5720}</ProjectGuid>
+    <ProjectGuid>{32E5814B-FA50-A33C-AE8D-EE9154D351C1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -48,7 +48,6 @@
      <Compile Include="Assets\SmartDataViewerV1\Editor\ConfigEditorSchema.cs" />
      <Compile Include="Assets\SmartDataViewerV1\Editor\EditorConfig.cs" />
      <Compile Include="Assets\SmartDataViewerV1\Editor\OpenFilterOptionConfigEditor.cs" />
-     <None Include="Assets\Resources\Config\FilterOption.txt" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
@@ -91,10 +90,11 @@
  <Reference Include="UnityEditor.OSXStandalone.Extensions">
  <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
  </Reference>
+ <Compile Include="Assets\StyleList.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{1210F9BD-F29B-6E49-D6CD-EEC4EDDB8AF4}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+      <Project>{51AEB4A3-B79C-7D3F-3E56-014EF89AC143}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
