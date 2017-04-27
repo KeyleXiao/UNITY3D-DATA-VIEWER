@@ -19,7 +19,7 @@ using UnityEngine;
 using System;
 using System.IO;
 
-namespace SmartDataViewerV1
+namespace SmartDataViewer
 {
 	public class Utility
 	{

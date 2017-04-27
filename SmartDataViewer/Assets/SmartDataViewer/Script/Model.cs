@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartDataViewerV1
+namespace SmartDataViewerV2
 {
 	[Serializable]
 	public class Model

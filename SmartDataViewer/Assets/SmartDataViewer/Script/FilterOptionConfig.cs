@@ -17,57 +17,18 @@
 
 using System;
 
-namespace SmartDataViewerV1
+namespace SmartDataViewer
 {
 	[ConfigEditor("通用编辑")]
 	[Serializable]
 	public class FilterOptionConfig : ConfigBase<FilterOption>
 	{
-		public FilterOption GetFilterOption(int condition)
-		{
-			foreach (var item in ConfigList)
-			{
-				if (item.extionsion_condition == condition)
-				{
-					return item;
-				}
-			}
-			return null;
-		}
 
-		public FilterOption GetFilterOption(EnumLevel eitem_type)
-		{
-			foreach (var item in ConfigList)
-			{
-				if (item.currentLevel == eitem_type)
-				{
-					return item;
-				}
-			}
-			return null;
-		}
-
-		public FilterOption GetFilterOption(EnumStatus element_propertity)
-		{
-			foreach (var item in ConfigList)
-			{
-				if (item.currentStatus == element_propertity)
-				{
-					return item;
-				}
-			}
-			return null;
-		}
 	}
 
 	[Serializable]
-	public class FilterOption : Model
+	public class FilterOption : IModel
 	{
-		public FilterOption() : base()
-		{
-			arg1 = string.Empty;
-		}
-
 		[ConfigEditorField(2, true)]
 		public FilterModel filter_mode;
 
@@ -83,10 +44,6 @@ namespace SmartDataViewerV1
 
 		[ConfigEditorField(4, true)]
 		public bool Enable;
-
-		[ConfigEditorField(7, true, "asdasds")]
-		public string arg1;
-
 	}
 
 	public enum EnumStatus

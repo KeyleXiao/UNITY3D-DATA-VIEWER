@@ -1,0 +1,23 @@
+﻿<Properties StartupConfiguration="{51AEB4A3-B79C-7D3F-3E56-014EF89AC143}|Unity" GitUserInfo="UsingGIT">
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/SmartDataViewerV2/Editor/OpenFilterOptionConfigEditor.cs">
+    <Files>
+      <File FileName="Assets/SmartDataViewerV1/Editor/ConfigEditorSchema.cs" Line="116" Column="1" />
+      <File FileName="Assets/SmartDataViewerV1/Script/FilterOptionConfig.cs" Line="22" Column="7" />
+      <File FileName="Assets/SmartDataViewerV1/Script/Model.cs" Line="3" Column="1" />
+      <File FileName="Assets/SmartDataViewerV1/Script/ConfigBase.cs" Line="1" Column="1" />
+      <File FileName="Assets/SmartDataViewerV2/Editor/ConfigEditorSchema.cs" Line="24" Column="28" />
+      <File FileName="Assets/SmartDataViewerV2/Script/ConfigBase.cs" Line="31" Column="17" />
+      <File FileName="Assets/SmartDataViewerV2/Script/FilterOptionConfig.cs" Line="22" Column="23" />
+      <File FileName="Assets/SmartDataViewerV2/Script/Model.cs" Line="3" Column="28" />
+      <File FileName="Assets/SmartDataViewerV2/Script/Utility.cs" Line="22" Column="28" />
+      <File FileName="Assets/SmartDataViewerV2/Editor/EditorConfig.cs" Line="19" Column="28" />
+      <File FileName="Assets/SmartDataViewerV2/Editor/OpenFilterOptionConfigEditor.cs" Line="44" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

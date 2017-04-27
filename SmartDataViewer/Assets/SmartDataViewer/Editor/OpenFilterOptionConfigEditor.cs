@@ -18,20 +18,20 @@ using System;
 using System.Linq;
 using UnityEditor;
 
-namespace SmartDataViewerV1.Editor
+namespace SmartDataViewer.Editor
 {
 	public class OpenFilterOptionConfigEditor : ConfigEditorSchema<FilterOption>
 	{
-		[MenuItem("SmartDataVierV1/Test/Demo")]
+		[MenuItem("SmartDataVier/Demo")]
 		static public void OpenView()
 		{
 			OpenFilterOptionConfigEditor w = CreateInstance<OpenFilterOptionConfigEditor>();
 			w.ShowUtility();
 		}
 
-		public override FilterOption AddValue()
+		public override FilterOption CreateValue()
 		{
-			FilterOption r = base.AddValue();
+			FilterOption r = base.CreateValue();
 			r.Enable = true;
 			return r;
 		}

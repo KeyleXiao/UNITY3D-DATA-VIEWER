@@ -48,6 +48,9 @@
      <Compile Include="Assets\SmartDataViewerV1\Editor\ConfigEditorSchema.cs" />
      <Compile Include="Assets\SmartDataViewerV1\Editor\EditorConfig.cs" />
      <Compile Include="Assets\SmartDataViewerV1\Editor\OpenFilterOptionConfigEditor.cs" />
+     <Compile Include="Assets\SmartDataViewerV2\Editor\ConfigEditorSchema.cs" />
+     <Compile Include="Assets\SmartDataViewerV2\Editor\EditorConfig.cs" />
+     <Compile Include="Assets\SmartDataViewerV2\Editor\OpenFilterOptionConfigEditor.cs" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
@@ -90,7 +93,6 @@
  <Reference Include="UnityEditor.OSXStandalone.Extensions">
  <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
  </Reference>
- <Compile Include="Assets\StyleList.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">

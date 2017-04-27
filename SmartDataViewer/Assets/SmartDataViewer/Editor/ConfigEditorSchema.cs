@@ -1,4 +1,4 @@
-﻿//
+//
 //    Copyright 2017 KeyleXiao.
 //    Contact to Me : Keyle_xiao@hotmail.com 
 //
@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 
-namespace SmartDataViewerV1.Editor
+namespace SmartDataViewer.Editor
 {
 	public class ConfigEditorSchemaChache
 	{
@@ -30,15 +30,10 @@ namespace SmartDataViewerV1.Editor
 		public int order { get; set; }
 	}
 
-
-	/// TODO: 抽象T 增加非继承自Model的类型
-	public class ConfigEditorSchema<T> : EditorWindow where T : Model, new()
+	public class ConfigEditorSchema<T> : EditorWindow where T : IModel, new()
 	{
 		protected ConfigEditorAttribute configSetting { get; set; }
-
-		/// TODO: 抽象 ConfigBase 增加对 NewstoneJson ， Protobuff的支持
 		protected ConfigBase<T> config_current { get; set; }
-
 		protected int Index { get; set; }
 		protected Vector2 posv { get; set; }
 		protected List<int> deleteList = new List<int>();
@@ -47,10 +42,11 @@ namespace SmartDataViewerV1.Editor
 		protected int PageIndex = 0;
 		protected bool initialized { get; set; }
 		protected List<FieldInfo> fieldinfos { get; set; }
-
-
-		/// TODO: 抽象Chache作为一个接口
 		protected List<ConfigEditorSchemaChache> Chache { get; set; }
+		protected bool FirstLoadFlag { get; set; }
+
+		protected List<T> Finallylist { get; set; }
+		protected int ItemMaxCount { get; set; }
 
 		public void SetConfigType(ConfigBase<T> tp)
 		{
@@ -58,7 +54,7 @@ namespace SmartDataViewerV1.Editor
 
 			configSetting = ConfigEditorAttribute.GetCurrentAttribute<ConfigEditorAttribute>(tp);
 
-			this.titleContent = new GUIContent(configSetting.EditorTitle);
+			this.titleContent = new GUIContent(string.IsNullOrEmpty(configSetting.EditorTitle) ? typeof(T).Name : configSetting.EditorTitle);
 
 			fieldinfos = typeof(T).GetFields().ToList();
 
@@ -71,7 +67,9 @@ namespace SmartDataViewerV1.Editor
 				f.field_info = item;
 				f.order = 0;
 
-				if (infos.Length != 0)
+				if (infos.Length == 0)
+					continue;
+				else
 				{
 					ConfigEditorFieldAttribute cefa = (ConfigEditorFieldAttribute)infos[0];
 					f.order = cefa.Order;
@@ -89,31 +87,34 @@ namespace SmartDataViewerV1.Editor
 
 		public virtual void Initialize() { }
 
-		public virtual T AddValue()
+		public virtual T CreateValue()
 		{
 			T t = new T();
 			t.ID = (config_current.ConfigList.Count == 0) ? 1 : (config_current.ConfigList.Max(i => i.ID) + 1);
 			t.NickName = string.Empty;
+
+			Debug.Log(t.ID);
 			return t;
 		}
 
-
-		/// TODO: 这里需要重构 将类型 与 控件的关系抽象
 		public virtual void RenderRawLine(ConfigEditorSchemaChache data, object value, T raw)
 		{
 			if (data.config_editor_field == null)
 			{
-				EditorGUILayout.LabelField(((bool)value).ToString(), new GUILayoutOption[] { GUILayout.Width(80) });
+				//EditorGUILayout.LabelField(((bool)value).ToString(), new GUILayoutOption[] { GUILayout.Width(80) });
+				EditorGUILayout.LabelField("", new GUILayoutOption[] { GUILayout.Width(80) });
 				return;
 			}
 
-			if (value == null)
+			if (value.GetType().IsGenericType)
 			{
-				Debug.LogError("you must impleted the default construct class : " + raw.GetType().Name);
-				return;
+				if (GUILayout.Button("Generic", new GUILayoutOption[] { GUILayout.Width(data.config_editor_field.Width) }))
+				{
+
+				}
 			}
 
-			if (value is Enum)
+			if (value.GetType().IsEnum)
 			{
 				if (data.config_editor_field.CanEditor)
 				{
@@ -175,6 +176,47 @@ namespace SmartDataViewerV1.Editor
 			}
 		}
 
+		protected virtual void Reload()
+		{
+			config_current = ConfigBase<T>.LoadConfig<ConfigBase<T>>(configSetting.LoadPath);
+			Debug.Log(configSetting.LoadPath);
+			if (config_current == null)
+				config_current = new ConfigBase<T>();
+			deleteList.Clear();
+		}
+
+		protected virtual void SaveConfig()
+		{
+			for (int i = 0; i < deleteList.Count; i++)
+			{
+				config_current.Delete(deleteList[i]);
+			}
+			config_current.SaveToDisk(configSetting.OutputPath);
+			AssetDatabase.Refresh();
+			ShowNotification(new GUIContent("SUCCESS !!!"));
+		}
+
+		protected virtual void SaveButton()
+		{
+			GUI.backgroundColor = Color.green;
+			if (GUILayout.Button("Save", GUI.skin.GetStyle("ButtonRight"), new GUILayoutOption[] { GUILayout.Height(30) }))
+				SaveConfig();
+			GUI.backgroundColor = Color.white;
+		}
+
+		protected virtual void SearchField()
+		{
+			GUILayout.BeginHorizontal();
+			EditorGUILayout.LabelField(EditorConfig.NickName, GUILayout.Width(100));
+			SearchResourceName = EditorGUILayout.TextField(SearchResourceName, GUI.skin.GetStyle("ToolbarSeachTextField"));
+			GUILayout.EndHorizontal();
+		}
+		protected virtual void NewLineButton()
+		{
+			if (GUILayout.Button("New Line", GUI.skin.GetStyle("ButtonMid"), new GUILayoutOption[] { GUILayout.Height(30) }))
+				config_current.ConfigList.Add(CreateValue());
+		}
+
 		public void OnGUI()
 		{
 			if (Event.current.isKey && Event.current.keyCode == KeyCode.Escape)
@@ -184,53 +226,36 @@ namespace SmartDataViewerV1.Editor
 			}
 
 			if (!initialized)
-			{
 				Initialize();
-			}
 
-			if (config_current == null)
+			if (!FirstLoadFlag)
 			{
-				config_current = ConfigBase<T>.LoadConfig<ConfigBase<T>>(configSetting.LoadPath);
-
-				if (config_current == null)
-					config_current = new ConfigBase<T>();
+				FirstLoadFlag = true;
+				Reload();
 			}
+
+
 
 			EditorGUILayout.Space();
 			GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
+
 			if (GUILayout.Button("Refresh", GUI.skin.GetStyle("ButtonLeft"), new GUILayoutOption[] { GUILayout.Height(30) }))
-			{
-				config_current = ConfigBase<T>.LoadConfig<ConfigBase<T>>(configSetting.LoadPath);
-				deleteList.Clear();
-			}
+				Reload();
 
-			if (GUILayout.Button("New Line", GUI.skin.GetStyle("ButtonMid"), new GUILayoutOption[] { GUILayout.Height(30) }))
-			{
-				config_current.ConfigList.Add(AddValue());
-				Debug.Log(config_current.ConfigList.Count);
-			}
+			if (!configSetting.DisableCreate)
+				NewLineButton();
 
-			GUI.backgroundColor = Color.green;
-			if (GUILayout.Button("Save", GUI.skin.GetStyle("ButtonRight"), new GUILayoutOption[] { GUILayout.Height(30) }))
-			{
-				for (int i = 0; i < deleteList.Count; i++)
-				{
-					config_current.Delete(deleteList[i]);
-				}
-				config_current.SaveToDisk(configSetting.OutputPath);
-				AssetDatabase.Refresh();
-				ShowNotification(new GUIContent("SUCCESS !!!"));
-			}
-			GUI.backgroundColor = Color.white;
+			if (!configSetting.DisableSave)
+				SaveButton();
+
 			GUILayout.EndHorizontal();
 
 
-			GUILayout.BeginHorizontal();
-			EditorGUILayout.LabelField(EditorConfig.NickName, GUILayout.Width(100));
-			SearchResourceName = EditorGUILayout.TextField(SearchResourceName, GUI.skin.GetStyle("ToolbarSeachTextField"));
-			GUILayout.EndHorizontal();
+			if (!configSetting.DisableSearch)
+				SearchField();
 
-			GUILayout.BeginScrollView(posv, false, false, GUIStyle.none, GUIStyle.none, new GUILayoutOption[] { GUILayout.Height(45) });
+
+			GUILayout.BeginScrollView(new Vector2(posv.x, 0), false, false, GUIStyle.none, GUIStyle.none, new GUILayoutOption[] { GUILayout.Height(45) });
 			GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
 			GUILayout.Space(20);
 
@@ -252,18 +277,18 @@ namespace SmartDataViewerV1.Editor
 
 
 			GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
-			posv = GUILayout.BeginScrollView(posv, false, false);
+			posv = GUILayout.BeginScrollView(posv, true, false, GUI.skin.GetStyle("horizontalScrollbar"), GUIStyle.none, GUI.skin.GetStyle("GroupBox"));
 			GUILayout.BeginVertical();
 
-			List<T> Finallylist = null;
 
-			int ItemMaxCount = 0;
+
 			if (!string.IsNullOrEmpty(SearchResourceName))
 			{
 				ItemMaxCount = config_current.ConfigList.Count(x => x.NickName.ToLower().Contains(SearchResourceName.ToLower().Trim()));
 				Finallylist = config_current.ConfigList.Where(x => x.NickName.ToLower().Contains(SearchResourceName.ToLower().Trim())).Skip(PageIndex * PageAmount).Take(PageAmount).ToList();
 			}
-			else {
+			else
+			{
 				ItemMaxCount = config_current.ConfigList.Count;
 				Finallylist = config_current.ConfigList.Skip(PageIndex * PageAmount).Take(PageAmount).ToList();
 			}
@@ -271,15 +296,13 @@ namespace SmartDataViewerV1.Editor
 			foreach (var item in Finallylist)
 			{
 				if (deleteList.Contains(item.ID))
-				{
 					continue;
-				}
+
 				GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
 
 				foreach (var schema in Chache)
 				{
 					var rawData = schema.field_info.GetValue(item);
-
 					RenderRawLine(schema, rawData, item);
 					GUILayout.Space(20);
 				}
@@ -297,9 +320,14 @@ namespace SmartDataViewerV1.Editor
 			GUILayout.EndScrollView();
 			GUILayout.EndHorizontal();
 
+			Page();
 
-
-
+			GUILayout.BeginHorizontal();
+			GUILayout.Label(EditorConfig.Contract);
+			GUILayout.EndHorizontal();
+		}
+		protected virtual void Page()
+		{
 			GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
 			int maxIndex = Mathf.FloorToInt((ItemMaxCount - 1) / (float)PageAmount);
 			if (maxIndex < PageIndex)
@@ -315,7 +343,8 @@ namespace SmartDataViewerV1.Editor
 				{
 					PageIndex = 0;
 				}
-				else {
+				else
+				{
 					PageIndex -= 1;
 				}
 			}
@@ -325,15 +354,11 @@ namespace SmartDataViewerV1.Editor
 				{
 					PageIndex = maxIndex;
 				}
-				else {
+				else
+				{
 					PageIndex++;
 				}
 			}
-			GUILayout.EndHorizontal();
-
-
-			GUILayout.BeginHorizontal();
-			GUILayout.Label(EditorConfig.Contract);
 			GUILayout.EndHorizontal();
 		}
 	}

@@ -1,4 +1,4 @@
-﻿//
+//
 //    Copyright 2017 KeyleXiao.
 //    Contact to Me : Keyle_xiao@hotmail.com 
 //
@@ -16,13 +16,13 @@
 
 using System.Collections.Generic;
 
-namespace SmartDataViewerV1.Editor
+namespace SmartDataViewer.Editor
 {
 	public class EditorConfig
 	{
 		public static string NickName = @"别名";
 		public static string Delete = @"删除当前";
-		public static string Contract = @"Version 1.0 Alpha | Author:Keyle | Contact:keyle_xiao@hotmail.com";
+		public static string Contract = @"Version 1.1 Alpha   ";
 		public static string OnePageMaxNumber = "单页最大数量";
 		public static string PageInfoFormate = @"|{0}|页-共|{1}|页";
 	}

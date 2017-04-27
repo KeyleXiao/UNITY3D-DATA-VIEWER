@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-namespace SmartDataViewerV1
+namespace SmartDataViewerV2
 {
 	[Serializable]
 	public class ConfigBase<T> where T : Model

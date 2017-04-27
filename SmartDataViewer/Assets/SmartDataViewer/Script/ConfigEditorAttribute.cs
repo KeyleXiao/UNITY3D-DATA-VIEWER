@@ -1,4 +1,4 @@
-﻿//
+//
 //    Copyright 2017 KeyleXiao.
 //    Contact to Me : Keyle_xiao@hotmail.com 
 //
@@ -17,7 +17,7 @@
 
 using System;
 
-namespace SmartDataViewerV1
+namespace SmartDataViewer
 {
 	public class BaseConfigFiedEditorAttribute : Attribute
 	{
@@ -40,12 +40,16 @@ namespace SmartDataViewerV1
 		public bool CanEditor { get; set; }
 		public int Width { get; set; }
 
-		public ConfigEditorFieldAttribute(int order = 0, bool can_editor = true, string display = "", int width = 100)
+		public ConfigEditorFieldAttribute(int order = 0, bool can_editor = true, string display = "",
+										  int width = 100, Type outLinkClass = null,
+										  string outLinkField = null
+										 )
 		{
 			Order = order;
 			Display = display;
 			CanEditor = can_editor;
 			Width = width;
+
 		}
 	}
 
@@ -55,12 +59,23 @@ namespace SmartDataViewerV1
 		public string LoadPath { get; set; }
 		public string OutputPath { get; set; }
 		public string EditorTitle { get; set; }
+		public bool DisableSearch { get; set; }
+		public bool DisableSave { get; set; }
+		public bool DisableCreate { get; set; }
 
-		public ConfigEditorAttribute(string editor_title, string load_path = "", string output_path = "")
+		public ConfigEditorAttribute(string editor_title = "",
+									 string load_path = "",
+									 string output_path = "",
+									 bool disableSearch = false,
+									 bool disableSave = false,
+									 bool disableCreate = false)
 		{
 			EditorTitle = editor_title;
 			OutputPath = output_path;
 			LoadPath = load_path;
+			DisableSave = disableSave;
+			DisableCreate = disableCreate;
+			DisableSearch = disableSearch;
 		}
 	}
 }
