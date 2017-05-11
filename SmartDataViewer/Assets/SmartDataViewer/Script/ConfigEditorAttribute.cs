@@ -41,7 +41,7 @@ namespace SmartDataViewer
 		public int Width { get; set; }
 
 		public ConfigEditorFieldAttribute(int order = 0, bool can_editor = true, string display = "",
-										  int width = 100, Type outLinkClass = null,
+										  int width = 100, bool isPrimarykey = false, Type outLinkClass = null,
 										  string outLinkField = null
 										 )
 		{

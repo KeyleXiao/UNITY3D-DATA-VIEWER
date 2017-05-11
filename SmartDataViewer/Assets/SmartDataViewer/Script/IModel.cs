@@ -1,14 +1,11 @@
-﻿using System;
+using System;
 
-namespace SmartDataViewerV2
+namespace SmartDataViewer
 {
 	[Serializable]
-	public class Model
+	public class IModel
 	{
-		public Model()
-		{
-			NickName = string.Empty;
-		}
+		public IModel() { }
 
 		[ConfigEditorField(99, true)]
 		public int ID;

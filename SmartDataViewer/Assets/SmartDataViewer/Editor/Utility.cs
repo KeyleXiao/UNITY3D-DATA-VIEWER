@@ -18,9 +18,22 @@
 using UnityEngine;
 using System;
 using System.IO;
+using UnityEditor;
 
-namespace SmartDataViewer
+namespace SmartDataViewer.Editor
 {
+
+	public enum FieldType
+	{
+		INT,
+		STRING,
+		FLOAT,
+		GEN_INT,
+		GEN_STRING,
+		GEN_FLOAT
+	}
+
+
 	public class Utility
 	{
 		static public string UrlEncode(string str)
@@ -36,6 +49,12 @@ namespace SmartDataViewer
 		static public string GetFileURL(string path)
 		{
 			return (new Uri(path)).AbsoluteUri;
+		}
+
+		static public string GetTemplateTxtFolder()
+		{
+			string path = Application.dataPath + "/SmartDataViewer/CTS/";
+			return path;
 		}
 
 

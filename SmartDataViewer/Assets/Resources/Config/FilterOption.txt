@@ -1,0 +1,1 @@
+{"ConfigList":[{"ID":1,"NickName":"keyle_xiao","filter_mode":1,"currentLevel":1,"currentStatus":2,"extionsion_condition":2,"Enable":true}]}

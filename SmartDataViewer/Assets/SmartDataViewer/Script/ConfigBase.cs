@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-namespace SmartDataViewerV2
+namespace SmartDataViewer
 {
 	[Serializable]
-	public class ConfigBase<T> where T : Model
+	public class ConfigBase<T> where T : IModel
 	{
 
 		public ConfigBase()
@@ -112,6 +112,12 @@ namespace SmartDataViewerV2
 			Configs.Remove(id);
 		}
 
+		string PathCombine(string pathA, string pathB)
+		{
+			return Path.Combine(pathA, pathB).Replace("\\", "/");
+		}
+
+
 
 		public virtual void DeleteFromDisk(string fileName = "", bool simulator = false)
 		{
@@ -121,7 +127,7 @@ namespace SmartDataViewerV2
 
 #if UNITY_EDITOR
 			if (simulator)
-				configPath = Utility.PathCombine(Application.persistentDataPath, typeof(T) + ".txt");
+				configPath = PathCombine(Application.persistentDataPath, typeof(T) + ".txt");
 			else
 				configPath = string.Format("{0}/Resources/Config/{1}.txt", Application.dataPath, fileName);
 #else
@@ -144,7 +150,7 @@ namespace SmartDataViewerV2
 			if (simulator)
 			{
 				DeleteFromDisk(fileName, simulator);
-				p = Utility.PathCombine(Application.persistentDataPath, typeof(T) + ".txt");
+				p = PathCombine(Application.persistentDataPath, typeof(T) + ".txt");
 			}
 			else
 			{
