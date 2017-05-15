@@ -15,27 +15,17 @@
 //     		limitations under the License.
 //
 using System;
-using SmartDataViewer.Editor;
-using UnityEditor;
+using SmartDataViewer;
 
-public class MapBoxConfigEditor : ConfigEditorSchema<MapBox>
+namespace SmartDataViewer.Editor
 {
-	[MenuItem("MapEditor/MapBox")]
-	static public void OpenView()
+	public class CommonLoadConfig : ConfigBase<CommonLoad>
 	{
-		MapBoxConfigEditor w = CreateInstance<MapBoxConfigEditor>();
-		w.ShowUtility();
+
 	}
 
-	public override MapBox CreateValue()
+	public class CommonLoad : IModel
 	{
-		MapBox r = base.CreateValue();
-		return r;
-	}
 
-	public override void Initialize()
-	{
-		SetConfigType(new MapBoxConfig());
 	}
-
 }

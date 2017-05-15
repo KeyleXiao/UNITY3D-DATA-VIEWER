@@ -1,0 +1,1 @@
+{"ConfigList":[{"ID":1,"NickName":"","testPoint":{"x":0.0,"y":0.0},"Points":[{"x":1.0,"y":2.0}],"MapResourceID":0,"Description":""}]}

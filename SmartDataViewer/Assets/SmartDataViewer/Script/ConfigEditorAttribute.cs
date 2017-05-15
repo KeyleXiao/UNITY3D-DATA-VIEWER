@@ -39,16 +39,20 @@ namespace SmartDataViewer
 		public string Display { get; set; }
 		public bool CanEditor { get; set; }
 		public int Width { get; set; }
+		public string OutLinkEditor { get; set; }
+		public string OutLinkClass { get; set; }
 
 		public ConfigEditorFieldAttribute(int order = 0, bool can_editor = true, string display = "",
-										  int width = 100, bool isPrimarykey = false, Type outLinkClass = null,
-										  string outLinkField = null
+										  int width = 100, string outLinkEditor = "",
+										  string outLinkClass = ""
 										 )
 		{
 			Order = order;
 			Display = display;
 			CanEditor = can_editor;
 			Width = width;
+			OutLinkEditor = outLinkEditor;
+			OutLinkClass = outLinkClass;
 
 		}
 	}

@@ -1,0 +1,1 @@
+{"ConfigList":[{"ID":1,"NickName":"test1","MapResourceID":0,"GameSceneEvents":[],"PointCharts":[1],"Description":"描述1"},{"ID":2,"NickName":"test2","MapResourceID":0,"GameSceneEvents":[],"PointCharts":[],"Description":"描述2"}]}

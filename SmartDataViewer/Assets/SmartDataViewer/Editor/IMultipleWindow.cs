@@ -15,27 +15,19 @@
 //     		limitations under the License.
 //
 using System;
-using SmartDataViewer.Editor;
-using UnityEditor;
-
-public class MapBoxConfigEditor : ConfigEditorSchema<MapBox>
+namespace SmartDataViewer.Editor
 {
-	[MenuItem("MapEditor/MapBox")]
-	static public void OpenView()
+	public enum WindowType
 	{
-		MapBoxConfigEditor w = CreateInstance<MapBoxConfigEditor>();
-		w.ShowUtility();
+		INPUT,
+		CALLBACK
 	}
-
-	public override MapBox CreateValue()
+	public class IMultipleWindow : UnityEditor.EditorWindow
 	{
-		MapBox r = base.CreateValue();
-		return r;
-	}
+		protected WindowType current_windowType = WindowType.INPUT;
+		protected Action<object, object> select_callback { get; set; }
+		protected object current_list { get; set; }
 
-	public override void Initialize()
-	{
-		SetConfigType(new MapBoxConfig());
+		public virtual void UpdateSelectModel(object curren_list, Action<object, object> callback) { }
 	}
-
 }

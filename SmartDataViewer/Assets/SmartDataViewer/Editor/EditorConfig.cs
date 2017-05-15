@@ -20,6 +20,12 @@ namespace SmartDataViewer.Editor
 {
 	public class EditorConfig
 	{
+		public static string Select = "选择";
+		public static string Previous = "前页";
+		public static string Next = "后页";
+		public static string Add = "添加";
+		public static string OutLinkIsNull = "请设置外链编辑器";
+		public static string Success = "成功..";
 		public static string NickName = @"别名";
 		public static string Delete = @"删除当前";
 		public static string Contract = @"Version 1.1 Alpha   ";

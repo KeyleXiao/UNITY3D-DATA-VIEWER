@@ -1,1 +1,1 @@
-{"ConfigList":[{"ID":1,"NickName":"keyle_xiao","filter_mode":1,"currentLevel":1,"currentStatus":2,"extionsion_condition":2,"Enable":true}]}
+{"ConfigList":[{"ID":1,"NickName":"keyle_xiao","filter_mode":1,"currentLevel":1,"currentStatus":2,"extionsion_condition":2,"Enable":true},{"ID":2,"NickName":"keyle_xiao2","filter_mode":1,"currentLevel":2,"currentStatus":0,"extionsion_condition":3,"Enable":true},{"ID":3,"NickName":"keyle_xiao3","filter_mode":0,"currentLevel":0,"currentStatus":0,"extionsion_condition":4,"Enable":true}]}

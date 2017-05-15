@@ -18,13 +18,23 @@ using System;
 using System.Collections.Generic;
 using SmartDataViewer;
 
+[ConfigEditor]
+[Serializable]
 public class MapBoxConfig : ConfigBase<MapBox>
 {
 
 }
 
+[Serializable]
 public class MapBox : IModel
 {
+	public MapBox()
+	{
+		MapResourceID = 0;
+		GameSceneEvents = new List<int>();
+		PointCharts = new List<int>();
+		Description = string.Empty;
+	}
 	/// <summary>
 	/// 关联资源表
 	/// </summary>
@@ -38,7 +48,9 @@ public class MapBox : IModel
 	/// <summary>
 	/// 关联布点表
 	/// </summary>
+	[ConfigEditorField(can_editor: true, outLinkEditor: "PointChartConfigEditor", outLinkClass: "PointChart", Width = 120)]
 	public List<int> PointCharts;
 
+	[ConfigEditorField(can_editor: true)]
 	public string Description;
 }

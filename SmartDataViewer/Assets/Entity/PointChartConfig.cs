@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using SmartDataViewer;
 using UnityEngine;
 
+[ConfigEditor]
 [Serializable]
 public class PointChartConfig : ConfigBase<PointChart>
 {
@@ -28,9 +29,22 @@ public class PointChartConfig : ConfigBase<PointChart>
 [Serializable]
 public class PointChart : IModel
 {
+	public PointChart()
+	{
+		Points = new List<Vector2>();
+		Description = string.Empty;
+	}
+
+	[ConfigEditorField(can_editor: true)]
+	public Vector2 testPoint;
+
+
+	[ConfigEditorField(can_editor: true)]
 	public List<Vector2> Points;
 
 	public int MapResourceID;
 
+
+	[ConfigEditorField(can_editor: true)]
 	public string Description;
 }
