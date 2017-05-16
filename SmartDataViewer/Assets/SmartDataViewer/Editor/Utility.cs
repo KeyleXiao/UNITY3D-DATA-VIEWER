@@ -19,6 +19,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using UnityEditor;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SmartDataViewer.Editor
 {
@@ -28,14 +29,32 @@ namespace SmartDataViewer.Editor
 		INT,
 		STRING,
 		FLOAT,
+		BOOL,
+		COLOR,
+		CURVE,
+		VECTOR2,
+		VECTOR3,
+		VECTOR4,
 		GEN_INT,
 		GEN_STRING,
-		GEN_FLOAT
+		GEN_FLOAT,
+		GEN_BOOL,
+		GEN_VECTOR2,
+		GEN_VECTOR3,
+		GEN_VECTOR4,
+		GEN_COLOR,
+		GEN_CURVE
+
 	}
 
 
 	public class Utility
 	{
+		public static T DeepClone<T>(T a)
+		{
+			var content = JsonUtility.ToJson(a);
+			return JsonUtility.FromJson<T>(content);
+		}
 		static public string UrlEncode(string str)
 		{
 			return Uri.EscapeDataString(str);
@@ -55,6 +74,18 @@ namespace SmartDataViewer.Editor
 		{
 			string path = Application.dataPath + "/SmartDataViewer/CTS/";
 			return path;
+		}
+
+		static public string GetRelativePath(string content = "")
+		{
+			string path = Application.dataPath + "/SmartDataViewer/CTS/";
+
+			if (string.IsNullOrEmpty(path))
+			{
+				return path;
+			}
+
+			return PathCombine(path, content);
 		}
 
 

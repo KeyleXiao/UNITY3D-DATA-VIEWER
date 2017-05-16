@@ -31,19 +31,41 @@ public class PointChart : IModel
 {
 	public PointChart()
 	{
-		Points = new List<Vector2>();
+		Points = new List<bool>();
 		Description = string.Empty;
+		PointColorList = new List<Color>();
+		CurveList = new List<AnimationCurve>();
+		Curve = new AnimationCurve();
+		testBounds = new Bounds();
+		BoundsList = new List<Bounds>();
 	}
+
+
+
 
 	[ConfigEditorField(can_editor: true)]
 	public Vector2 testPoint;
 
 
 	[ConfigEditorField(can_editor: true)]
-	public List<Vector2> Points;
+	public List<bool> Points;
+
+
 
 	public int MapResourceID;
 
+	[ConfigEditorField(can_editor: true, Width = 200)]
+	public Bounds testBounds;
+	[ConfigEditorField(can_editor: true)]
+	public Color PointColor;
+	[ConfigEditorField(can_editor: true)]
+	public AnimationCurve Curve;
+	[ConfigEditorField(can_editor: true)]
+	public List<Color> PointColorList;
+	[ConfigEditorField(can_editor: true)]
+	public List<AnimationCurve> CurveList;
+	[ConfigEditorField(can_editor: true, Width = 200)]
+	public List<Bounds> BoundsList;
 
 	[ConfigEditorField(can_editor: true)]
 	public string Description;

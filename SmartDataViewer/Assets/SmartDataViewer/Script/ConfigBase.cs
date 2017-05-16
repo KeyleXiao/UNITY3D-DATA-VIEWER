@@ -119,54 +119,60 @@ namespace SmartDataViewer
 
 
 
-		public virtual void DeleteFromDisk(string fileName = "", bool simulator = false)
+		public virtual void DeleteFromDisk(string fileName = "")
 		{
 			fileName = string.IsNullOrEmpty(fileName) ? typeof(T).Name : fileName;
 
 			string configPath = string.Empty;
 
 #if UNITY_EDITOR
-			if (simulator)
-				configPath = PathCombine(Application.persistentDataPath, typeof(T) + ".txt");
-			else
-				configPath = string.Format("{0}/Resources/Config/{1}.txt", Application.dataPath, fileName);
+			configPath = string.Format("{0}/Resources/Config/{1}.txt", Application.dataPath, fileName);
 #else
-		configPath = Utility.PathCombine(Application.persistentDataPath, typeof(T) + ".txt");
+			configPath = Utility.PathCombine(Application.persistentDataPath, typeof(T) + ".txt");
 #endif
 
 			if (File.Exists(configPath))
 				File.Delete(configPath);
 		}
 
-		public virtual void SaveToDisk(string fileName = "", bool simulator = false)
+		public virtual void SaveToDisk(string fileName = "")
 		{
 			//Modified by keyle 2016.11.29 缩减配置尺寸
 			string cg = JsonUtility.ToJson(this, false);
 			string p = string.Empty;
 
 			fileName = string.IsNullOrEmpty(fileName) ? typeof(T).Name : fileName;
+			DeleteFromDisk(fileName);
 
 #if UNITY_EDITOR
-			if (simulator)
-			{
-				DeleteFromDisk(fileName, simulator);
-				p = PathCombine(Application.persistentDataPath, typeof(T) + ".txt");
-			}
-			else
-			{
-				DeleteFromDisk(fileName);
-				p = string.Format(@"{0}/Resources/Config/{1}.txt", Application.dataPath, fileName);
-			}
+			p = string.Format(@"{0}/Resources/Config/{1}.txt", Application.dataPath, fileName);
 #else
-		DeleteFromDisk(fileName);
-		p = Utility.PathCombine(Application.persistentDataPath, typeof(T) + ".txt");
+			p = Utility.PathCombine(Application.persistentDataPath, typeof(T) + ".txt");
 #endif
 			File.WriteAllText(p, cg);
 		}
 
+		static string RootSymbol = "{ROOT}";
+		static string EditorSymbol = "{EDITOR}";
+
 		public static V LoadConfig<V>(string fileWithNoExcension = "", bool absolute = false) where V : ConfigBase<T>, new()
 		{
-			fileWithNoExcension = string.IsNullOrEmpty(fileWithNoExcension) ? typeof(T).Name : fileWithNoExcension;
+			if (fileWithNoExcension.Contains(RootSymbol))
+			{
+				fileWithNoExcension = fileWithNoExcension.Replace(RootSymbol, Application.dataPath);
+				absolute = true;
+			}
+			else if (fileWithNoExcension.Contains(EditorSymbol))
+			{
+				fileWithNoExcension = fileWithNoExcension.Replace(EditorSymbol, Application.dataPath + "SmartDataViewer/");
+				absolute = true;
+			}
+			else
+			{
+				fileWithNoExcension = string.IsNullOrEmpty(fileWithNoExcension) ? typeof(T).Name : fileWithNoExcension;
+			}
+
+
 			//Check Is Null
 
 			string str = string.Empty;
@@ -187,13 +193,9 @@ namespace SmartDataViewer
 			{
 				string path = fileWithNoExcension;
 				if (!File.Exists(path))
-				{
 					return new V();
-				}
 				else
-				{
 					str = File.ReadAllText(path);
-				}
 			}
 
 			return JsonUtility.FromJson<V>(str);

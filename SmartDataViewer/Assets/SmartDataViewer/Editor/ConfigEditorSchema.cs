@@ -50,6 +50,7 @@ namespace SmartDataViewer.Editor
 
 		protected Dictionary<string, ConfigBase<IModel>> outLinkChache { get; set; }
 
+		protected T PasteItem { get; set; }
 
 		public void SetConfigType(ConfigBase<T> tp)
 		{
@@ -121,12 +122,12 @@ namespace SmartDataViewer.Editor
 				{
 
 
-					if (GUILayout.Button(EditorConfig.Add))
+					if (GUILayout.Button(Language.Add))
 					{
 						Assembly assembly = Assembly.GetExecutingAssembly();
 						IMultipleWindow e = assembly.CreateInstance(data.config_editor_field.OutLinkEditor) as IMultipleWindow;
 						if (e == null)
-							ShowNotification(new GUIContent(EditorConfig.OutLinkIsNull));
+							ShowNotification(new GUIContent(Language.OutLinkIsNull));
 						else
 						{
 							e.UpdateSelectModel(value, SetListItemValue);
@@ -178,7 +179,7 @@ namespace SmartDataViewer.Editor
 					var removeMethod = value.GetType().GetMethod("RemoveAt");
 
 
-					if (GUILayout.Button(EditorConfig.Add))
+					if (GUILayout.Button(Language.Add))
 					{
 						addMethod.Invoke(value, new object[] { Activator.CreateInstance(t) });
 					}
@@ -233,6 +234,42 @@ namespace SmartDataViewer.Editor
 				else
 				{
 					EditorGUILayout.LabelField((value as Enum).ToString(), new GUILayoutOption[] { GUILayout.Width(width) });
+				}
+			}
+			else if (value is Bounds)
+			{
+				if (enable)
+				{
+					value = EditorGUILayout.BoundsField((Bounds)value, new GUILayoutOption[] { GUILayout.Width(width) });
+					setValue(value);
+				}
+				else
+				{
+					EditorGUILayout.BoundsField((Bounds)value, new GUILayoutOption[] { GUILayout.Width(width) });
+				}
+			}
+			else if (value is Color)
+			{
+				if (enable)
+				{
+					value = EditorGUILayout.ColorField((Color)value, new GUILayoutOption[] { GUILayout.Width(width) });
+					setValue(value);
+				}
+				else
+				{
+					EditorGUILayout.ColorField((Color)value, new GUILayoutOption[] { GUILayout.Width(width) });
+				}
+			}
+			else if (value is AnimationCurve)
+			{
+				if (enable)
+				{
+					value = EditorGUILayout.CurveField((AnimationCurve)value, new GUILayoutOption[] { GUILayout.Width(width) });
+					setValue(value);
+				}
+				else
+				{
+					EditorGUILayout.CurveField((AnimationCurve)value, new GUILayoutOption[] { GUILayout.Width(width) });
 				}
 			}
 			else if (value is string)
@@ -368,7 +405,7 @@ namespace SmartDataViewer.Editor
 			}
 			config_current.SaveToDisk(configSetting.OutputPath);
 			AssetDatabase.Refresh();
-			ShowNotification(new GUIContent(EditorConfig.Success));
+			ShowNotification(new GUIContent(Language.Success));
 		}
 
 		protected virtual void SaveButton()
@@ -382,7 +419,7 @@ namespace SmartDataViewer.Editor
 		protected virtual void SearchField()
 		{
 			GUILayout.BeginHorizontal();
-			EditorGUILayout.LabelField(EditorConfig.NickName, GUILayout.Width(100));
+			EditorGUILayout.LabelField(Language.NickName, GUILayout.Width(100));
 			SearchResourceName = EditorGUILayout.TextField(SearchResourceName, GUI.skin.GetStyle("ToolbarSeachTextField"));
 			GUILayout.EndHorizontal();
 		}
@@ -446,9 +483,9 @@ namespace SmartDataViewer.Editor
 			}
 
 			if (current_windowType != WindowType.CALLBACK)
-				EditorGUILayout.LabelField(new GUIContent(EditorConfig.Delete), GUILayout.Width(80));
+				EditorGUILayout.LabelField(new GUIContent(Language.Operation), GUILayout.Width(80));
 			if (current_windowType == WindowType.CALLBACK)
-				EditorGUILayout.LabelField(new GUIContent(EditorConfig.Select), GUILayout.Width(80));
+				EditorGUILayout.LabelField(new GUIContent(Language.Select), GUILayout.Width(80));
 
 
 			GUILayout.EndHorizontal();
@@ -472,8 +509,11 @@ namespace SmartDataViewer.Editor
 				Finallylist = config_current.ConfigList.Skip(PageIndex * PageAmount).Take(PageAmount).ToList();
 			}
 
-			foreach (var item in Finallylist)
+			//foreach (var item in Finallylist)
+			for (int i = 0; i < Finallylist.Count; i++)
 			{
+				T item = Finallylist[i];
+
 				if (deleteList.Contains(item.ID))
 					continue;
 
@@ -486,21 +526,37 @@ namespace SmartDataViewer.Editor
 					GUILayout.Space(20);
 				}
 
+
+
 				if (current_windowType != WindowType.CALLBACK)
 				{
-					if (GUILayout.Button(EditorConfig.Delete, new GUILayoutOption[] { GUILayout.Width(80) }))
+
+					if (GUILayout.Button(Language.Copy, GUI.skin.GetStyle("ButtonLeft"), new GUILayoutOption[] { GUILayout.Width(19) }))
+					{
+						PasteItem = Utility.DeepClone<T>(item);
+					}
+					if (GUILayout.Button(Language.Delete, GUI.skin.GetStyle("ButtonMid"), new GUILayoutOption[] { GUILayout.Width(19) }))
 					{
 						deleteList.Add(item.ID);
-						ShowNotification(new GUIContent(EditorConfig.Success));
+						ShowNotification(new GUIContent(Language.Success));
+					}
+					if (GUILayout.Button(Language.Paste, GUI.skin.GetStyle("ButtonRight"), new GUILayoutOption[] { GUILayout.Width(19) }))
+					{
+						if (PasteItem != null)
+						{
+							config_current.ConfigList.Remove(item);
+							PasteItem.ID = item.ID;
+							config_current.ConfigList.Add(Utility.DeepClone<T>(PasteItem));
+						}
 					}
 				}
 
 				if (current_windowType == WindowType.CALLBACK)
 				{
-					if (GUILayout.Button(EditorConfig.Select, new GUILayoutOption[] { GUILayout.Width(80) }))
+					if (GUILayout.Button(Language.Select, new GUILayoutOption[] { GUILayout.Width(80) }))
 					{
 						select_callback(current_list, item);
-						Close();
+						ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, item.NickName)));
 					}
 				}
 
@@ -516,7 +572,7 @@ namespace SmartDataViewer.Editor
 			Page();
 
 			GUILayout.BeginHorizontal();
-			GUILayout.Label(EditorConfig.Contract);
+			GUILayout.Label(Language.Contract);
 			GUILayout.EndHorizontal();
 		}
 		protected virtual void Page()
@@ -526,18 +582,18 @@ namespace SmartDataViewer.Editor
 			if (maxIndex < PageIndex)
 				PageIndex = 0;
 
-			GUILayout.Label(string.Format(EditorConfig.PageInfoFormate, PageIndex + 1, maxIndex + 1), GUILayout.Width(80));
-			GUILayout.Label(EditorConfig.OnePageMaxNumber, GUILayout.Width(80));
+			GUILayout.Label(string.Format(Language.PageInfoFormate, PageIndex + 1, maxIndex + 1), GUILayout.Width(80));
+			GUILayout.Label(Language.OnePageMaxNumber, GUILayout.Width(80));
 			int.TryParse(GUILayout.TextField(PageAmount.ToString(), GUILayout.Width(80)), out PageAmount);
 
-			if (GUILayout.Button(EditorConfig.Previous, GUI.skin.GetStyle("ButtonLeft"), GUILayout.Height(16)))
+			if (GUILayout.Button(Language.Previous, GUI.skin.GetStyle("ButtonLeft"), GUILayout.Height(16)))
 			{
 				if (PageIndex - 1 < 0)
 					PageIndex = 0;
 				else
 					PageIndex -= 1;
 			}
-			if (GUILayout.Button(EditorConfig.Next, GUI.skin.GetStyle("ButtonRight"), GUILayout.Height(16)))
+			if (GUILayout.Button(Language.Next, GUI.skin.GetStyle("ButtonRight"), GUILayout.Height(16)))
 			{
 				if (PageIndex + 1 > maxIndex)
 					PageIndex = maxIndex;

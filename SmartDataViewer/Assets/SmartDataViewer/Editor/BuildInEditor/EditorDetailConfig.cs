@@ -16,21 +16,56 @@
 //
 using System;
 using SmartDataViewer;
-
+using UnityEditor;
 
 namespace SmartDataViewer.Editor
 {
-	public class EditorDetailConfig
+	[ConfigEditor(LoadPath = @"{ROOT}/Config/EditorDetailConfig")]
+	[Serializable]
+	public class EditorDetailConfig : ConfigBase<EditorDetail>
 	{
 
 	}
 
 
+	[Serializable]
 	public class EditorDetail : IModel
 	{
+		public EditorDetail()
+		{
+			FieldName = string.Empty;
+			Description = string.Empty;
+		}
+		[ConfigEditorField(can_editor: true)]
 		public FieldType CurrentType;
+		[ConfigEditorField(can_editor: true)]
 		public string FieldName;
+		[ConfigEditorField(can_editor: true)]
 		public bool CanEditor;
+		[ConfigEditorField(can_editor: true)]
 		public string Description;
 	}
+
+	public class EditorDetailConfigEditor : ConfigEditorSchema<EditorDetail>
+	{
+		[MenuItem("SmartDataVier/EditorDetailConfig")]
+		static public void OpenView()
+		{
+			EditorDetailConfigEditor w = CreateInstance<EditorDetailConfigEditor>();
+			w.ShowUtility();
+		}
+
+		public override EditorDetail CreateValue()
+		{
+			EditorDetail r = base.CreateValue();
+			return r;
+		}
+
+		public override void Initialize()
+		{
+			SetConfigType(new EditorDetailConfig());
+		}
+	}
 }
+
+

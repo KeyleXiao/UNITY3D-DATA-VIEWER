@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace SmartDataViewer.Editor
 {
-	public class EditorConfig
+	public class Language
 	{
 		public static string Select = "选择";
 		public static string Previous = "前页";
@@ -26,8 +26,12 @@ namespace SmartDataViewer.Editor
 		public static string Add = "添加";
 		public static string OutLinkIsNull = "请设置外链编辑器";
 		public static string Success = "成功..";
+		public static string SuccessAdd = "成功添加 {0}";
 		public static string NickName = @"别名";
-		public static string Delete = @"删除当前";
+		public static string Delete = @"X";
+		public static string Copy = @"C";
+		public static string Paste = @"P";
+		public static string Operation = @"操作";
 		public static string Contract = @"Version 1.1 Alpha   ";
 		public static string OnePageMaxNumber = "单页最大数量";
 		public static string PageInfoFormate = @"|{0}|页-共|{1}|页";
