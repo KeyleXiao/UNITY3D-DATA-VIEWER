@@ -35,24 +35,22 @@ namespace SmartDataViewer
 	[AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
 	public sealed class ConfigEditorFieldAttribute : BaseConfigFiedEditorAttribute
 	{
-		public int Order { get; set; }
-		public string Display { get; set; }
-		public bool CanEditor { get; set; }
-		public int Width { get; set; }
-		public string OutLinkEditor { get; set; }
-		public string OutLinkClass { get; set; }
+		public DefaultControlPropertity Setting { get; set; }
 
 		public ConfigEditorFieldAttribute(int order = 0, bool can_editor = true, string display = "",
 										  int width = 100, string outLinkEditor = "",
-										  string outLinkClass = ""
+										  string outLinkClass = "", bool visibility = true
 										 )
 		{
-			Order = order;
-			Display = display;
-			CanEditor = can_editor;
-			Width = width;
-			OutLinkEditor = outLinkEditor;
-			OutLinkClass = outLinkClass;
+			Setting = new DefaultControlPropertity();
+
+			Setting.Order = order;
+			Setting.Display = display;
+			Setting.CanEditor = can_editor;
+			Setting.Width = width;
+			Setting.OutLinkEditor = outLinkEditor;
+			Setting.OutLinkClass = outLinkClass;
+			Setting.Visibility = visibility;
 
 		}
 	}
@@ -60,12 +58,8 @@ namespace SmartDataViewer
 	[AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
 	public sealed class ConfigEditorAttribute : BaseConfigFiedEditorAttribute
 	{
-		public string LoadPath { get; set; }
-		public string OutputPath { get; set; }
-		public string EditorTitle { get; set; }
-		public bool DisableSearch { get; set; }
-		public bool DisableSave { get; set; }
-		public bool DisableCreate { get; set; }
+		public DefaultEditorPropertity Setting { get; set; }
+
 
 		public ConfigEditorAttribute(string editor_title = "",
 									 string load_path = "",
@@ -74,12 +68,13 @@ namespace SmartDataViewer
 									 bool disableSave = false,
 									 bool disableCreate = false)
 		{
-			EditorTitle = editor_title;
-			OutputPath = output_path;
-			LoadPath = load_path;
-			DisableSave = disableSave;
-			DisableCreate = disableCreate;
-			DisableSearch = disableSearch;
+			Setting = new DefaultEditorPropertity();
+			Setting.EditorTitle = editor_title;
+			Setting.OutputPath = output_path;
+			Setting.LoadPath = load_path;
+			Setting.DisableSave = disableSave;
+			Setting.DisableCreate = disableCreate;
+			Setting.DisableSearch = disableSearch;
 		}
 	}
 }

@@ -26,7 +26,8 @@ namespace SmartDataViewer.Editor
 	public class ConfigEditorSchemaChache
 	{
 		public FieldInfo field_info { get; set; }
-		public ConfigEditorFieldAttribute config_editor_field { get; set; }
+		//public ConfigEditorFieldAttribute config_editor_field { get; set; }
+		public DefaultControlPropertity config_editor_setting { get; set; }
 		public int order { get; set; }
 	}
 
@@ -52,13 +53,14 @@ namespace SmartDataViewer.Editor
 
 		protected T PasteItem { get; set; }
 
+
 		public void SetConfigType(ConfigBase<T> tp)
 		{
 			this.config_current = tp;
 
 			configSetting = ConfigEditorAttribute.GetCurrentAttribute<ConfigEditorAttribute>(tp);
 
-			this.titleContent = new GUIContent(string.IsNullOrEmpty(configSetting.EditorTitle) ? typeof(T).Name : configSetting.EditorTitle);
+			this.titleContent = new GUIContent(string.IsNullOrEmpty(configSetting.Setting.EditorTitle) ? typeof(T).Name : configSetting.Setting.EditorTitle);
 
 			fieldinfos = typeof(T).GetFields().ToList();
 
@@ -72,12 +74,26 @@ namespace SmartDataViewer.Editor
 				f.order = 0;
 
 				if (infos.Length == 0)
-					continue;
+				{
+					int id = (int)GetCurrentFieldType(item.FieldType);
+					f.config_editor_setting = Utility.GetDefaultControlConfig().SearchByID(id);
+
+
+					if (f.config_editor_setting == null)
+					{
+						Debug.Log("Can't find default control id :" + id);
+					}
+
+					if (!f.config_editor_setting.Visibility)
+						continue;
+				}
 				else
 				{
 					ConfigEditorFieldAttribute cefa = (ConfigEditorFieldAttribute)infos[0];
-					f.order = cefa.Order;
-					f.config_editor_field = cefa;
+					f.order = cefa.Setting.Order;
+					f.config_editor_setting = cefa.Setting;
+					if (!cefa.Setting.Visibility)
+						continue;
 				}
 				Chache.Add(f);
 			}
@@ -88,6 +104,8 @@ namespace SmartDataViewer.Editor
 
 			initialized = true;
 		}
+
+
 
 		public virtual void Initialize() { }
 
@@ -104,28 +122,29 @@ namespace SmartDataViewer.Editor
 
 		public virtual void RenderRawLine(ConfigEditorSchemaChache data, object value, T raw)
 		{
-			if (data.config_editor_field == null)
-			{
-				//EditorGUILayout.LabelField(((bool)value).ToString(), new GUILayoutOption[] { GUILayout.Width(80) });
-				EditorGUILayout.LabelField("", new GUILayoutOption[] { GUILayout.Width(80) });
-				return;
-			}
+			//if (data.config_editor_setting == null)
+			//{
+			//	//EditorGUILayout.LabelField(((bool)value).ToString(), new GUILayoutOption[] { GUILayout.Width(80) });
+			//	EditorGUILayout.LabelField("", new GUILayoutOption[] { GUILayout.Width(80) });
+			//	return;
+			//}
+
 
 			if (value.GetType().IsGenericType)
 			{
-				GUILayout.BeginVertical(GUIStyle.none, new GUILayoutOption[] { GUILayout.Width(data.config_editor_field.Width) });
+				GUILayout.BeginVertical(GUIStyle.none, new GUILayoutOption[] { GUILayout.Width(data.config_editor_setting.Width) });
 
 				int deleteIndex = -1;
 
 				//Open Editor
-				if (!string.IsNullOrEmpty(data.config_editor_field.OutLinkEditor))
+				if (!string.IsNullOrEmpty(data.config_editor_setting.OutLinkEditor))
 				{
 
 
 					if (GUILayout.Button(Language.Add))
 					{
 						Assembly assembly = Assembly.GetExecutingAssembly();
-						IMultipleWindow e = assembly.CreateInstance(data.config_editor_field.OutLinkEditor) as IMultipleWindow;
+						IMultipleWindow e = assembly.CreateInstance(data.config_editor_setting.OutLinkEditor) as IMultipleWindow;
 						if (e == null)
 							ShowNotification(new GUIContent(Language.OutLinkIsNull));
 						else
@@ -141,13 +160,13 @@ namespace SmartDataViewer.Editor
 					{
 						GUILayout.BeginHorizontal();
 
-						if (!outLinkChache.ContainsKey(data.config_editor_field.OutLinkClass))
+						if (!outLinkChache.ContainsKey(data.config_editor_setting.OutLinkClass))
 						{
 							GUILayout.Label("NickName");
 						}
 						else
 						{
-							var info = outLinkChache[data.config_editor_field.OutLinkClass].SearchByID(temp[i]);
+							var info = outLinkChache[data.config_editor_setting.OutLinkClass].SearchByID(temp[i]);
 							if (info != null)
 							{
 								GUILayout.Label(info.NickName);
@@ -195,7 +214,7 @@ namespace SmartDataViewer.Editor
 
 
 						GUILayout.BeginHorizontal();
-						RenderBaseControl(data.config_editor_field.Width - 18, data.config_editor_field.CanEditor, listItem, v =>
+						RenderBaseControl(data.config_editor_setting.Width - 18, data.config_editor_setting.CanEditor, listItem, v =>
 						{
 							value.GetType().GetProperty("Item").SetValue(value, v, new object[] { i });
 						});
@@ -218,10 +237,115 @@ namespace SmartDataViewer.Editor
 			}
 			else
 			{
-				RenderBaseControl(data.config_editor_field.Width, data.config_editor_field.CanEditor, value, v => { data.field_info.SetValue(raw, v); });
+				RenderBaseControl(data.config_editor_setting.Width, data.config_editor_setting.CanEditor, value, v => { data.field_info.SetValue(raw, v); });
 			}
 
 		}
+
+
+		public virtual FieldType GetCurrentFieldType(Type value)
+		{
+
+			if (value.IsGenericType)
+			{
+				Type t = value.GetGenericArguments()[0];
+
+				if (t.IsEnum)
+				{
+					return FieldType.GEN_ENUM;
+				}
+				else if (t == typeof(Bounds))
+				{
+					return FieldType.GEN_BOUNDS;
+				}
+				else if (t == typeof(Color))
+				{
+					return FieldType.GEN_COLOR;
+				}
+				else if (t == typeof(AnimationCurve))
+				{
+					return FieldType.GEN_ANIMATIONCURVE;
+				}
+				else if (t == typeof(string))
+				{
+					return FieldType.GEN_STRING;
+				}
+				else if (t == typeof(float))
+				{
+					return FieldType.GEN_FLOAT;
+				}
+				else if (t == typeof(int))
+				{
+					return FieldType.GEN_INT;
+				}
+				else if (t == typeof(bool))
+				{
+					return FieldType.GEN_BOOL;
+				}
+				else if (t == typeof(Vector2))
+				{
+					return FieldType.GEN_VECTOR2;
+				}
+				else if (t == typeof(Vector3))
+				{
+					return FieldType.GEN_VECTOR3;
+				}
+				else if (t == typeof(Vector4))
+				{
+					return FieldType.GEN_VECTOR4;
+				}
+
+				return FieldType.GEN_STRING;
+			}
+
+			if (value.IsEnum)
+			{
+				return FieldType.ENUM;
+			}
+			else if (value == typeof(Bounds))
+			{
+				return FieldType.BOUNDS;
+			}
+			else if (value == typeof(Color))
+			{
+				return FieldType.COLOR;
+			}
+			else if (value == typeof(AnimationCurve))
+			{
+				return FieldType.ANIMATIONCURVE;
+			}
+			else if (value == typeof(string))
+			{
+				return FieldType.STRING;
+			}
+			else if (value == typeof(float))
+			{
+				return FieldType.FLOAT;
+			}
+			else if (value == typeof(int))
+			{
+				return FieldType.INT;
+			}
+			else if (value == typeof(bool))
+			{
+				return FieldType.BOOL;
+			}
+			else if (value == typeof(Vector2))
+			{
+				return FieldType.VECTOR2;
+			}
+			else if (value == typeof(Vector3))
+			{
+				return FieldType.VECTOR3;
+			}
+			else if (value == typeof(Vector4))
+			{
+				return FieldType.VECTOR4;
+			}
+
+			return FieldType.STRING;
+		}
+
 		public virtual void RenderBaseControl(int width, bool enable, object value, Action<object> setValue)
 		{
 			if (value is Enum)
@@ -367,7 +491,7 @@ namespace SmartDataViewer.Editor
 
 		protected virtual void Reload()
 		{
-			config_current = ConfigBase<T>.LoadConfig<ConfigBase<T>>(configSetting.LoadPath);
+			config_current = ConfigBase<T>.LoadConfig<ConfigBase<T>>(configSetting.Setting.LoadPath);
 
 			if (config_current == null)
 				config_current = new ConfigBase<T>();
@@ -382,16 +506,16 @@ namespace SmartDataViewer.Editor
 
 			for (int i = 0; i < Chache.Count; i++)
 			{
-				if (Chache[i].config_editor_field == null)
+				if (Chache[i].config_editor_setting == null)
 					continue;
 
-				if (!string.IsNullOrEmpty(Chache[i].config_editor_field.OutLinkEditor) && !string.IsNullOrEmpty(Chache[i].config_editor_field.OutLinkClass))
+				if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) && !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
 				{
-					ConfigBase<IModel> model = ConfigBase<IModel>.LoadConfig<ConfigBase<IModel>>(Chache[i].config_editor_field.OutLinkClass);
+					ConfigBase<IModel> model = ConfigBase<IModel>.LoadConfig<ConfigBase<IModel>>(Chache[i].config_editor_setting.OutLinkClass);
 
 					if (model != null)
 					{
-						outLinkChache.Add(Chache[i].config_editor_field.OutLinkClass, model);
+						outLinkChache.Add(Chache[i].config_editor_setting.OutLinkClass, model);
 					}
 				}
 			}
@@ -403,7 +527,13 @@ namespace SmartDataViewer.Editor
 			{
 				config_current.Delete(deleteList[i]);
 			}
-			config_current.SaveToDisk(configSetting.OutputPath);
+
+			string outPutPath = configSetting.Setting.OutputPath;
+			if (string.IsNullOrEmpty(outPutPath) && !string.IsNullOrEmpty(configSetting.Setting.LoadPath))
+				outPutPath = configSetting.Setting.LoadPath;
+
+
+			config_current.SaveToDisk(outPutPath);
 			AssetDatabase.Refresh();
 			ShowNotification(new GUIContent(Language.Success));
 		}
@@ -454,16 +584,16 @@ namespace SmartDataViewer.Editor
 			if (GUILayout.Button("Refresh", GUI.skin.GetStyle("ButtonLeft"), new GUILayoutOption[] { GUILayout.Height(30) }))
 				Reload();
 
-			if (!configSetting.DisableCreate && current_windowType != WindowType.CALLBACK)
+			if (!configSetting.Setting.DisableCreate && current_windowType != WindowType.CALLBACK)
 				NewLineButton();
 
-			if (!configSetting.DisableSave && current_windowType != WindowType.CALLBACK)
+			if (!configSetting.Setting.DisableSave && current_windowType != WindowType.CALLBACK)
 				SaveButton();
 
 			GUILayout.EndHorizontal();
 
 
-			if (!configSetting.DisableSearch)
+			if (!configSetting.Setting.DisableSearch)
 				SearchField();
 
 
@@ -474,10 +604,10 @@ namespace SmartDataViewer.Editor
 
 			foreach (var item in Chache)
 			{
-				if (item.config_editor_field == null)
+				if (item.config_editor_setting == null)
 					EditorGUILayout.LabelField(new GUIContent(item.field_info.Name), GUILayout.Width(80));
 				else
-					EditorGUILayout.LabelField(new GUIContent(item.config_editor_field.Display == "" ? item.field_info.Name : item.config_editor_field.Display), GUILayout.Width(item.config_editor_field.Width));
+					EditorGUILayout.LabelField(new GUIContent(item.config_editor_setting.Display == "" ? item.field_info.Name : item.config_editor_setting.Display), GUILayout.Width(item.config_editor_setting.Width));
 
 				GUILayout.Space(20);
 			}

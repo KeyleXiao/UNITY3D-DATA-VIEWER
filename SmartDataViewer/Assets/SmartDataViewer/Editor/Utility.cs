@@ -30,11 +30,13 @@ namespace SmartDataViewer.Editor
 		STRING,
 		FLOAT,
 		BOOL,
-		COLOR,
-		CURVE,
 		VECTOR2,
 		VECTOR3,
 		VECTOR4,
+		COLOR,
+		CURVE,
+		BOUNDS,
+
 		GEN_INT,
 		GEN_STRING,
 		GEN_FLOAT,
@@ -43,13 +45,30 @@ namespace SmartDataViewer.Editor
 		GEN_VECTOR3,
 		GEN_VECTOR4,
 		GEN_COLOR,
-		GEN_CURVE
+		GEN_CURVE,
+		GEN_BOUNDS,
+
+		ANIMATIONCURVE,
+		GEN_ANIMATIONCURVE,
+		ENUM,
+		GEN_ENUM,
 
 	}
 
 
 	public class Utility
 	{
+		public static DefaultControlConfig ControlConfig { get; set; }
+
+		public static DefaultControlConfig GetDefaultControlConfig()
+		{
+			if (ControlConfig == null)
+			{
+				ControlConfig = DefaultControlConfig.LoadConfig<DefaultControlConfig>("{ROOT}/SmartDataViewer/Config/DefaultControlPropertity");
+			}
+			return ControlConfig;
+		}
+
 		public static T DeepClone<T>(T a)
 		{
 			var content = JsonUtility.ToJson(a);

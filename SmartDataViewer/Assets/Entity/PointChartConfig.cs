@@ -41,32 +41,26 @@ public class PointChart : IModel
 	}
 
 
-
-
-	[ConfigEditorField(can_editor: true)]
 	public Vector2 testPoint;
 
 
-	[ConfigEditorField(can_editor: true)]
 	public List<bool> Points;
-
 
 
 	public int MapResourceID;
 
-	[ConfigEditorField(can_editor: true, Width = 200)]
 	public Bounds testBounds;
-	[ConfigEditorField(can_editor: true)]
+
 	public Color PointColor;
-	[ConfigEditorField(can_editor: true)]
+
 	public AnimationCurve Curve;
-	[ConfigEditorField(can_editor: true)]
+
 	public List<Color> PointColorList;
-	[ConfigEditorField(can_editor: true)]
+
+
 	public List<AnimationCurve> CurveList;
-	[ConfigEditorField(can_editor: true, Width = 200)]
+
 	public List<Bounds> BoundsList;
 
-	[ConfigEditorField(can_editor: true)]
 	public string Description;
 }
