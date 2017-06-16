@@ -50,9 +50,7 @@ namespace SmartDataViewer.Editor
 		protected List<T> Finallylist { get; set; }
 		protected int ItemMaxCount { get; set; }
 
-		protected Dictionary<string, ConfigBase<IModel>> outLinkChache { get; set; }
-
-		//TODO 1.0 外联表原始数据
+		//TODO 2.0 外联表原始数据
 		protected Dictionary<string, object> outLinkRawData { get; set; }
 
 
@@ -135,10 +133,8 @@ namespace SmartDataViewer.Editor
 		public virtual void RenderRawLine(ConfigEditorSchemaChache data, object value, T raw)
 		{
 			//TODO 这里有个问题 有时候会为空 需要查
-			if (value == null)
-			{
-				return;
-			}
+			if (value == null) return;
+
 			if (value.GetType().IsGenericType)
 			{
 				GUILayout.BeginVertical(GUIStyle.none, new GUILayoutOption[] { GUILayout.Width(data.config_editor_setting.Width) });
@@ -166,21 +162,7 @@ namespace SmartDataViewer.Editor
 					for (int i = 0; i < temp.Count; i++)
 					{
 						GUILayout.BeginHorizontal();
-
-						if (!outLinkChache.ContainsKey(data.config_editor_setting.OutLinkSubClass))
-						{
-							GUILayout.Label("NickName");
-						}
-						else
-						{
-							var info = outLinkChache[data.config_editor_setting.OutLinkSubClass].SearchByID(temp[i]);
-							if (info != null)
-							{
-								GUILayout.Label(string.IsNullOrEmpty(info.NickName) ? info.ID.ToString() : info.NickName);
-							}
-							else { GUILayout.Label("NickName"); }
-						}
-
+						GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutLinkClass, data.config_editor_setting.OutLinkDisplay));
 						if (GUILayout.Button("X", GUILayout.Width(18)))
 							deleteIndex = i;
 
@@ -247,50 +229,8 @@ namespace SmartDataViewer.Editor
 				//Open Editor
 				if (!string.IsNullOrEmpty(data.config_editor_setting.OutLinkEditor))
 				{
-					//GUILayout.BeginVertical(GUIStyle.none, new GUILayoutOption[] { GUILayout.Width(data.config_editor_setting.Width) });
-
-					string buttonName = "NickName";
-
-					if (!outLinkRawData.ContainsKey(data.config_editor_setting.OutLinkClass))
-					{
-						buttonName = Language.Select;
-					}
-					else
-					{
-
-						//Copy -- Start
-						//if (!outLinkChache.ContainsKey(data.config_editor_setting.OutLinkSubClass))
-						//{
-						//	buttonName = Language.Select;
-						//	//GUILayout.Label("NickName");
-						//se
-						//{
-						//data.field_info.SetValue(raw, GetSingleSelectValueByFlag(raw.ID, data.field_info.Name, (int)value));
-
-						//var info = outLinkChache[data.config_editor_setting.OutLinkSubClass].SearchByID((int)value);
-
-
-						//if (info != null)
-						//{
-						//	if (string.IsNullOrEmpty(data.config_editor_setting.OutLinkDisplay))
-						//	{
-						//		buttonName = string.IsNullOrEmpty(info.NickName) ? info.ID.ToString() : info.NickName;
-						//	}
-						//	else
-						//	{
-						//		Debug.Log("cocococococo");
-						//		buttonName = GetOutLinkDisplayField(info, data.config_editor_setting.OutLinkClass, data.config_editor_setting.OutLinkDisplay);
-						//	}
-						//}
-						//else
-						//	buttonName = Language.Select; //set default
-						//Copy -- End
-
-						data.field_info.SetValue(raw, GetSingleSelectValueByFlag(raw.ID, data.field_info.Name, (int)value));
-						buttonName = GetOutLinkDisplayField((int)value, data.config_editor_setting.OutLinkClass, data.config_editor_setting.OutLinkDisplay);
-
-
-					}
+					data.field_info.SetValue(raw, GetSingleSelectValueByFlag(raw.ID, data.field_info.Name, (int)value));
+					string buttonName = GetOutLinkDisplayField((int)value, data.config_editor_setting.OutLinkClass, data.config_editor_setting.OutLinkDisplay);
 
 					if (GUILayout.Button(buttonName, new GUILayoutOption[] { GUILayout.Width(data.config_editor_setting.Width) }))
 					{
@@ -305,12 +245,6 @@ namespace SmartDataViewer.Editor
 							e.ShowUtility();
 						}
 					}
-
-					//GUILayout.BeginHorizontal();
-
-
-					//GUILayout.EndHorizontal();
-					//GUILayout.EndVertical();
 				}
 				else
 				{
@@ -335,7 +269,7 @@ namespace SmartDataViewer.Editor
 			if (!outLinkRawData.ContainsKey(outLinkChacheKey))
 				return string.Empty;
 
-			if (string.IsNullOrEmpty(field)) field = "ID";
+			if (string.IsNullOrEmpty(field)) field = "NickName";
 
 			object rawData = outLinkRawData[outLinkChacheKey];
 
@@ -347,7 +281,15 @@ namespace SmartDataViewer.Editor
 
 			if (subData == null) return Language.Select;
 
-			string v = subData.GetType().GetField(field).GetValue(subData).ToString();
+			var tempDisplayObj = subData.GetType().GetField(field).GetValue(subData);
+
+			if (tempDisplayObj == null || string.IsNullOrEmpty(tempDisplayObj.ToString()))
+			{
+				field = "ID";
+				tempDisplayObj = subData.GetType().GetField(field).GetValue(subData);
+			}
+
+			string v = tempDisplayObj.ToString();
 
 			if (string.IsNullOrEmpty(v)) return Language.Select;
 
@@ -608,26 +550,12 @@ namespace SmartDataViewer.Editor
 
 		protected virtual void ReloadOutLinkChache()
 		{
-			outLinkChache = new Dictionary<string, ConfigBase<IModel>>();
 			outLinkRawData = new Dictionary<string, object>();
 
 			for (int i = 0; i < Chache.Count; i++)
 			{
 				if (Chache[i].config_editor_setting == null)
 					continue;
-
-				//TODO VERSION 1.0 Load Common Model 
-				if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) && !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
-				{
-					ConfigBase<IModel> model = ConfigBase<IModel>.LoadConfig<ConfigBase<IModel>>(Chache[i].config_editor_setting.OutLinkSubClass);
-
-
-					if (model != null)
-					{
-						if (!outLinkChache.ContainsKey(Chache[i].config_editor_setting.OutLinkSubClass))
-							outLinkChache.Add(Chache[i].config_editor_setting.OutLinkSubClass, model);
-					}
-				}
 
 				//TODO VERSION 2.0 Load Raw Data
 				if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) &&
