@@ -166,13 +166,13 @@ namespace SmartDataViewer.Editor
 					{
 						GUILayout.BeginHorizontal();
 
-						if (!outLinkChache.ContainsKey(data.config_editor_setting.OutLinkClass))
+						if (!outLinkChache.ContainsKey(data.config_editor_setting.OutLinkSubClass))
 						{
 							GUILayout.Label("NickName");
 						}
 						else
 						{
-							var info = outLinkChache[data.config_editor_setting.OutLinkClass].SearchByID(temp[i]);
+							var info = outLinkChache[data.config_editor_setting.OutLinkSubClass].SearchByID(temp[i]);
 							if (info != null)
 							{
 								GUILayout.Label(string.IsNullOrEmpty(info.NickName) ? info.ID.ToString() : info.NickName);
@@ -250,7 +250,7 @@ namespace SmartDataViewer.Editor
 
 					string buttonName = "NickName";
 
-					if (!outLinkChache.ContainsKey(data.config_editor_setting.OutLinkClass))
+					if (!outLinkChache.ContainsKey(data.config_editor_setting.OutLinkSubClass))
 					{
 						buttonName = Language.Select;
 						//GUILayout.Label("NickName");
@@ -259,7 +259,7 @@ namespace SmartDataViewer.Editor
 					{
 						data.field_info.SetValue(raw, GetSingleSelectValueByFlag(raw.ID, data.field_info.Name, (int)value));
 
-						var info = outLinkChache[data.config_editor_setting.OutLinkClass].SearchByID((int)value);
+						var info = outLinkChache[data.config_editor_setting.OutLinkSubClass].SearchByID((int)value);
 
 
 						if (info != null)
@@ -270,7 +270,7 @@ namespace SmartDataViewer.Editor
 							}
 							else
 							{
-								var index = outLinkChache[data.config_editor_setting.OutLinkClass].ConfigList.IndexOf(info);
+								var index = outLinkChache[data.config_editor_setting.OutLinkSubClass].ConfigList.IndexOf(info);
 
 								//TODO 1.3 需要解决显示任意字段注释 
 								//var rrr = (ConfigBase<IModel>)outLinkRawData[data.config_editor_setting.OutLinkClass];
@@ -312,6 +312,12 @@ namespace SmartDataViewer.Editor
 
 		}
 
+
+		public string GetOutLinkDisplayField(object searchData, T currentItem, string outLinkChacheKey)
+		{
+
+			return string.Empty; ;
+		}
 
 		public virtual FieldType GetCurrentFieldType(Type value)
 		{
@@ -577,9 +583,9 @@ namespace SmartDataViewer.Editor
 				if (Chache[i].config_editor_setting == null)
 					continue;
 
-				if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) && !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
+				if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) && !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
 				{
-					ConfigBase<IModel> model = ConfigBase<IModel>.LoadConfig<ConfigBase<IModel>>(Chache[i].config_editor_setting.OutLinkClass);
+					ConfigBase<IModel> model = ConfigBase<IModel>.LoadConfig<ConfigBase<IModel>>(Chache[i].config_editor_setting.OutLinkSubClass);
 
 					//TODO 1.需要解决显示任意字段注释 
 					//string rawClass = Chache[i].config_editor_setting.OutLinkClass;
@@ -594,8 +600,8 @@ namespace SmartDataViewer.Editor
 
 					if (model != null)
 					{
-						if (!outLinkChache.ContainsKey(Chache[i].config_editor_setting.OutLinkClass))
-							outLinkChache.Add(Chache[i].config_editor_setting.OutLinkClass, model);
+						if (!outLinkChache.ContainsKey(Chache[i].config_editor_setting.OutLinkSubClass))
+							outLinkChache.Add(Chache[i].config_editor_setting.OutLinkSubClass, model);
 
 						//TODO 1.1 需要解决显示任意字段注释 
 						//if (!outLinkRawData.ContainsKey(Chache[i].config_editor_setting.OutLinkClass))

@@ -1,4 +1,4 @@
-﻿//
+//
 //   		Copyright 2017 KeyleXiao.
 //     		Contact : Keyle_xiao@hotmail.com 
 //
@@ -24,7 +24,7 @@ namespace SmartDataViewer
 		{
 			Display = string.Empty;
 			OutLinkEditor = string.Empty;
-			OutLinkClass = string.Empty;
+			OutLinkSubClass = string.Empty;
 			OutLinkDisplay = string.Empty;
 		}
 		public int Order;
@@ -40,6 +40,8 @@ namespace SmartDataViewer
 		public string OutLinkEditor;
 
 		[ConfigEditorField(visibility: false)]
+		public string OutLinkSubClass;
+
 		public string OutLinkClass;
 
 		[ConfigEditorField(visibility: true)]

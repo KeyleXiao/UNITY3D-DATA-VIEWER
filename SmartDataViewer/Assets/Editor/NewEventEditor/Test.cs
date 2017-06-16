@@ -17,13 +17,14 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using SmartDataViewer;
 
 public static class Test
 {
 	[MenuItem("Test/test")]
 	public static void ShowTestButton()
 	{
-		Debug.Log(SmartDataViewer.Editor.Utility.GetTemplateTxtFolder());
+		//Debug.Log(SmartDataViewer.Editor.Utility.GetTemplateTxtFolder());
+		Debug.Log(Utility.GetType("PointChartConfig").Name);
 	}
-
 }

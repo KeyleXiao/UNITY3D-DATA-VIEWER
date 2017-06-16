@@ -18,11 +18,17 @@
 using UnityEngine;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace SmartDataViewer
 {
 	public class Utility
 	{
+		static public Type GetType(string type_name)
+		{
+			return Assembly.GetExecutingAssembly().GetType(type_name);
+		}
+
 		static public string UrlEncode(string str)
 		{
 			return Uri.EscapeDataString(str);
