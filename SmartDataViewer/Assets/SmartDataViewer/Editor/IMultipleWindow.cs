@@ -41,11 +41,11 @@ namespace SmartDataViewer.Editor
 			temp.Add(model.ID);
 		}
 
-		public virtual void AddSingleSelectFlag(int id, string filed)
+		public virtual void AddSingleSelectFlag(int id, string name)
 		{
 			if (SingleTempSelect == null) SingleTempSelect = new List<int>();
 			if (SingleSelectInfo == null) SingleSelectInfo = new Dictionary<int, string>();
-			if (!SingleSelectInfo.ContainsKey(id)) SingleSelectInfo.Add(id, filed);
+			if (!SingleSelectInfo.ContainsKey(id)) SingleSelectInfo.Add(id, name);
 		}
 
 		public int GetSingleSelectValueByFlag(int id, string filed, int rawVlaue)
