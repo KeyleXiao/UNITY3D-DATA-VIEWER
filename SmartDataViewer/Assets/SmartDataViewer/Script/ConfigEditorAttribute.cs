@@ -40,7 +40,8 @@ namespace SmartDataViewer
 		public ConfigEditorFieldAttribute(int order = 0, bool can_editor = true, string display = "",
 										  int width = 100, string outLinkEditor = "",
 										  string outLinkSubClass = "", string outLinkClass = "",
-										  bool visibility = true, string outLinkDisplay = ""
+										  bool visibility = true, string outLinkDisplay = "",
+										  string outLinkFilePath = ""
 										 )
 		{
 			Setting = new DefaultControlPropertity();
@@ -54,7 +55,7 @@ namespace SmartDataViewer
 			Setting.OutLinkClass = outLinkClass;
 			Setting.Visibility = visibility;
 			Setting.OutLinkDisplay = outLinkDisplay;
-
+			Setting.OutLinkFilePath = outLinkFilePath;
 		}
 	}
 

@@ -48,5 +48,7 @@ namespace SmartDataViewer
 		public bool Visibility;
 
 		public string OutLinkDisplay;
+
+		public string OutLinkFilePath;
 	}
 }

@@ -48,9 +48,12 @@ public class MapBox : IModel
 	/// <summary>
 	/// 关联布点表
 	/// </summary>
-	[ConfigEditorField(can_editor: true, outLinkEditor: "PointChartConfigEditor", outLinkSubClass: "PointChart", outLinkDisplay: "Description", width: 120)]
+	[ConfigEditorField(can_editor: true, outLinkEditor: "PointChartConfigEditor", outLinkClass: "PointChartConfig", outLinkFilePath: "PointChart", outLinkDisplay: "Description", width: 120)]
 	public List<int> PointCharts;
 
 	[ConfigEditorField(can_editor: true)]
 	public string Description;
+
+	[ConfigEditorField(can_editor: true, outLinkEditor: "PointChartConfigEditor", outLinkClass: "PointChartConfig", outLinkFilePath: "PointChart", width: 120)]
+	public int PointChart;
 }

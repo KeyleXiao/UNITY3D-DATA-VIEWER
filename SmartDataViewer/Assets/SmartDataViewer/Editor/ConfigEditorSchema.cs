@@ -33,6 +33,7 @@ namespace SmartDataViewer.Editor
 
 	public class ConfigEditorSchema<T> : IMultipleWindow where T : IModel, new()
 	{
+		protected bool isLog { get { return true; } }
 		protected ConfigEditorAttribute configSetting { get; set; }
 		protected ConfigBase<T> config_current { get; set; }
 		protected int Index { get; set; }
@@ -51,8 +52,8 @@ namespace SmartDataViewer.Editor
 
 		protected Dictionary<string, ConfigBase<IModel>> outLinkChache { get; set; }
 
-		//TODO 1.2 需要解决显示任意字段注释 
-		//protected Dictionary<string, object> outLinkRawData { get; set; }
+		//TODO 1.0 外联表原始数据
+		protected Dictionary<string, object> outLinkRawData { get; set; }
 
 
 
@@ -250,37 +251,44 @@ namespace SmartDataViewer.Editor
 
 					string buttonName = "NickName";
 
-					if (!outLinkChache.ContainsKey(data.config_editor_setting.OutLinkSubClass))
+					if (!outLinkRawData.ContainsKey(data.config_editor_setting.OutLinkClass))
 					{
 						buttonName = Language.Select;
-						//GUILayout.Label("NickName");
 					}
 					else
 					{
+
+						//Copy -- Start
+						//if (!outLinkChache.ContainsKey(data.config_editor_setting.OutLinkSubClass))
+						//{
+						//	buttonName = Language.Select;
+						//	//GUILayout.Label("NickName");
+						//se
+						//{
+						//data.field_info.SetValue(raw, GetSingleSelectValueByFlag(raw.ID, data.field_info.Name, (int)value));
+
+						//var info = outLinkChache[data.config_editor_setting.OutLinkSubClass].SearchByID((int)value);
+
+
+						//if (info != null)
+						//{
+						//	if (string.IsNullOrEmpty(data.config_editor_setting.OutLinkDisplay))
+						//	{
+						//		buttonName = string.IsNullOrEmpty(info.NickName) ? info.ID.ToString() : info.NickName;
+						//	}
+						//	else
+						//	{
+						//		Debug.Log("cocococococo");
+						//		buttonName = GetOutLinkDisplayField(info, data.config_editor_setting.OutLinkClass, data.config_editor_setting.OutLinkDisplay);
+						//	}
+						//}
+						//else
+						//	buttonName = Language.Select; //set default
+						//Copy -- End
+
 						data.field_info.SetValue(raw, GetSingleSelectValueByFlag(raw.ID, data.field_info.Name, (int)value));
+						buttonName = GetOutLinkDisplayField((int)value, data.config_editor_setting.OutLinkClass, data.config_editor_setting.OutLinkDisplay);
 
-						var info = outLinkChache[data.config_editor_setting.OutLinkSubClass].SearchByID((int)value);
-
-
-						if (info != null)
-						{
-							if (string.IsNullOrEmpty(data.config_editor_setting.OutLinkDisplay))
-							{
-								buttonName = string.IsNullOrEmpty(info.NickName) ? info.ID.ToString() : info.NickName;
-							}
-							else
-							{
-								var index = outLinkChache[data.config_editor_setting.OutLinkSubClass].ConfigList.IndexOf(info);
-
-								//TODO 1.3 需要解决显示任意字段注释 
-								//var rrr = (ConfigBase<IModel>)outLinkRawData[data.config_editor_setting.OutLinkClass];
-								//var rawInfo = rrr.ConfigList[index];
-								//Debug.Log(index.ToString() + "<- CURRNET SELECT ->" + data.config_editor_setting.OutLinkDisplay);
-								//buttonName = (string)rawInfo.GetType().GetField(data.config_editor_setting.OutLinkDisplay).GetValue(rawInfo);
-							}
-						}
-						else
-							buttonName = Language.Select; //set default
 
 					}
 
@@ -313,10 +321,37 @@ namespace SmartDataViewer.Editor
 		}
 
 
-		public string GetOutLinkDisplayField(object searchData, T currentItem, string outLinkChacheKey)
+		public virtual void Log(string str)
 		{
+			if (isLog)
+			{
+				Debug.Log(str);
+			}
+		}
 
-			return string.Empty; ;
+
+		public string GetOutLinkDisplayField(int id, string outLinkChacheKey, string field)
+		{
+			if (!outLinkRawData.ContainsKey(outLinkChacheKey))
+				return string.Empty;
+
+			if (string.IsNullOrEmpty(field)) field = "ID";
+
+			object rawData = outLinkRawData[outLinkChacheKey];
+
+			var searchMethod = rawData.GetType().GetMethod("SearchByID");
+
+			var subData = searchMethod.Invoke(rawData, new object[] { id });
+
+			Log(string.Format("is Null ={0}  Field ={1}  id ={2}", subData == null, field, id.ToString()));
+
+			if (subData == null) return Language.Select;
+
+			string v = subData.GetType().GetField(field).GetValue(subData).ToString();
+
+			if (string.IsNullOrEmpty(v)) return Language.Select;
+
+			return v;
 		}
 
 		public virtual FieldType GetCurrentFieldType(Type value)
@@ -574,40 +609,48 @@ namespace SmartDataViewer.Editor
 		protected virtual void ReloadOutLinkChache()
 		{
 			outLinkChache = new Dictionary<string, ConfigBase<IModel>>();
-
-			//TODO 1.4 需要解决显示任意字段注释 
-			//outLinkRawData = new Dictionary<string, object>();
+			outLinkRawData = new Dictionary<string, object>();
 
 			for (int i = 0; i < Chache.Count; i++)
 			{
 				if (Chache[i].config_editor_setting == null)
 					continue;
 
+				//TODO VERSION 1.0 Load Common Model 
 				if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) && !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
 				{
 					ConfigBase<IModel> model = ConfigBase<IModel>.LoadConfig<ConfigBase<IModel>>(Chache[i].config_editor_setting.OutLinkSubClass);
 
-					//TODO 1.需要解决显示任意字段注释 
-					//string rawClass = Chache[i].config_editor_setting.OutLinkClass;
-					//if (!Chache[i].config_editor_setting.OutLinkClass.EndsWith("Config")) rawClass += "Config";
-					//Type classType = Type.GetType(rawClass);//Assembly.GetExecutingAssembly().GetType(rawClass);
-					//if (classType == null)
-					//{
-					//	Debug.Log(rawClass + " is null");
-					//	continue;
-					//}
-					//var modelRaw = ConfigBase<IModel>.LoadRawConfig(classType, Chache[i].config_editor_setting.OutLinkClass);
 
 					if (model != null)
 					{
 						if (!outLinkChache.ContainsKey(Chache[i].config_editor_setting.OutLinkSubClass))
 							outLinkChache.Add(Chache[i].config_editor_setting.OutLinkSubClass, model);
+					}
+				}
 
-						//TODO 1.1 需要解决显示任意字段注释 
-						//if (!outLinkRawData.ContainsKey(Chache[i].config_editor_setting.OutLinkClass))
-						//	outLinkRawData.Add(Chache[i].config_editor_setting.OutLinkClass, modelRaw);
+				//TODO VERSION 2.0 Load Raw Data
+				if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) &&
+					!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass) &&
+					!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkFilePath)
+				   )
+				{
+					string rawClass = Chache[i].config_editor_setting.OutLinkClass;
+					if (string.IsNullOrEmpty(rawClass))
+						rawClass = Chache[i].config_editor_setting.OutLinkSubClass + "Config";
+					Type classType = SmartDataViewer.Utility.GetType(rawClass);
+					if (classType == null)
+					{
+						Debug.Log("Can't find calss " + rawClass);
+						continue;
+					}
+					var modelRaw = ConfigBase<IModel>.LoadRawConfig(classType, Chache[i].config_editor_setting.OutLinkFilePath);
+					if (modelRaw != null)
+					{
+						if (!outLinkRawData.ContainsKey(Chache[i].config_editor_setting.OutLinkClass))
+							outLinkRawData.Add(Chache[i].config_editor_setting.OutLinkClass, modelRaw);
 
-						///Debug.Log(string.Format("Loading OutLink Class [{0}] Data , Length-{1}", Chache[i].config_editor_setting.OutLinkClass, outLinkRawData[Chache[i].config_editor_setting.OutLinkClass].ConfigList.Count()));
+						Debug.Log(string.Format("Loading OutLink Class [{0}] Data", Chache[i].config_editor_setting.OutLinkClass));
 					}
 				}
 			}

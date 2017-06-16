@@ -2,8 +2,11 @@
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/SmartDataViewer/Editor/ConfigEditorSchema.cs">
     <Files>
-      <File FileName="Assets/SmartDataViewer/Editor/ConfigEditorSchema.cs" Line="267" Column="67" />
-      <File FileName="Assets/Entity/MapBoxConfig.cs" Line="52" Column="30" />
+      <File FileName="Assets/SmartDataViewer/Editor/ConfigEditorSchema.cs" Line="344" Column="10" />
+      <File FileName="Assets/SmartDataViewer/Script/ConfigBase.cs" Line="237" Column="1" />
+      <File FileName="Assets/SmartDataViewer/Script/DefaultControlPropertity.cs" Line="21" Column="23" />
+      <File FileName="Assets/SmartDataViewer/Script/ConfigEditorAttribute.cs" Line="50" Column="15" />
+      <File FileName="Assets/Entity/MapBoxConfig.cs" Line="57" Column="143" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
