@@ -48,7 +48,7 @@ namespace SmartDataViewer.Editor
 
 	public class EditorDetailConfigEditor : ConfigEditorSchema<EditorDetail>
 	{
-		[MenuItem("SmartDataVier/EditorDetailConfig")]
+		[MenuItem("SmartDataViewer/EditorDetailConfig")]
 		static public void OpenView()
 		{
 			EditorDetailConfigEditor w = CreateInstance<EditorDetailConfigEditor>();

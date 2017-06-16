@@ -25,6 +25,7 @@ namespace SmartDataViewer
 			Display = string.Empty;
 			OutLinkEditor = string.Empty;
 			OutLinkClass = string.Empty;
+			OutLinkDisplay = string.Empty;
 		}
 		public int Order;
 
@@ -43,5 +44,7 @@ namespace SmartDataViewer
 
 		[ConfigEditorField(visibility: true)]
 		public bool Visibility;
+
+		public string OutLinkDisplay;
 	}
 }

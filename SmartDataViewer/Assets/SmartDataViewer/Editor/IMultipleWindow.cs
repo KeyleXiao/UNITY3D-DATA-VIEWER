@@ -15,6 +15,8 @@
 //     		limitations under the License.
 //
 using System;
+using System.Collections.Generic;
+
 namespace SmartDataViewer.Editor
 {
 	public enum WindowType
@@ -27,6 +29,40 @@ namespace SmartDataViewer.Editor
 		protected WindowType current_windowType = WindowType.INPUT;
 		protected Action<object, object> select_callback { get; set; }
 		protected object current_list { get; set; }
+
+		//Single item selcted
+		protected List<int> SingleTempSelect { get; set; }
+		protected Dictionary<int, string> SingleSelectInfo { get; set; }
+
+		public virtual void SetListItemValue(object item, object addValue)
+		{
+			var temp = item as List<int>;
+			var model = addValue as IModel;
+			temp.Add(model.ID);
+		}
+
+		public virtual void AddSingleSelectFlag(int id, string filed)
+		{
+			if (SingleTempSelect == null) SingleTempSelect = new List<int>();
+			if (SingleSelectInfo == null) SingleSelectInfo = new Dictionary<int, string>();
+			if (!SingleSelectInfo.ContainsKey(id)) SingleSelectInfo.Add(id, filed);
+		}
+
+		public int GetSingleSelectValueByFlag(int id, string filed, int rawVlaue)
+		{
+			if (SingleTempSelect == null) SingleTempSelect = new List<int>();
+			if (SingleSelectInfo == null) SingleSelectInfo = new Dictionary<int, string>();
+
+			if (SingleTempSelect.Count == 0 ||
+				!SingleSelectInfo.ContainsKey(id) ||
+				SingleSelectInfo[id] != filed) return rawVlaue;
+
+
+			int result = SingleTempSelect[SingleTempSelect.Count - 1];
+			SingleSelectInfo.Clear();
+			SingleTempSelect.Clear();
+			return result;
+		}
 
 		public virtual void UpdateSelectModel(object curren_list, Action<object, object> callback) { }
 	}

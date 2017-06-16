@@ -29,7 +29,7 @@ namespace SmartDataViewer.Editor
 
 	public class DefaultControlConfigEditor : ConfigEditorSchema<DefaultControlPropertity>
 	{
-		[MenuItem("SmartDataVier/DefaultControlConfigEditor")]
+		[MenuItem("SmartDataViewer/DefaultControlConfigEditor")]
 		static public void OpenView()
 		{
 			DefaultControlConfigEditor w = CreateInstance<DefaultControlConfigEditor>();

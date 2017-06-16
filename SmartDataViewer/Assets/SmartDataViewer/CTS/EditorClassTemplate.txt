@@ -18,23 +18,23 @@ using System;
 using UnityEditor;
 using SmartDataViewer.Editor;
 
-public class $[class] : ConfigEditorSchema<$[type]>
+public class $[EditorName] : ConfigEditorSchema<$[SubType]>
 {
-	[MenuItem("MapEditor/$[class]")]
+	[MenuItem("MapEditor/$[EditorName]")]
 	static public void OpenView()
 	{
-		$[class]> w = CreateInstance<$[class]>();
+		$[EditorName] w = CreateInstance<$[EditorName]>();
 		w.ShowUtility();
 	}
 
-	public override $[type] CreateValue()
+	public override $[SubType] CreateValue()
 	{
-		$[type] r = base.CreateValue();
+		$[SubType] r = base.CreateValue();
 		return r;
 	}
 
 	public override void Initialize()
 	{
-		SetConfigType(new $[type]Config());
+		SetConfigType(new $[ClassType]());
 	}
 }

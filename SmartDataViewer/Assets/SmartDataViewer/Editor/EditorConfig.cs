@@ -20,6 +20,7 @@ namespace SmartDataViewer.Editor
 {
 	public class Language
 	{
+		public static string Build = "生成";
 		public static string Select = "选择";
 		public static string Previous = "前页";
 		public static string Next = "后页";
