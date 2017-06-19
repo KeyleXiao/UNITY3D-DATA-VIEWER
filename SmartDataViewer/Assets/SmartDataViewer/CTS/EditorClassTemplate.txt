@@ -20,7 +20,7 @@ using SmartDataViewer.Editor;
 
 public class $[EditorName] : ConfigEditorSchema<$[SubType]>
 {
-	[MenuItem("MapEditor/$[EditorName]")]
+	[MenuItem("CustomEditor/$[EditorName]")]
 	static public void OpenView()
 	{
 		$[EditorName] w = CreateInstance<$[EditorName]>();

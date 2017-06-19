@@ -53,17 +53,37 @@ namespace SmartDataViewer.Editor
 
 		protected override void RenderExtensionButton(CodeGen item)
 		{
+			base.RenderExtensionButton(item);
 			//string filePath = GetAbsolutePath(item.CodeFilePath);
 			string dirPath = GetAbsolutePath(item.CodeFileFolder, true);
 
-			if (Directory.Exists(dirPath))
+			string errorInfo = string.Empty;
+
+			if (!Directory.Exists(dirPath))
+			{
+				errorInfo = "Can't find Code Folder";
+			}
+			else if (string.IsNullOrEmpty(item.EditorName))
+			{
+				errorInfo = "Editor Name Is Empty";
+			}
+			else if (string.IsNullOrEmpty(item.SubType))
+			{
+				errorInfo = "SubType Is Empty";
+			}
+
+
+			if (string.IsNullOrEmpty(errorInfo))
 			{
 				if (GUILayout.Button(Language.Build, new GUILayoutOption[] { GUILayout.Width(90) }))
 					WriteFile(item);
 			}
 			else
 			{
-				GUILayout.Label("", GUI.skin.GetStyle("CN EntryWarn"), new GUILayoutOption[] { GUILayout.Width(50) });
+				if (GUILayout.Button("", GUI.skin.GetStyle("CN EntryWarn"), new GUILayoutOption[] { GUILayout.Width(50) }))
+				{
+					ShowNotification(new GUIContent(errorInfo));
+				}
 			}
 			//base.RenderExtensionButton(item);
 		}

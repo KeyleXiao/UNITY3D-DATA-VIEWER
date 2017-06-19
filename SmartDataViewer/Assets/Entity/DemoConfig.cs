@@ -20,40 +20,32 @@ using SmartDataViewer;
 
 [ConfigEditor]
 [Serializable]
-public class MapBoxConfig : ConfigBase<MapBox>
+public class DemoConfig : ConfigBase<Demo>
 {
 
 }
 
 [Serializable]
-public class MapBox : IModel
+public class Demo : IModel
 {
-	public MapBox()
+	public Demo()
 	{
-		MapResourceID = 0;
-		GameSceneEvents = new List<int>();
-		PointCharts = new List<int>();
-		Description = string.Empty;
+		strList = new List<string>();
+		list = new List<int>();
+		supports = new List<int>();
+		description = string.Empty;
 	}
-	/// <summary>
-	/// 关联资源表
-	/// </summary>
-	public int MapResourceID;
 
-	/// <summary>
-	/// 关联事件表
-	/// </summary>
-	public List<int> GameSceneEvents;
+	public List<string> strList;
 
-	/// <summary>
-	/// 关联布点表
-	/// </summary>
-	[ConfigEditorField(can_editor: true, outLinkEditor: "PointChartConfigEditor", outLinkClass: "PointChartConfig", outLinkFilePath: "PointChart", outLinkDisplay: "Description", width: 120)]
-	public List<int> PointCharts;
+	public List<int> list;
+
+	[ConfigEditorField(can_editor: true, outLinkEditor: "SupportsConfigEditor", outLinkClass: "SupportsConfig", outLinkFilePath: "Supports", outLinkDisplay: "description", width: 120)]
+	public List<int> supports;
 
 	[ConfigEditorField(can_editor: true)]
-	public string Description;
+	public string description;
 
-	[ConfigEditorField(can_editor: true, outLinkEditor: "PointChartConfigEditor", outLinkClass: "PointChartConfig", outLinkFilePath: "PointChart", width: 120)]
-	public int PointChart;
+	[ConfigEditorField(can_editor: true, outLinkEditor: "SupportsConfigEditor", outLinkClass: "SupportsConfig", outLinkFilePath: "Supports", width: 120)]
+	public int support;
 }

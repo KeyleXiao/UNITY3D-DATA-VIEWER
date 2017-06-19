@@ -17,29 +17,48 @@
 using System;
 using System.Collections.Generic;
 using SmartDataViewer;
+using UnityEngine;
 
 [ConfigEditor]
 [Serializable]
-public class TagConfig : ConfigBase<Tag>
+public class SupportsConfig : ConfigBase<Supports>
 {
 
 }
 
 [Serializable]
-public class Tag : IModel
+public class Supports : IModel
 {
-	public Tag()
+	public Supports()
 	{
-		Monsters = new List<int>();
-		Interactives = new List<int>();
+		boolList = new List<bool>();
+		description = string.Empty;
+		colorList = new List<Color>();
+		curveList = new List<AnimationCurve>();
+		curve = new AnimationCurve();
+		bounds = new Bounds();
+		boundsList = new List<Bounds>();
 	}
 
-	[ConfigEditorField(2, true)]
-	public string Description;
 
-	[ConfigEditorField(4, true)]
-	public List<int> Monsters;
+	public Vector2 testPoint;
 
-	[ConfigEditorField(6, true)]
-	public List<int> Interactives;
+	public List<bool> boolList;
+
+	public int testID;
+
+	public Bounds bounds;
+
+	public Color PointColor;
+
+	public AnimationCurve curve;
+
+	public List<Color> colorList;
+
+
+	public List<AnimationCurve> curveList;
+
+	public List<Bounds> boundsList;
+
+	public string description;
 }

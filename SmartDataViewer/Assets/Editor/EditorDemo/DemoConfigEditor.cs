@@ -15,26 +15,26 @@
 //     		limitations under the License.
 //
 using System;
-using SmartDataViewer.Editor;
 using UnityEditor;
+using SmartDataViewer.Editor;
 
-public class PointChartConfigEditor : ConfigEditorSchema<PointChart>
+public class DemoConfigEditor : ConfigEditorSchema<Demo>
 {
-	[MenuItem("MapEditor/PointChart")]
+	[MenuItem("CustomEditor/DemoConfigEditor")]
 	static public void OpenView()
 	{
-		PointChartConfigEditor w = CreateInstance<PointChartConfigEditor>();
+		DemoConfigEditor w = CreateInstance<DemoConfigEditor>();
 		w.ShowUtility();
 	}
 
-	public override PointChart CreateValue()
+	public override Demo CreateValue()
 	{
-		PointChart r = base.CreateValue();
+		Demo r = base.CreateValue();
 		return r;
 	}
 
 	public override void Initialize()
 	{
-		SetConfigType(new PointChartConfig());
+		SetConfigType(new DemoConfig());
 	}
 }

@@ -18,23 +18,23 @@ using System;
 using UnityEditor;
 using SmartDataViewer.Editor;
 
-public class TagConfigEditor : ConfigEditorSchema<Tag>
+public class SupportsConfigEditor : ConfigEditorSchema<Supports>
 {
-	[MenuItem("MapEditor/TAG")]
+	[MenuItem("CustomEditor/SupportsConfigEditor")]
 	static public void OpenView()
 	{
-		TagConfigEditor w = CreateInstance<TagConfigEditor>();
+		SupportsConfigEditor w = CreateInstance<SupportsConfigEditor>();
 		w.ShowUtility();
 	}
 
-	public override Tag CreateValue()
+	public override Supports CreateValue()
 	{
-		Tag r = base.CreateValue();
+		Supports r = base.CreateValue();
 		return r;
 	}
 
 	public override void Initialize()
 	{
-		SetConfigType(new TagConfig());
+		SetConfigType(new SupportsConfig());
 	}
 }
