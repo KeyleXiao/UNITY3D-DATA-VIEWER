@@ -46,11 +46,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Editor\NewEventEditor\MainNodeEditor.cs" />
-     <Compile Include="Assets\Editor\NewEventEditor\MapBoxConfigEditor.cs" />
-     <Compile Include="Assets\Editor\NewEventEditor\PointChartConfigEditor.cs" />
-     <Compile Include="Assets\Editor\NewEventEditor\TagConfigEditor.cs" />
-     <Compile Include="Assets\Editor\NewEventEditor\Test.cs" />
+     <Compile Include="Assets\Editor\EditorDemo\DemoConfigEditor.cs" />
+     <Compile Include="Assets\Editor\EditorDemo\SupportsConfigEditor.cs" />
      <Compile Include="Assets\SmartDataViewer\Editor\BuildInEditor\CodeGen.cs" />
      <Compile Include="Assets\SmartDataViewer\Editor\BuildInEditor\DefaultControlPropertityConfig.cs" />
      <Compile Include="Assets\SmartDataViewer\Editor\BuildInEditor\DefaultEditorPropertityConfig.cs" />
@@ -61,13 +58,12 @@
      <Compile Include="Assets\SmartDataViewer\Editor\IMultipleWindow.cs" />
      <Compile Include="Assets\SmartDataViewer\Editor\OpenFilterOptionConfigEditor.cs" />
      <Compile Include="Assets\SmartDataViewer\Editor\Utility.cs" />
-     <None Include="Assets\Resources\Config\MapBox.txt" />
      <None Include="Assets\SmartDataViewer\Config\DefaultControlPropertity.txt" />
      <None Include="Assets\SmartDataViewer\CTS\EditorClassTemplate.txt" />
      <None Include="Assets\SmartDataViewer\Config\CodeGen.txt" />
-     <None Include="Assets\Resources\Config\PointChart.txt" />
      <None Include="Assets\SmartDataViewer\CTS\ModelClassTemplate.txt" />
-     <None Include="Assets\Resources\Config\FilterOption.txt" />
+     <None Include="Assets\Resources\Config\Supports.txt" />
+     <None Include="Assets\Resources\Config\Demo.txt" />
  <Reference Include="Facebook.Unity.Settings">
  <HintPath>/Users/keyle/Documents/Code/UNITY3D-DATA-VIEWER/SmartDataViewer/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
  </Reference>

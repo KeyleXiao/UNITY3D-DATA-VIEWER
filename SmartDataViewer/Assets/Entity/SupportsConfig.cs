@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using SmartDataViewer;
 using UnityEngine;
 
-[ConfigEditor]
 [Serializable]
 public class SupportsConfig : ConfigBase<Supports>
 {
@@ -54,7 +53,6 @@ public class Supports : IModel
 	public AnimationCurve curve;
 
 	public List<Color> colorList;
-
 
 	public List<AnimationCurve> curveList;
 
