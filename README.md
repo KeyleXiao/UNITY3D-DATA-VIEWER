@@ -137,6 +137,17 @@ public class Supports : IModel
 ![通过SmartDataViewer生成的编辑器](/F1CC3692-35AB-4E74-B030-5E8006171256.png)
 
 
+# 如何加载数据？ ／ How to Load Data ?
 
+``` cs
+		var c = SupportsConfig.LoadConfig<SupportsConfig>();
+		//var c = SupportsConfig.LoadConfig<SupportsConfig>("Special path");
+
+		c.DeleteFromDisk();
+		////c.DeleteFromDisk("Special path");
+
+		c.SaveToDisk();
+		//c.SaveToDisk("Special path");
+```
 
 #### QQ群 'Game' ／QQ Group 'Game' : 137728654  
