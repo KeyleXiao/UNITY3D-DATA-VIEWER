@@ -33,7 +33,7 @@ namespace SmartDataViewer.Editor
 
 	public class ConfigEditorSchema<T> : IMultipleWindow where T : IModel, new()
 	{
-		protected bool isLog { get { return true; } }
+		protected bool isLog { get { return false; } }
 		protected ConfigEditorAttribute configSetting { get; set; }
 		protected ConfigBase<T> config_current { get; set; }
 		protected int Index { get; set; }
@@ -49,6 +49,7 @@ namespace SmartDataViewer.Editor
 
 		protected List<T> Finallylist { get; set; }
 		protected int ItemMaxCount { get; set; }
+		protected Dictionary<string, bool> FieldsOrder { get; set; }
 
 		//TODO 2.0 外联表原始数据
 		protected Dictionary<string, object> outLinkRawData { get; set; }
@@ -58,6 +59,19 @@ namespace SmartDataViewer.Editor
 		public List<int> SelctList { get; set; }
 
 		protected T PasteItem { get; set; }
+
+
+		protected virtual bool GetFieldsOrder(string key)
+		{
+			if (!FieldsOrder.ContainsKey(key))
+			{
+				FieldsOrder.Add(key, true);
+				return true;
+			}
+
+			FieldsOrder[key] = !FieldsOrder[key];
+			return FieldsOrder[key];
+		}
 
 
 		public void SetConfigType(ConfigBase<T> tp)
@@ -87,7 +101,7 @@ namespace SmartDataViewer.Editor
 
 					if (f.config_editor_setting == null)
 					{
-						Debug.Log("Can't find default control id :" + id);
+						Log("Can't find default control id :" + id);
 					}
 					else
 					{
@@ -100,6 +114,15 @@ namespace SmartDataViewer.Editor
 					ConfigEditorFieldAttribute cefa = (ConfigEditorFieldAttribute)infos[0];
 					f.order = cefa.Setting.Order;
 					f.config_editor_setting = cefa.Setting;
+
+
+					if (f.config_editor_setting.Width == 0)
+					{
+						int id = (int)GetCurrentFieldType(item.FieldType);
+						var setting = Utility.GetDefaultControlConfig().SearchByID(id);
+						f.config_editor_setting.Width = setting.Width;
+					}
+
 					if (!cefa.Setting.Visibility)
 						continue;
 				}
@@ -259,7 +282,7 @@ namespace SmartDataViewer.Editor
 		{
 			if (isLog)
 			{
-				Debug.Log(str);
+				Log(str);
 			}
 		}
 
@@ -539,14 +562,17 @@ namespace SmartDataViewer.Editor
 
 		protected virtual void Reload()
 		{
+			AssetDatabase.Refresh();
+			FieldsOrder = new Dictionary<string, bool>();
 			config_current = ConfigBase<T>.LoadConfig<ConfigBase<T>>(configSetting.Setting.LoadPath);
 
 			if (config_current == null)
 				config_current = new ConfigBase<T>();
 			deleteList.Clear();
-
 			ReloadOutLinkChache();
 		}
+
+
 
 		protected virtual void ReloadOutLinkChache()
 		{
@@ -556,6 +582,40 @@ namespace SmartDataViewer.Editor
 			{
 				if (Chache[i].config_editor_setting == null)
 					continue;
+
+				if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor))
+				{
+					if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
+					{
+						Chache[i].config_editor_setting.OutLinkEditor = Chache[i].config_editor_setting.OutLinkClass + "Editor";
+					}
+					else if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
+					{
+						Chache[i].config_editor_setting.OutLinkEditor = Chache[i].config_editor_setting.OutLinkSubClass + "ConfigEditor";
+					}
+					else
+					{
+						Log("Out link info is null ...");
+						continue;
+					}
+				}
+
+				if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
+				{
+					if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
+						Chache[i].config_editor_setting.OutLinkClass = Chache[i].config_editor_setting.OutLinkSubClass + "Config";
+					else
+						Chache[i].config_editor_setting.OutLinkClass = Chache[i].config_editor_setting.OutLinkEditor.Replace("Editor", "");
+				}
+
+				if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkFilePath))
+				{
+					if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
+						Chache[i].config_editor_setting.OutLinkFilePath = Chache[i].config_editor_setting.OutLinkSubClass;
+					else
+						Chache[i].config_editor_setting.OutLinkFilePath = Chache[i].config_editor_setting.OutLinkClass.Replace("ConfigEditor", "");
+				}
+
 
 				//TODO VERSION 2.0 Load Raw Data
 				if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) &&
@@ -569,7 +629,7 @@ namespace SmartDataViewer.Editor
 					Type classType = SmartDataViewer.Utility.GetType(rawClass);
 					if (classType == null)
 					{
-						Debug.Log("Can't find calss " + rawClass);
+						Log("Can't find calss " + rawClass);
 						continue;
 					}
 					var modelRaw = ConfigBase<IModel>.LoadRawConfig(classType, Chache[i].config_editor_setting.OutLinkFilePath);
@@ -578,7 +638,7 @@ namespace SmartDataViewer.Editor
 						if (!outLinkRawData.ContainsKey(Chache[i].config_editor_setting.OutLinkClass))
 							outLinkRawData.Add(Chache[i].config_editor_setting.OutLinkClass, modelRaw);
 
-						Debug.Log(string.Format("Loading OutLink Class [{0}] Data", Chache[i].config_editor_setting.OutLinkClass));
+						Log(string.Format("Loading OutLink Class [{0}] Data", Chache[i].config_editor_setting.OutLinkClass));
 					}
 				}
 			}
@@ -594,7 +654,6 @@ namespace SmartDataViewer.Editor
 			string outPutPath = configSetting.Setting.OutputPath;
 			if (string.IsNullOrEmpty(outPutPath) && !string.IsNullOrEmpty(configSetting.Setting.LoadPath))
 				outPutPath = configSetting.Setting.LoadPath;
-
 
 			config_current.SaveToDisk(outPutPath);
 			AssetDatabase.Refresh();
@@ -620,6 +679,24 @@ namespace SmartDataViewer.Editor
 		{
 			if (GUILayout.Button("New Line", GUI.skin.GetStyle("ButtonMid"), new GUILayoutOption[] { GUILayout.Height(30) }))
 				config_current.ConfigList.Add(CreateValue());
+		}
+
+		protected virtual void HeadButton_Click(string field_name)
+		{
+			if (field_name == "ID")
+			{
+				if (GetFieldsOrder(field_name))
+					config_current.ConfigList = config_current.ConfigList.OrderBy(x => x.ID).ToList();
+				else
+					config_current.ConfigList = config_current.ConfigList.OrderByDescending(x => x.ID).ToList();
+			}
+			if (field_name == "NickName")
+			{
+				if (GetFieldsOrder(field_name))
+					config_current.ConfigList = config_current.ConfigList.OrderBy(x => x.NickName).ToList();
+				else
+					config_current.ConfigList = config_current.ConfigList.OrderByDescending(x => x.NickName).ToList();
+			}
 		}
 
 		public void OnGUI()
@@ -668,13 +745,11 @@ namespace SmartDataViewer.Editor
 			GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
 			GUILayout.Space(20);
 
-
+			//TODO Set Order
 			foreach (var item in Chache)
 			{
-				if (item.config_editor_setting == null)
-					EditorGUILayout.LabelField(new GUIContent(item.field_info.Name), GUILayout.Width(80));
-				else
-					EditorGUILayout.LabelField(new GUIContent(item.config_editor_setting.Display == "" ? item.field_info.Name : item.config_editor_setting.Display), GUILayout.Width(item.config_editor_setting.Width));
+				if (GUILayout.Button(item.config_editor_setting.Display == "" ? item.field_info.Name : item.config_editor_setting.Display, GUI.skin.GetStyle("WhiteLabel"), GUILayout.Width(item.config_editor_setting.Width)))
+					HeadButton_Click(item.field_info.Name);
 
 				GUILayout.Space(20);
 			}
