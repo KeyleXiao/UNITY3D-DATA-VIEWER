@@ -19,10 +19,7 @@ using System.Collections.Generic;
 using SmartDataViewer;
 
 [Serializable]
-public class DemoConfig : ConfigBase<Demo>
-{
-
-}
+public class DemoConfig : ConfigBase<Demo> { }
 
 [Serializable]
 public class Demo : IModel
@@ -39,20 +36,11 @@ public class Demo : IModel
 
 	public List<int> list;
 
-	[ConfigEditorField(can_editor: true,
-					   outLinkEditor: "SupportsConfigEditor",
-					   outLinkClass: "SupportsConfig",
-					   outLinkFilePath: "Supports",
-					   outLinkDisplay: "description")]
+	[ConfigEditorField(outLinkSubClass: "Supports")]
 	public List<int> supports;
 
-	[ConfigEditorField(can_editor: true)]
 	public string description;
 
-	[ConfigEditorField(can_editor: true,
-					   outLinkEditor: "SupportsConfigEditor",
-					   outLinkClass: "SupportsConfig",
-					   outLinkFilePath: "Supports",
-					   width: 120)]
+	[ConfigEditorField(outLinkSubClass: "Supports")]
 	public int support;
 }

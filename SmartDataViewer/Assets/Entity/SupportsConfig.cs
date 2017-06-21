@@ -20,10 +20,7 @@ using SmartDataViewer;
 using UnityEngine;
 
 [Serializable]
-public class SupportsConfig : ConfigBase<Supports>
-{
-
-}
+public class SupportsConfig : ConfigBase<Supports> { }
 
 [Serializable]
 public class Supports : IModel

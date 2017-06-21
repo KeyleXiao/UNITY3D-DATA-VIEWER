@@ -33,7 +33,7 @@ namespace SmartDataViewer.Editor
 		//public static string Copy = @"C";
 		//public static string Paste = @"P";
 		//public static string Operation = @"操作";
-		//public static string Contract = @"Version 1.1 Alpha   ";
+		//public static string Contract = @"Version 1.2 Beta   --Keyle";
 		//public static string OnePageMaxNumber = "单页最大数量";
 		//public static string PageInfoFormate = @"|{0}|页-共|{1}|页";
 
@@ -50,7 +50,7 @@ namespace SmartDataViewer.Editor
 		public static string Copy = @"C";
 		public static string Paste = @"P";
 		public static string Operation = @"Operation";
-		public static string Contract = @"Version 1.1 Alpha   ";
+		public static string Contract = @"Version 1.2 Beta   --Keyle";
 		public static string OnePageMaxNumber = "Max In Page";
 		public static string PageInfoFormate = @"Page |{0}|-|{1}|";
 	}
