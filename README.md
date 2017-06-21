@@ -5,7 +5,8 @@ UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
 ## Video on YouTube
 
-[![Demo alpha](http://img.youtube.com/vi/_uk8XBJPZwA/0.jpg)](https://www.youtube.com/embed/_uk8XBJPZwA)
+
+[![Demo alpha](http://img.youtube.com/vi/cjk8dZT1TTU/0.jpg)](https://www.youtube.com/embed/cjk8dZT1TTU)
 
 
 # 为什么要使用 SmartDataViewer ？
