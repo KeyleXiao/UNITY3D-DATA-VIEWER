@@ -1,18 +1,17 @@
 ﻿<Properties StartupConfiguration="{51AEB4A3-B79C-7D3F-3E56-014EF89AC143}|Unity">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/SmartDataViewer/Editor/EditorConfig.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Entity/DemoConfig.cs">
     <Files>
-      <File FileName="Assets/Entity/DemoConfig.cs" Line="22" Column="47" />
-      <File FileName="Assets/Entity/SupportsConfig.cs" Line="60" Column="1" NotebookId="1" />
-      <File FileName="Assets/SmartDataViewer/Script/ConfigEditorAttribute.cs" Line="92" Column="1" NotebookId="1" />
+      <File FileName="Assets/Entity/DemoConfig.cs" Line="41" Column="2" />
+      <File FileName="Assets/Entity/SupportsConfig.cs" Line="31" Column="27" NotebookId="1" />
+      <File FileName="Assets/SmartDataViewer/Script/ConfigEditorAttribute.cs" Line="45" Column="19" NotebookId="1" />
       <File FileName="Assets/SmartDataViewer/Editor/Utility.cs" Line="1" Column="1" NotebookId="1" />
       <File FileName="Assets/SmartDataViewer/Editor/CommonLoadConfig.cs" Line="1" Column="1" NotebookId="1" />
       <File FileName="Assets/SmartDataViewer/Editor/ConfigEditorSchema.cs" Line="1" Column="1" NotebookId="1" />
       <File FileName="Assets/SmartDataViewer/Editor/IMultipleWindow.cs" Line="1" Column="1" NotebookId="1" />
       <File FileName="Assets/SmartDataViewer/Editor/OpenFilterOptionConfigEditor.cs" Line="1" Column="1" NotebookId="1" />
-      <File FileName="Assets/Editor/EditorDemo/DemoConfigEditor.cs" Line="1" Column="1" NotebookId="1" />
-      <File FileName="Assets/Editor/EditorDemo/SupportsConfigEditor.cs" Line="1" Column="1" NotebookId="1" />
-      <File FileName="Assets/SmartDataViewer/Editor/EditorConfig.cs" Line="53" Column="48" NotebookId="1" />
+      <File FileName="Assets/SmartDataViewer/Editor/EditorConfig.cs" Line="38" Column="1" NotebookId="1" />
+      <File FileName="Assets/SmartDataViewer/Script/DefaultControlPropertity.cs" Line="39" Column="1" NotebookId="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
