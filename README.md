@@ -1,100 +1,136 @@
 # UNITY3D-DATA-VIEWER
 UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
-# Version 1
+# Version 1.2 BETA
 
 ## Video on YouTube
 
-> 对数据进行增删改查 / Operation data with CRUD
-
 [![Demo alpha](http://img.youtube.com/vi/_uk8XBJPZwA/0.jpg)](https://www.youtube.com/embed/_uk8XBJPZwA)
 
-## Demo Code
 
+# 为什么要使用 SmartDataViewer ？
+SmartDataViewer 节约程序大量编辑器开发时间，在定义完成基础类型的时候，即可同步生成可视化编辑器。
+
+# 特性
+1. 秒速生成编辑器
+2. 支持外联多个类
+3. 支持针对特定字段进行排序与查询
+4. 支持数据导出导入(内建Unity3d Json支持)
+5. 支持开放式编辑器事件,几乎所有的事件与组件渲染 用户可自定义
+6. 通过标签定制编辑器字段显示方式,包括宽度，显示别名，显示排序，导出导入位置等
+
+
+# 正确的打开姿势
+## 继承 IModel 并且实现一个xxxConfig的容器
+
+Type 1
 ``` cs
-namespace SmartDataViewerV1
+[Serializable]
+public class DemoConfig : ConfigBase<Demo> { }
+
+[Serializable]
+public class Demo : IModel
 {
-	[ConfigEditor("通用编辑")]
-	[Serializable]
-	public class FilterOptionConfig : ConfigBase<FilterOption>
+	public Demo()
 	{
-
+		strList = new List<string>();
+		list = new List<int>();
+		supports = new List<int>();
+		description = string.Empty;
 	}
 
-	[Serializable]
-	public class FilterOption : Model
-	{
-		[ConfigEditorField(2, true)]
-		public FilterModel filter_mode;
+	public List<string> strList;
 
-		[ConfigEditorField(3, true)]
-		public EnumLevel currentLevel;
+	public List<int> list;
 
-		[ConfigEditorField(4, true)]
-		public EnumStatus currentStatus;
+	[ConfigEditorField(outLinkSubClass: "Supports")]
+	public List<int> supports;
 
+	public string description;
 
-		[ConfigEditorField(5, true, "条件(1-10)")]
-		public int extionsion_condition;
-
-		[ConfigEditorField(4, true)]
-		public bool Enable;
-	}
-
-	public enum EnumStatus
-	{
-		A,
-		B,
-		C
-	}
-
-	public enum EnumLevel
-	{
-		VIP1,
-		VIP2,
-		VIP3
-	}
-
-	public enum FilterModel
-	{
-		DEFAULT,
-		STATUS,
-		LEVEL
-	}
-
+	[ConfigEditorField(outLinkSubClass: "Supports")]
+	public int support;
 }
 ```
+Type 2
+``` cs
+[Serializable]
+public class SupportsConfig : ConfigBase<Supports> { }
 
-
-> 使用如下代码 制作编辑器界面 / Use this code and you made a editor view now 
-
-```  cs
-namespace SmartDataViewerV1.Editor
+[Serializable]
+public class Supports : IModel
 {
-	public class OpenFilterOptionConfigEditor : ConfigEditorSchema<FilterOption>
+	public Supports()
 	{
-		[MenuItem("SmartDataVierV1/Test/Demo")]
-		static public void OpenView()
-		{
-			OpenFilterOptionConfigEditor w = CreateInstance<OpenFilterOptionConfigEditor>();
-			w.ShowUtility();
-		}
-
-		public override FilterOption AddValue()
-		{
-			FilterOption r = base.AddValue();
-			r.Enable = true;
-			return r;
-		}
-
-		public override void Initialize()
-		{
-			SetConfigType(new FilterOptionConfig());
-		}
+		boolList = new List<bool>();
+		description = string.Empty;
+		colorList = new List<Color>();
+		curveList = new List<AnimationCurve>();
+		curve = new AnimationCurve();
+		bounds = new Bounds();
+		boundsList = new List<Bounds>();
 	}
+	public Vector2 testPoint;
+
+	public List<bool> boolList;
+
+	public int testID;
+
+	public Bounds bounds;
+
+	public Color PointColor;
+
+	public AnimationCurve curve;
+
+	public List<Color> colorList;
+
+	public List<AnimationCurve> curveList;
+
+	public List<Bounds> boundsList;
+
+	public string description;
 }
+
 ```
 
+## 添加标签
+
+### ConfigEditorAttribute
+容器标签
+``` cs
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:SmartDataViewer.ConfigEditorAttribute"/> class.
+		/// </summary>
+		/// <param name="editor_title">当前编辑器显示的名词</param>
+		/// <param name="load_path">当前编辑器数据文件的位置</param>
+		/// <param name="output_path">编辑文件导出路径</param>
+		/// <param name="disableSearch">是否禁用搜索栏</param>
+		/// <param name="disableSave">是否禁用保存按钮</param>
+		/// <param name="disableCreate">是否禁用添加按钮</param>
+```
+
+### ConfigEditorFieldAttribute 
+字段标签
+``` cs
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:SmartDataViewer.ConfigEditorFieldAttribute"/> class.
+		/// </summary>
+		/// <param name="order">编辑器字段显示顺序</param>
+		/// <param name="can_editor">If set to <c>true</c> can editor.</param>
+		/// <param name="display">编辑器中显示别名 不填为字段名</param>
+		/// <param name="width">编辑器中显示的字段宽度</param>
+		/// <param name="outLinkEditor">外联到新的编辑器</param>
+		/// <param name="outLinkSubClass">外联到新的子类型,如果遵循编辑器默认命名规则 只需要填写此项即可</param>
+		/// <param name="outLinkClass">外联到新的类型</param>
+		/// <param name="visibility">是否在编辑器中隐藏此字段</param>
+		/// <param name="outLinkDisplay">将显示外联数据的别名 默认显示外联数据的NickName如果没有则显示ID</param>
+		/// <param name="outLinkFilePath">外联数据的文件位置</param>
+```
+
+## 生成代码
+点击build按钮 则会在指定路径生成数据编辑器
+![通过SmartDataViewer生成的编辑器](/A6153579-9537-404D-9007-CE9B85F69BBF.png)
 
 
-
+## 完成
+![通过SmartDataViewer生成的编辑器](/B0942117-D7EE-42A8-BE99-7D94014C8E13.png)
