@@ -20,8 +20,8 @@ SmartDataViewer 节约程序大量编辑器开发时间，在定义完成基础�
 6. 通过标签定制编辑器字段显示方式,包括宽度，显示别名，显示排序，导出导入位置等
 
 
-# 正确的打开姿势
-## 继承 IModel 并且实现一个xxxConfig的容器
+# 正确的打开姿势 / Tutorial
+## 1.创建容器 / Create Container
 
 Type 1
 ``` cs
@@ -93,10 +93,10 @@ public class Supports : IModel
 
 ```
 
-## 添加标签
+## 2.添加标签 / Add Attribute
 
 ### ConfigEditorAttribute
-容器标签
+容器标签 / Container Attribute
 ``` cs
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:SmartDataViewer.ConfigEditorAttribute"/> class.
@@ -110,7 +110,7 @@ public class Supports : IModel
 ```
 
 ### ConfigEditorFieldAttribute 
-字段标签
+字段标签 / Fields Attribute
 ``` cs
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:SmartDataViewer.ConfigEditorFieldAttribute"/> class.
@@ -127,10 +127,10 @@ public class Supports : IModel
 		/// <param name="outLinkFilePath">外联数据的文件位置</param>
 ```
 
-## 生成代码
+## 3.生成代码 / Click Build Button
 点击build按钮 则会在指定路径生成数据编辑器
 ![通过SmartDataViewer生成的编辑器](/A6153579-9537-404D-9007-CE9B85F69BBF.png)
 
 
-## 完成
+## 完成 / Complete
 ![通过SmartDataViewer生成的编辑器](/B0942117-D7EE-42A8-BE99-7D94014C8E13.png)
