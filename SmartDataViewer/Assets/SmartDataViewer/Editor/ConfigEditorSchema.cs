@@ -651,6 +651,8 @@ namespace SmartDataViewer.Editor
 				config_current.Delete(deleteList[i]);
 			}
 
+			deleteList.Clear();
+
 			string outPutPath = configSetting.Setting.OutputPath;
 			if (string.IsNullOrEmpty(outPutPath) && !string.IsNullOrEmpty(configSetting.Setting.LoadPath))
 				outPutPath = configSetting.Setting.LoadPath;
