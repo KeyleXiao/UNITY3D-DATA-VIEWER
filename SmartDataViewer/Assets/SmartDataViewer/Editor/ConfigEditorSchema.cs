@@ -96,7 +96,7 @@ namespace SmartDataViewer.Editor
 				if (infos.Length == 0)
 				{
 					int id = (int)GetCurrentFieldType(item.FieldType);
-					f.config_editor_setting = Utility.GetDefaultControlConfig().SearchByID(id);
+					f.config_editor_setting = EditorConfig.GetDefaultControlConfig().SearchByID(id);
 
 
 					if (f.config_editor_setting == null)
@@ -119,7 +119,7 @@ namespace SmartDataViewer.Editor
 					if (f.config_editor_setting.Width == 0)
 					{
 						int id = (int)GetCurrentFieldType(item.FieldType);
-						var setting = Utility.GetDefaultControlConfig().SearchByID(id);
+						var setting = EditorConfig.GetDefaultControlConfig().SearchByID(id);
 						f.config_editor_setting.Width = setting.Width;
 					}
 
@@ -626,7 +626,7 @@ namespace SmartDataViewer.Editor
 					string rawClass = Chache[i].config_editor_setting.OutLinkClass;
 					if (string.IsNullOrEmpty(rawClass))
 						rawClass = Chache[i].config_editor_setting.OutLinkSubClass + "Config";
-					Type classType = SmartDataViewer.Utility.GetType(rawClass);
+					Type classType = GetType(rawClass);
 					if (classType == null)
 					{
 						Log("Can't find calss " + rawClass);
@@ -841,7 +841,7 @@ namespace SmartDataViewer.Editor
 			{
 				if (GUILayout.Button(Language.Copy, GUI.skin.GetStyle("ButtonLeft"), new GUILayoutOption[] { GUILayout.Width(19) }))
 				{
-					PasteItem = Utility.DeepClone(item);
+					PasteItem = DeepClone(item);
 				}
 				if (GUILayout.Button(Language.Delete, GUI.skin.GetStyle("ButtonMid"), new GUILayoutOption[] { GUILayout.Width(19) }))
 				{
@@ -854,7 +854,7 @@ namespace SmartDataViewer.Editor
 					{
 						config_current.ConfigList.Remove(item);
 						PasteItem.ID = item.ID;
-						config_current.ConfigList.Add(Utility.DeepClone<T>(PasteItem));
+						config_current.ConfigList.Add(DeepClone<T>(PasteItem));
 					}
 				}
 			}
@@ -893,6 +893,18 @@ namespace SmartDataViewer.Editor
 			current_windowType = WindowType.CALLBACK;
 			select_callback = callback;
 			this.current_list = current_list;
+		}
+		
+		
+		public T DeepClone<T>(T a)
+		{
+			var content = JsonUtility.ToJson(a);
+			return JsonUtility.FromJson<T>(content);
+		}
+		
+		protected virtual Type GetType(string type_name)
+		{
+			return Assembly.GetExecutingAssembly().GetType(type_name);
 		}
 	}
 }

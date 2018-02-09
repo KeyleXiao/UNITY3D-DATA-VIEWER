@@ -10,10 +10,10 @@
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>
     </RootNamespace>
-    <ProjectGuid>{32E5814B-FA50-A33C-AE8D-EE9154D351C1}</ProjectGuid>
+    <ProjectGuid>{C2C22975-311B-7236-AEAC-90BC6C27ED40}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+    <AssemblyName>Assembly-CSharp-Editor-firstpass</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>Assets</BaseDirectory>
@@ -52,17 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Editor\EditorDemo\DemoConfigEditor.cs" />
-    <Compile Include="Assets\Editor\EditorDemo\SupportsConfigEditor.cs" />
-    <Compile Include="Assets\SmartDataViewer\Editor\BuildInEditor\CodeGen.cs" />
-    <Compile Include="Assets\SmartDataViewer\Editor\BuildInEditor\DefaultControlPropertityConfig.cs" />
-    <Compile Include="Assets\SmartDataViewer\Editor\BuildInEditor\DefaultEditorPropertityConfig.cs" />
-    <Compile Include="Assets\SmartDataViewer\Editor\BuildInEditor\EditorDetailConfig.cs" />
-    <Compile Include="Assets\SmartDataViewer\Editor\CommonLoadConfig.cs" />
-    <Compile Include="Assets\SmartDataViewer\Editor\ConfigEditorSchema.cs" />
-    <Compile Include="Assets\SmartDataViewer\Editor\EditorConfig.cs" />
-    <Compile Include="Assets\SmartDataViewer\Editor\IMultipleWindow.cs" />
-    <Compile Include="Assets\SmartDataViewer\Editor\Test.cs" />
+    <Compile Include="Assets\Plugins\Editor\JetBrains\Unity3DRider.cs" />
     <Reference Include="UnityEngine.UI">
       <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -153,22 +143,6 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>/Users/keyle/Library/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
-      <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.iOS.Extensions.Common">
-      <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{51AEB4A3-B79C-7D3F-3E56-014EF89AC143}</Project>
-      <Name>Assembly-CSharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
-      <Project>{C2C22975-311B-7236-AEAC-90BC6C27ED40}</Project>
-      <Name>Assembly-CSharp-Editor-firstpass</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

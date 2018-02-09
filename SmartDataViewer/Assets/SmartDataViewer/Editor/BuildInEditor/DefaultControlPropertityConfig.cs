@@ -48,7 +48,7 @@ namespace SmartDataViewer.Editor
 		}
 		protected override void SaveButton()
 		{
-			Utility.ControlConfig = DefaultControlConfig.LoadConfig<DefaultControlConfig>("{ROOT}/SmartDataViewer/Config/DefaultControlPropertity");
+			EditorConfig.ControlConfig = DefaultControlConfig.LoadConfig<DefaultControlConfig>("{ROOT}/SmartDataViewer/Config/DefaultControlPropertity");
 			base.SaveButton();
 		}
 	}

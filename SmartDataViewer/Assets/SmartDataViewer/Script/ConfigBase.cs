@@ -15,7 +15,8 @@ namespace SmartDataViewer
 			ConfigList = new List<T>();
 		}
 
-		public Dictionary<int, T> Configs { get; set; }
+		[NonSerialized] 
+		public Dictionary<int, T> Configs;
 
 		public List<T> ConfigList;
 
@@ -111,12 +112,6 @@ namespace SmartDataViewer
 			ConfigList.RemoveAt(index);
 			Configs.Remove(id);
 		}
-
-		string PathCombine(string pathA, string pathB)
-		{
-			return Path.Combine(pathA, pathB).Replace("\\", "/");
-		}
-
 
 
 		public virtual void DeleteFromDisk(string fileWithNoExcension = "", bool absolute = false)
