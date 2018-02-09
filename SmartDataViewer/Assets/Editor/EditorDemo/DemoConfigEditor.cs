@@ -14,27 +14,28 @@
 //     		See the License for the specific language governing permissions and
 //     		limitations under the License.
 //
+
 using System;
 using UnityEditor;
 using SmartDataViewer.Editor;
 
 public class DemoConfigEditor : ConfigEditorSchema<Demo>
 {
-	[MenuItem("CustomEditor/DemoConfigEditor")]
-	static public void OpenView()
-	{
-		DemoConfigEditor w = CreateInstance<DemoConfigEditor>();
-		w.ShowUtility();
-	}
+    [MenuItem("CustomEditor/DemoConfigEditor")]
+    static public void OpenView()
+    {
+        DemoConfigEditor w = CreateInstance<DemoConfigEditor>();
+        w.ShowUtility();
+    }
 
-	public override Demo CreateValue()
-	{
-		Demo r = base.CreateValue();
-		return r;
-	}
+    public override Demo CreateValue()
+    {
+        Demo r = base.CreateValue();
+        return r;
+    }
 
-	public override void Initialize()
-	{
-		SetConfigType(new DemoConfig());
-	}
+    public override void Initialize()
+    {
+        SetConfigType(new DemoConfig());
+    }
 }

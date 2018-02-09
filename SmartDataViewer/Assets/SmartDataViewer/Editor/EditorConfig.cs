@@ -18,6 +18,58 @@ using System.Collections.Generic;
 
 namespace SmartDataViewer.Editor
 {
+	public enum WindowType
+	{
+		INPUT,
+		CALLBACK
+	}
+	
+	public enum FieldType
+	{
+		INT,
+		STRING,
+		FLOAT,
+		BOOL,
+		VECTOR2,
+		VECTOR3,
+		VECTOR4,
+		COLOR,
+		CURVE,
+		BOUNDS,
+
+		GEN_INT,
+		GEN_STRING,
+		GEN_FLOAT,
+		GEN_BOOL,
+		GEN_VECTOR2,
+		GEN_VECTOR3,
+		GEN_VECTOR4,
+		GEN_COLOR,
+		GEN_CURVE,
+		GEN_BOUNDS,
+
+		ANIMATIONCURVE,
+		GEN_ANIMATIONCURVE,
+		ENUM,
+		GEN_ENUM,
+
+	}
+
+	
+	public class EditorConfig
+	{
+		public static DefaultControlConfig ControlConfig { get; set; }
+
+		public static DefaultControlConfig GetDefaultControlConfig()
+		{
+			if (ControlConfig == null)
+			{
+				ControlConfig = DefaultControlConfig.LoadConfig<DefaultControlConfig>("{ROOT}/SmartDataViewer/Config/DefaultControlPropertity");
+			}
+			return ControlConfig;
+		}
+	}		
+
 	public class Language
 	{
 		//public static string Build = "生成";

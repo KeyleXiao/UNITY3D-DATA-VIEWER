@@ -19,11 +19,7 @@ using System.Collections.Generic;
 
 namespace SmartDataViewer.Editor
 {
-	public enum WindowType
-	{
-		INPUT,
-		CALLBACK
-	}
+
 	public class IMultipleWindow : UnityEditor.EditorWindow
 	{
 		protected WindowType current_windowType = WindowType.INPUT;
