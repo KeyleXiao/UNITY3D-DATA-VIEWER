@@ -1,7 +1,7 @@
 # UNITY3D-DATA-VIEWER
 UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
-# Version 1.2 BETA
+# Version 1.2.1 BETA
 
 ## Video on YouTube
 
