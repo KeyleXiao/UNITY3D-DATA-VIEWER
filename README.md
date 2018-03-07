@@ -16,7 +16,7 @@ UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
 # Current Version 1.2.2 BETA
 
-初次尝试轻直接在UNITY菜单中选择 <code>SmartDataViewer/CodeGen -> build</code> 即可在工程中创建编辑器导出路径 <code>Editor/Export/</code> 。其中有已经成功生成的编辑器脚本。
+初次尝试请直接在UNITY菜单中选择 <code>SmartDataViewer/CodeGen -> build</code> 即可在工程中创建编辑器导出路径 <code>Editor/Export/</code> 。其中有已经成功生成的编辑器脚本。
 
 
 # Next Version 

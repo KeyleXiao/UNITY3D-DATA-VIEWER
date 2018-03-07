@@ -17,9 +17,12 @@ namespace SmartDataViewer.Helpers
 #if !UNITY_EDITOR && (NETFX_CORE || WINDOWS_UWP || UNITY_WP8 || UNITY_WP_8_1 || UNITY_WSA || UNITY_WSA_8_0 || UNITY_WSA_8_1 || UNITY_WSA_10_0)
             if (rType == rBaseType || rBaseType.GetTypeInfo().IsAssignableFrom(rType.GetTypeInfo())) { return true; }
 #else
-            if (rType == rBaseType || rType.IsSubclassOf(rBaseType)) { return true; }
+            if (rType == rBaseType || rType.IsSubclassOf(rBaseType))
+            {
+                return true;
+            }
 #endif
-                return false;
+            return false;
         }
 
         /// <summary>
@@ -33,7 +36,10 @@ namespace SmartDataViewer.Helpers
 #if !UNITY_EDITOR && (NETFX_CORE || WINDOWS_UWP || UNITY_WP8 || UNITY_WP_8_1 || UNITY_WSA || UNITY_WSA_8_0 || UNITY_WSA_8_1 || UNITY_WSA_10_0)
             if (rType == rDerivedType || rType.GetTypeInfo().IsAssignableFrom(rDerivedType.GetTypeInfo())) { return true; }
 #else
-            if (rType == rDerivedType || rType.IsAssignableFrom(rDerivedType)) { return true; }
+            if (rType == rDerivedType || rType.IsAssignableFrom(rDerivedType))
+            {
+                return true;
+            }
 #endif
             return false;
         }
@@ -45,15 +51,19 @@ namespace SmartDataViewer.Helpers
         public static T GetAttribute<T>(Type rObjectType)
         {
 #if !UNITY_EDITOR && (NETFX_CORE || WINDOWS_UWP || UNITY_WP8 || UNITY_WP_8_1 || UNITY_WSA || UNITY_WSA_8_0 || UNITY_WSA_8_1 || UNITY_WSA_10_0)
-            System.Collections.Generic.IEnumerable<System.Attribute> lInitialAttributes = rObjectType.GetTypeInfo().GetCustomAttributes(typeof(T), true);
+            System.Collections.Generic.IEnumerable<System.Attribute> lInitialAttributes =
+ rObjectType.GetTypeInfo().GetCustomAttributes(typeof(T), true);
             object[] lAttributes = lInitialAttributes.ToArray();
 #else
             object[] lAttributes = rObjectType.GetCustomAttributes(typeof(T), true);
 #endif
 
-            if (lAttributes == null || lAttributes.Length == 0) { return default(T); }
+            if (lAttributes == null || lAttributes.Length == 0)
+            {
+                return default(T);
+            }
 
-            return (T)lAttributes[0];           
+            return (T) lAttributes[0];
         }
 
         /// <summary>
@@ -66,13 +76,17 @@ namespace SmartDataViewer.Helpers
         public static bool IsDefined(Type rObjectType, Type rType)
         {
 #if !UNITY_EDITOR && (NETFX_CORE || WINDOWS_UWP || UNITY_WP8 || UNITY_WP_8_1 || UNITY_WSA || UNITY_WSA_8_0 || UNITY_WSA_8_1 || UNITY_WSA_10_0)
-            System.Collections.Generic.IEnumerable<System.Attribute> lInitialAttributes = rObjectType.GetTypeInfo().GetCustomAttributes(rType, true);
+            System.Collections.Generic.IEnumerable<System.Attribute> lInitialAttributes =
+ rObjectType.GetTypeInfo().GetCustomAttributes(rType, true);
             object[] lAttributes = lInitialAttributes.ToArray();
 #else
             object[] lAttributes = rObjectType.GetCustomAttributes(rType, true);
 #endif
 
-            if (lAttributes != null && lAttributes.Length > 0) { return true; }
+            if (lAttributes != null && lAttributes.Length > 0)
+            {
+                return true;
+            }
 
             return false;
         }
@@ -87,13 +101,17 @@ namespace SmartDataViewer.Helpers
         public static bool IsDefined(FieldInfo rFieldInfo, Type rType)
         {
 #if !UNITY_EDITOR && (NETFX_CORE || WINDOWS_UWP || UNITY_WP8 || UNITY_WP_8_1 || UNITY_WSA || UNITY_WSA_8_0 || UNITY_WSA_8_1 || UNITY_WSA_10_0)
-            System.Collections.Generic.IEnumerable<System.Attribute> lInitialAttributes = rFieldInfo.GetCustomAttributes(rType, true);
+            System.Collections.Generic.IEnumerable<System.Attribute> lInitialAttributes =
+ rFieldInfo.GetCustomAttributes(rType, true);
             object[] lAttributes = lInitialAttributes.ToArray();
 #else
             object[] lAttributes = rFieldInfo.GetCustomAttributes(rType, true);
 #endif
 
-            if (lAttributes != null && lAttributes.Length > 0) { return true; }
+            if (lAttributes != null && lAttributes.Length > 0)
+            {
+                return true;
+            }
 
             return false;
         }
@@ -108,13 +126,17 @@ namespace SmartDataViewer.Helpers
         public static bool IsDefined(MemberInfo rMemberInfo, Type rType)
         {
 #if !UNITY_EDITOR && (NETFX_CORE || WINDOWS_UWP || UNITY_WP8 || UNITY_WP_8_1 || UNITY_WSA || UNITY_WSA_8_0 || UNITY_WSA_8_1 || UNITY_WSA_10_0)
-            System.Collections.Generic.IEnumerable<System.Attribute> lInitialAttributes = rMemberInfo.GetCustomAttributes(rType, true);
+            System.Collections.Generic.IEnumerable<System.Attribute> lInitialAttributes =
+ rMemberInfo.GetCustomAttributes(rType, true);
             object[] lAttributes = lInitialAttributes.ToArray();
 #else
             object[] lAttributes = rMemberInfo.GetCustomAttributes(rType, true);
 #endif
 
-            if (lAttributes != null && lAttributes.Length > 0) { return true; }
+            if (lAttributes != null && lAttributes.Length > 0)
+            {
+                return true;
+            }
 
             return false;
         }
@@ -129,13 +151,17 @@ namespace SmartDataViewer.Helpers
         public static bool IsDefined(PropertyInfo rPropertyInfo, Type rType)
         {
 #if !UNITY_EDITOR && (NETFX_CORE || WINDOWS_UWP || UNITY_WP8 || UNITY_WP_8_1 || UNITY_WSA || UNITY_WSA_8_0 || UNITY_WSA_8_1 || UNITY_WSA_10_0)
-            System.Collections.Generic.IEnumerable<System.Attribute> lInitialAttributes = rPropertyInfo.GetCustomAttributes(rType, true);
+            System.Collections.Generic.IEnumerable<System.Attribute> lInitialAttributes =
+ rPropertyInfo.GetCustomAttributes(rType, true);
             object[] lAttributes = lInitialAttributes.ToArray();
 #else
             object[] lAttributes = rPropertyInfo.GetCustomAttributes(rType, true);
 #endif
 
-            if (lAttributes != null && lAttributes.Length > 0) { return true; }
+            if (lAttributes != null && lAttributes.Length > 0)
+            {
+                return true;
+            }
 
             return false;
         }
@@ -227,7 +253,7 @@ namespace SmartDataViewer.Helpers
         /// <returns></returns>
         public static object GetDefaultValue(Type rType)
         {
-            bool lIsValueType = false ;
+            bool lIsValueType = false;
 
 #if !UNITY_EDITOR && (NETFX_CORE || WINDOWS_UWP || UNITY_WP8 || UNITY_WP_8_1 || UNITY_WSA || UNITY_WSA_8_0 || UNITY_WSA_8_1 || UNITY_WSA_10_0)
             lIsValueType = rType.GetTypeInfo().IsValueType;
@@ -244,6 +270,139 @@ namespace SmartDataViewer.Helpers
                 UnityEngine.Vector3 lDummy = new UnityEngine.Vector3();
                 return lDummy.GetType().GetMethod("GetDefaultGeneric").MakeGenericMethod(rType).Invoke(lDummy, null);
             }
+        }
+
+
+        public static FieldType GetCurrentFieldType(Type value)
+        {
+            if (value.IsGenericType)
+            {
+                Type t = value.GetGenericArguments()[0];
+
+                if (t.IsEnum)
+                {
+                    return FieldType.GEN_ENUM;
+                }
+                else if (t == typeof(UnityEngine.Bounds))
+                {
+                    return FieldType.GEN_BOUNDS;
+                }
+                else if (t == typeof(UnityEngine.Color))
+                {
+                    return FieldType.GEN_COLOR;
+                }
+                else if (t == typeof(UnityEngine.AnimationCurve))
+                {
+                    return FieldType.GEN_ANIMATIONCURVE;
+                }
+                else if (t == typeof(string))
+                {
+                    return FieldType.GEN_STRING;
+                }
+                else if (t == typeof(float))
+                {
+                    return FieldType.GEN_FLOAT;
+                }
+                else if (t == typeof(int))
+                {
+                    return FieldType.GEN_INT;
+                }
+                else if (t == typeof(bool))
+                {
+                    return FieldType.GEN_BOOL;
+                }
+                else if (t == typeof(UnityEngine.Vector2))
+                {
+                    return FieldType.GEN_VECTOR2;
+                }
+                else if (t == typeof(UnityEngine.Vector3))
+                {
+                    return FieldType.GEN_VECTOR3;
+                }
+                else if (t == typeof(UnityEngine.Vector4))
+                {
+                    return FieldType.GEN_VECTOR4;
+                }
+
+                return FieldType.GEN_STRING;
+            }
+
+            if (value.IsEnum)
+            {
+                return FieldType.ENUM;
+            }
+            else if (value == typeof(UnityEngine.Bounds))
+            {
+                return FieldType.BOUNDS;
+            }
+            else if (value == typeof(UnityEngine.Color))
+            {
+                return FieldType.COLOR;
+            }
+            else if (value == typeof(UnityEngine.AnimationCurve))
+            {
+                return FieldType.ANIMATIONCURVE;
+            }
+            else if (value == typeof(string))
+            {
+                return FieldType.STRING;
+            }
+            else if (value == typeof(float))
+            {
+                return FieldType.FLOAT;
+            }
+            else if (value == typeof(int))
+            {
+                return FieldType.INT;
+            }
+            else if (value == typeof(bool))
+            {
+                return FieldType.BOOL;
+            }
+            else if (value == typeof(UnityEngine.Vector2))
+            {
+                return FieldType.VECTOR2;
+            }
+            else if (value == typeof(UnityEngine.Vector3))
+            {
+                return FieldType.VECTOR3;
+            }
+            else if (value == typeof(UnityEngine.Vector4))
+            {
+                return FieldType.VECTOR4;
+            }
+
+            return FieldType.STRING;
+        }
+
+        public enum FieldType
+        {
+            INT,
+            STRING,
+            FLOAT,
+            BOOL,
+            VECTOR2,
+            VECTOR3,
+            VECTOR4,
+            COLOR,
+            CURVE,
+            BOUNDS,
+
+            GEN_INT,
+            GEN_STRING,
+            GEN_FLOAT,
+            GEN_BOOL,
+            GEN_VECTOR2,
+            GEN_VECTOR3,
+            GEN_VECTOR4,
+            GEN_COLOR,
+            GEN_CURVE,
+            GEN_BOUNDS,
+
+            ANIMATIONCURVE,
+            GEN_ANIMATIONCURVE,
+            ENUM,
+            GEN_ENUM,
         }
     }
 }

@@ -108,17 +108,15 @@ namespace SmartDataViewer.Editor
 	{
 		public CodeGen()
 		{
-			NickName = string.Empty;
 			EditorName = string.Empty;
 			ClassType = string.Empty;
 			SubType = string.Empty;
 			EditorPath = "CustomEditor";
 		}
-		
+		public string EditorPath;
 		public string EditorName;
 		public string ClassType;
 		public string SubType;
-		public string EditorPath;
 	}
 
 }

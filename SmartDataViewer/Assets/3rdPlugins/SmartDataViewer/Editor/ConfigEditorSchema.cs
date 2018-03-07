@@ -15,7 +15,7 @@
 //          limitations under the License.
 //
 
-//TODO bug : 删除文件之后加载CodeGen直接报错 然而直接加载detail编辑 再切回来就正常了
+//TODO bug fix: 删除文件之后加载CodeGen直接报错 然而直接加载detail编辑 再切回来就正常了 主要是由于生成脚本编译引起的 现在CodeGen之后直接把界面关闭
 
 using System;
 using UnityEditor;
@@ -23,6 +23,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using SmartDataViewer.Helpers;
 
 namespace SmartDataViewer.Editor
 {
@@ -68,6 +69,11 @@ namespace SmartDataViewer.Editor
         protected T PasteItem { get; set; }
 
 
+        /// <summary>
+        /// 设置编辑器字段排序规则
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         protected virtual bool GetFieldsOrder(string key)
         {
             if (!FieldsOrder.ContainsKey(key))
@@ -81,6 +87,10 @@ namespace SmartDataViewer.Editor
         }
 
 
+        /// <summary>
+        /// 设置想要编辑的类
+        /// </summary>
+        /// <param name="tp"></param>
         public void SetConfigType(ConfigBase<T> tp)
         {
             config_current = tp;
@@ -105,7 +115,7 @@ namespace SmartDataViewer.Editor
 
                 if (infos.Length == 0)
                 {
-                    int id = (int) GetCurrentFieldType(item.FieldType);
+                    int id = (int) ReflectionHelper.GetCurrentFieldType(item.FieldType);
                     f.config_editor_setting = EditorConfig.GetDefaultControlConfig().SearchByID(id);
 
 
@@ -128,7 +138,7 @@ namespace SmartDataViewer.Editor
 
                     if (f.config_editor_setting.Width == 0)
                     {
-                        int id = (int) GetCurrentFieldType(item.FieldType);
+                        int id = (int) ReflectionHelper.GetCurrentFieldType(item.FieldType);
                         var setting = EditorConfig.GetDefaultControlConfig().SearchByID(id);
                         f.config_editor_setting.Width = setting.Width;
                     }
@@ -149,10 +159,17 @@ namespace SmartDataViewer.Editor
         }
 
 
+        /// <summary>
+        /// 初始化构造
+        /// </summary>
         public virtual void Initialize()
         {
         }
 
+        /// <summary>
+        /// 创建一条新数据
+        /// </summary>
+        /// <returns></returns>
         public virtual T CreateValue()
         {
             T t = new T();
@@ -164,9 +181,14 @@ namespace SmartDataViewer.Editor
         }
 
 
+        /// <summary>
+        /// 反射原始数据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="value"></param>
+        /// <param name="raw"></param>
         public virtual void RenderRawLine(ConfigEditorSchemaChache data, object value, T raw)
         {
-            //TODO 这里有个问题 有时候会为空 需要查
             if (value == null) return;
 
             if (value.GetType().IsGenericType)
@@ -215,15 +237,8 @@ namespace SmartDataViewer.Editor
                 {
                     Type t = value.GetType().GetGenericArguments()[0];
 
-                    if (value == null)
-                    {
-                        value = Activator.CreateInstance(t);
-                        data.field_info.SetValue(raw, value);
-                    }
-
                     var addMethod = value.GetType().GetMethod("Add");
                     var removeMethod = value.GetType().GetMethod("RemoveAt");
-
 
                     if (GUILayout.Button(Language.Add))
                     {
@@ -297,12 +312,23 @@ namespace SmartDataViewer.Editor
         }
 
 
+        /// <summary>
+        /// 使用isLog控制输出
+        /// </summary>
+        /// <param name="str"></param>
         public virtual void Log(string str)
         {
             if (isLog) Debug.Log(str);
         }
 
 
+        /// <summary>
+        /// 获取外链编辑器的按钮上显示的字符，未指定则显示ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="outLinkChacheKey"></param>
+        /// <param name="field"></param>
+        /// <returns></returns>
         public string GetOutLinkDisplayField(int id, string outLinkChacheKey, string field)
         {
             if (!outLinkRawData.ContainsKey(outLinkChacheKey))
@@ -335,108 +361,14 @@ namespace SmartDataViewer.Editor
             return v;
         }
 
-        public virtual FieldType GetCurrentFieldType(Type value)
-        {
-            if (value.IsGenericType)
-            {
-                Type t = value.GetGenericArguments()[0];
 
-                if (t.IsEnum)
-                {
-                    return FieldType.GEN_ENUM;
-                }
-                else if (t == typeof(Bounds))
-                {
-                    return FieldType.GEN_BOUNDS;
-                }
-                else if (t == typeof(Color))
-                {
-                    return FieldType.GEN_COLOR;
-                }
-                else if (t == typeof(AnimationCurve))
-                {
-                    return FieldType.GEN_ANIMATIONCURVE;
-                }
-                else if (t == typeof(string))
-                {
-                    return FieldType.GEN_STRING;
-                }
-                else if (t == typeof(float))
-                {
-                    return FieldType.GEN_FLOAT;
-                }
-                else if (t == typeof(int))
-                {
-                    return FieldType.GEN_INT;
-                }
-                else if (t == typeof(bool))
-                {
-                    return FieldType.GEN_BOOL;
-                }
-                else if (t == typeof(Vector2))
-                {
-                    return FieldType.GEN_VECTOR2;
-                }
-                else if (t == typeof(Vector3))
-                {
-                    return FieldType.GEN_VECTOR3;
-                }
-                else if (t == typeof(Vector4))
-                {
-                    return FieldType.GEN_VECTOR4;
-                }
-
-                return FieldType.GEN_STRING;
-            }
-
-            if (value.IsEnum)
-            {
-                return FieldType.ENUM;
-            }
-            else if (value == typeof(Bounds))
-            {
-                return FieldType.BOUNDS;
-            }
-            else if (value == typeof(Color))
-            {
-                return FieldType.COLOR;
-            }
-            else if (value == typeof(AnimationCurve))
-            {
-                return FieldType.ANIMATIONCURVE;
-            }
-            else if (value == typeof(string))
-            {
-                return FieldType.STRING;
-            }
-            else if (value == typeof(float))
-            {
-                return FieldType.FLOAT;
-            }
-            else if (value == typeof(int))
-            {
-                return FieldType.INT;
-            }
-            else if (value == typeof(bool))
-            {
-                return FieldType.BOOL;
-            }
-            else if (value == typeof(Vector2))
-            {
-                return FieldType.VECTOR2;
-            }
-            else if (value == typeof(Vector3))
-            {
-                return FieldType.VECTOR3;
-            }
-            else if (value == typeof(Vector4))
-            {
-                return FieldType.VECTOR4;
-            }
-
-            return FieldType.STRING;
-        }
-
+        /// <summary>
+        /// 设置基础的控件
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="enable"></param>
+        /// <param name="value"></param>
+        /// <param name="setValue"></param>
         public virtual void RenderBaseControl(int width, bool enable, object value, Action<object> setValue)
         {
             if (value is Enum)
@@ -580,6 +512,9 @@ namespace SmartDataViewer.Editor
         }
 
 
+        /// <summary>
+        /// Reload 但不包括 SetConfigType 与 Initialize
+        /// </summary>
         protected virtual void Reload()
         {
             AssetDatabase.Refresh();
@@ -602,7 +537,7 @@ namespace SmartDataViewer.Editor
 
             for (int i = 0; i < Chache.Count; i++)
             {
-               //Bug fix: 自动做默认参数初始化 
+                //Bug fix: 自动做默认参数初始化 
                 if (Chache[i].config_editor_setting == null)
                     Chache[i].config_editor_setting = new DefaultControlPropertity();
 
@@ -738,6 +673,9 @@ namespace SmartDataViewer.Editor
             }
         }
 
+        /// <summary>
+        /// 主逻辑
+        /// </summary>
         public void OnGUI()
         {
             if (Event.current.isKey && Event.current.keyCode == KeyCode.Escape)
@@ -773,7 +711,7 @@ namespace SmartDataViewer.Editor
                 new GUILayoutOption[] {GUILayout.Height(30)}))
                 Reload();
 
-   
+
             if (!configSetting.Setting.DisableCreate && current_windowType != WindowType.CALLBACK)
                 NewLineButton();
 
@@ -796,7 +734,7 @@ namespace SmartDataViewer.Editor
             foreach (var item in Chache)
             {
                 if (GUILayout.Button(
-                    string.IsNullOrEmpty(item.config_editor_setting.Display) 
+                    string.IsNullOrEmpty(item.config_editor_setting.Display)
                         ? item.field_info.Name
                         : item.config_editor_setting.Display, GUI.skin.GetStyle("WhiteLabel"),
                     GUILayout.Width(item.config_editor_setting.Width)))
@@ -916,6 +854,9 @@ namespace SmartDataViewer.Editor
             }
         }
 
+        /// <summary>
+        /// 分页算法
+        /// </summary>
         protected virtual void Page()
         {
             GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
@@ -946,6 +887,11 @@ namespace SmartDataViewer.Editor
             GUILayout.EndHorizontal();
         }
 
+        /// <summary>
+        /// 当前界面设置 Select 回调
+        /// </summary>
+        /// <param name="current_list"></param>
+        /// <param name="callback"></param>
         public override void UpdateSelectModel(object current_list, Action<object, object> callback)
         {
             current_windowType = WindowType.CALLBACK;
@@ -954,12 +900,23 @@ namespace SmartDataViewer.Editor
         }
 
 
+        /// <summary>
+        /// 深拷贝 复制数据
+        /// </summary>
+        /// <param name="a"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T DeepClone<T>(T a)
         {
             var content = JsonUtility.ToJson(a);
             return JsonUtility.FromJson<T>(content);
         }
 
+        /// <summary>
+        /// 在当前程序集总获取Type 不能放在其他程序集
+        /// </summary>
+        /// <param name="type_name"></param>
+        /// <returns></returns>
         protected virtual Type GetType(string type_name)
         {
             return Assembly.GetExecutingAssembly().GetType(type_name);

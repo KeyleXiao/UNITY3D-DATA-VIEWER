@@ -16,6 +16,7 @@
 //
 using System;
 using SmartDataViewer;
+using SmartDataViewer.Helpers;
 using UnityEditor;
 
 namespace SmartDataViewer.Editor
@@ -37,7 +38,7 @@ namespace SmartDataViewer.Editor
 			Description = string.Empty;
 		}
 		[ConfigEditorField(can_editor: true)]
-		public FieldType CurrentType;
+		public ReflectionHelper.FieldType CurrentType;
 		[ConfigEditorField(can_editor: true)]
 		public string FieldName;
 		[ConfigEditorField(can_editor: true)]
