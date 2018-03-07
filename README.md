@@ -1,7 +1,22 @@
 # UNITY3D-DATA-VIEWER
 UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
-# Version 1.2.1 BETA
+# Version 1.2.2 BETA
+
+├── 3rdPlugins
+│   └── SmartDataViewer
+│       ├── CTS
+│       ├── Config
+│       ├── Editor
+│       └── Script
+├── DemoEntity
+├── Plugins
+│   └── Editor
+│       └── JetBrains
+└── Resources
+    └── Config
+
+初次尝试轻直接在UNITY菜单中选择 <code>SmartDataViewer/CodeGen -> build</code> 即可在工程中创建编辑器导出路径 <code>Editor/Export/</code> 。其中有已经成功生成的编辑器脚本。
 
 ## Video on YouTube
 
