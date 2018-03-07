@@ -1,1 +1,0 @@
-{"ConfigList":[{"ID":1,"NickName":"","CodeFileFolder":"{ROOT}/Editor/EditorDemo","EditorName":"SupportsConfigEditor","ClassType":"SupportsConfig","SubType":"Supports"},{"ID":2,"NickName":"","CodeFileFolder":"{ROOT}/Editor/EditorDemo","EditorName":"DemoConfigEditor","ClassType":"DemoConfig","SubType":"Demo"}]}

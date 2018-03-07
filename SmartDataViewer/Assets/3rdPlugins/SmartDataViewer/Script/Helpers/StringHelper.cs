@@ -266,6 +266,24 @@ namespace SmartDataViewer.Helpers
             // Return the array
             return lReturnValues;
         }
+        
+        
+        /**
+         *  随机数函数
+         */
+        static char[] constant = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+        static public string GenerateRandomNumber(int length)
+        {
+            System.Text.StringBuilder newRandom = new System.Text.StringBuilder();
+            System.Random rd = new System.Random();
+            for (int i = 0; i < length; i++)
+            {
+                newRandom.Append(constant[rd.Next(10)]);
+            }
+
+            return newRandom.ToString();
+        }
     }
 
     /// <summary>

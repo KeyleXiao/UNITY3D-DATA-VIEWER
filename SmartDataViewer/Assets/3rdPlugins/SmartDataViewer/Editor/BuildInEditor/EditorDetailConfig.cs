@@ -20,36 +20,52 @@ using UnityEditor;
 
 namespace SmartDataViewer.Editor
 {
+	[ConfigEditor(load_path: @"{EDITOR}/Config/EditorDetailConfig")]
 	[Serializable]
-	[ConfigEditor(load_path: @"{ROOT}/SmartDataViewer/Config/DefaultControlPropertity")]
-	public class DefaultControlConfig : ConfigBase<DefaultControlPropertity>
+	public class EditorDetailConfig : ConfigBase<EditorDetail>
 	{
 
 	}
 
-	public class DefaultControlConfigEditor : ConfigEditorSchema<DefaultControlPropertity>
+
+	[Serializable]
+	public class EditorDetail : IModel
 	{
-		[MenuItem("SmartDataViewer/DefaultControlConfigEditor")]
+		public EditorDetail()
+		{
+			FieldName = string.Empty;
+			Description = string.Empty;
+		}
+		[ConfigEditorField(can_editor: true)]
+		public FieldType CurrentType;
+		[ConfigEditorField(can_editor: true)]
+		public string FieldName;
+		[ConfigEditorField(can_editor: true)]
+		public bool CanEditor;
+		[ConfigEditorField(can_editor: true)]
+		public string Description;
+	}
+
+	public class EditorDetailConfigEditor : ConfigEditorSchema<EditorDetail>
+	{
+		[MenuItem("SmartDataViewer/EditorDetailConfig")]
 		static public void OpenView()
 		{
-			DefaultControlConfigEditor w = CreateInstance<DefaultControlConfigEditor>();
+			EditorDetailConfigEditor w = CreateInstance<EditorDetailConfigEditor>();
 			w.ShowUtility();
 		}
 
-		public override DefaultControlPropertity CreateValue()
+		public override EditorDetail CreateValue()
 		{
-			DefaultControlPropertity r = base.CreateValue();
+			EditorDetail r = base.CreateValue();
 			return r;
 		}
 
 		public override void Initialize()
 		{
-			SetConfigType(new DefaultControlConfig());
-		}
-		protected override void SaveButton()
-		{
-			EditorConfig.ControlConfig = DefaultControlConfig.LoadConfig<DefaultControlConfig>("{ROOT}/SmartDataViewer/Config/DefaultControlPropertity");
-			base.SaveButton();
+			SetConfigType(new EditorDetailConfig());
 		}
 	}
 }
+
+

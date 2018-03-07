@@ -23,25 +23,6 @@ namespace SmartDataViewer.Editor
 {
 	public class CodeGenConfigEditor : ConfigEditorSchema<CodeGen>
 	{
-		string RootSymbol = "{ROOT}";
-		string EditorSymbol = "{EDITOR}";
-
-
-		public string GetAbsolutePath(string fileWithNoExcension, bool isDir = false)
-		{
-			if (fileWithNoExcension.Contains(RootSymbol))
-			{
-				fileWithNoExcension = fileWithNoExcension.Replace(RootSymbol, Application.dataPath);
-				if (!isDir && !fileWithNoExcension.EndsWith(".txt")) fileWithNoExcension += ".txt";
-			}
-			else if (fileWithNoExcension.Contains(EditorSymbol))
-			{
-				fileWithNoExcension = fileWithNoExcension.Replace(EditorSymbol, Application.dataPath + "/SmartDataViewer");
-				if (!isDir && !fileWithNoExcension.EndsWith(".txt")) fileWithNoExcension += ".txt";
-			}
-			return fileWithNoExcension;
-		}
-
 		//{ROOT}/Editor/SceneEditor/NewEventEditor
 		[MenuItem("SmartDataViewer/CodeGen")]
 		static public void OpenView()
@@ -54,16 +35,10 @@ namespace SmartDataViewer.Editor
 		protected override void RenderExtensionButton(CodeGen item)
 		{
 			base.RenderExtensionButton(item);
-			//string filePath = GetAbsolutePath(item.CodeFilePath);
-			string dirPath = GetAbsolutePath(item.CodeFileFolder, true);
-
+			
 			string errorInfo = string.Empty;
 
-			if (!Directory.Exists(dirPath))
-			{
-				errorInfo = "Can't find Code Folder";
-			}
-			else if (string.IsNullOrEmpty(item.EditorName))
+			if (string.IsNullOrEmpty(item.EditorName))
 			{
 				errorInfo = "Editor Name Is Empty";
 			}
@@ -71,7 +46,6 @@ namespace SmartDataViewer.Editor
 			{
 				errorInfo = "SubType Is Empty";
 			}
-
 
 			if (string.IsNullOrEmpty(errorInfo))
 			{
@@ -85,23 +59,22 @@ namespace SmartDataViewer.Editor
 					ShowNotification(new GUIContent(errorInfo));
 				}
 			}
-			//base.RenderExtensionButton(item);
 		}
 
 		string templateFile { get; set; }
 
-
 		public override void Initialize()
 		{
+			base.Initialize();
+			
 			SetConfigType(new CodeGenConfig());
 
 
-			string path = GetAbsolutePath("{EDITOR}/CTS/EditorClassTemplate");
-			Debug.Log(path);
+			string path = PathHelper.GetTemplatetEditorClassPath();
+			
 			if (File.Exists(path))
-			{
 				templateFile = File.ReadAllText(path);
-			}
+			
 		}
 
 		public void WriteFile(CodeGen item)
@@ -111,35 +84,41 @@ namespace SmartDataViewer.Editor
 			temp = temp.Replace("$[EditorName]", item.EditorName);
 			temp = temp.Replace("$[ClassType]", item.ClassType);
 			temp = temp.Replace("$[SubType]", item.SubType);
-			string path = GetAbsolutePath(item.CodeFileFolder, true) + "/" + item.EditorName + ".cs";
+			temp = temp.Replace("$[EditorPath]", item.EditorPath);
+
+			//Gen file path
+			string path = string.Format("{0}/{1}.cs", PathHelper.GetEditorExportPath(), item.EditorName);
+			
 			if (File.Exists(path)) File.Delete(path);
 			File.WriteAllText(path, temp, System.Text.Encoding.UTF8);
+			Debug.LogWarning(string.Format("Success Build !\n{0}",path));
 			AssetDatabase.Refresh();
-			ShowNotification(new GUIContent("Success"));
+			Close();
 		}
 
 
 	}
 
-	[System.Serializable]
+	[Serializable]
 	[ConfigEditor(disableSearch: true, load_path: "{EDITOR}/Config/CodeGen")]
 	public class CodeGenConfig : ConfigBase<CodeGen> { }
 
-	[System.Serializable]
+	[Serializable]
 	public class CodeGen : IModel
 	{
 		public CodeGen()
 		{
 			NickName = string.Empty;
-			CodeFileFolder = string.Empty;
 			EditorName = string.Empty;
 			ClassType = string.Empty;
 			SubType = string.Empty;
+			EditorPath = "CustomEditor";
 		}
-		public string CodeFileFolder;
+		
 		public string EditorName;
 		public string ClassType;
 		public string SubType;
+		public string EditorPath;
 	}
 
 }

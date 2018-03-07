@@ -26,6 +26,8 @@ namespace SmartDataViewer
 			OutLinkEditor = string.Empty;
 			OutLinkSubClass = string.Empty;
 			OutLinkDisplay = string.Empty;
+			CanEditor = true;
+			Width = 150;
 		}
 		public int Order;
 

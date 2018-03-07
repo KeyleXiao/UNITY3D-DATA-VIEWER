@@ -1,4 +1,4 @@
-﻿//
+//
 //   		Copyright 2017 KeyleXiao.
 //     		Contact : Keyle_xiao@hotmail.com 
 //
@@ -14,27 +14,27 @@
 //     		See the License for the specific language governing permissions and
 //     		limitations under the License.
 //
-
+using System;
 using UnityEditor;
 using SmartDataViewer.Editor;
 
-public class DemoConfigEditor : ConfigEditorSchema<Demo>
+public class $[EditorName] : ConfigEditorSchema<$[SubType]>
 {
-    [MenuItem("CustomEditor/DemoConfigEditor")]
-    static public void OpenView()
-    {
-        DemoConfigEditor w = CreateInstance<DemoConfigEditor>();
-        w.ShowUtility();
-    }
+	[MenuItem("$[EditorPath]/$[EditorName]")]
+	static public void OpenView()
+	{
+		$[EditorName] w = CreateInstance<$[EditorName]>();
+		w.ShowUtility();
+	}
 
-    public override Demo CreateValue()
-    {
-        Demo r = base.CreateValue();
-        return r;
-    }
+	public override $[SubType] CreateValue()
+	{
+		$[SubType] r = base.CreateValue();
+		return r;
+	}
 
-    public override void Initialize()
-    {
-        SetConfigType(new DemoConfig());
-    }
+	public override void Initialize()
+	{
+		SetConfigType(new $[ClassType]());
+	}
 }

@@ -7,3 +7,6 @@ SmartDataViewer/Assets/SmartDataViewer/.DS_Store
 SmartDataViewer/Assets/.DS_Store
 SmartDataViewer/.DS_Store
 .DS_Store
+SmartDataViewer/Assembly-CSharp-Editor.csproj
+SmartDataViewer/Assembly-CSharp.csproj
+Assembly-CSharp-Editor.csproj

@@ -19,38 +19,93 @@ using System;
 using System.IO;
 using System.Runtime.Remoting;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+
+#endif
 
 namespace SmartDataViewer
 {
     public static class PathHelper
     {
-        static public string GetConfigAbsoluteFilePath(string filename,string extionsion = ".txt")
+#if UNITY_EDITOR
+        static string EditorClassTemplate = "{EDITOR}/CTS/EditorClassTemplate.txt";
+        static string EditorSymbol = "{EDITOR}";
+        static string RealEditorPath = "";
+        static string EditorExportPath = "";
+        static string EditorClassTemplatePath = "";
+
+        static public string GetTemplatetEditorClassPath()
         {
-            #if UNITY_EDITOR
-            return string.Format(@"{0}/Resources/Config/{1}{2}", Application.dataPath, filename,extionsion);
-            #endif
-            
-            
+            if (!string.IsNullOrEmpty(EditorClassTemplatePath))
+                return EditorClassTemplatePath;
+
+            if (string.IsNullOrEmpty(RealEditorPath))
+                RealEditorPath = GetRootEditorPath();
+
+            return EditorClassTemplatePath = EditorClassTemplate.Replace("{EDITOR}", RealEditorPath);
+        }
+
+        static public string GetRootEditorPath()
+        {
+            if (!string.IsNullOrEmpty(RealEditorPath))
+                return RealEditorPath;
+
+            string[] res =
+                Directory.GetDirectories(Application.dataPath, "SmartDataViewer", SearchOption.AllDirectories);
+            return RealEditorPath = res[0];
+        }
+
+        static public string GetEditorExportPath()
+        {
+            if (!string.IsNullOrEmpty(EditorExportPath))
+            {
+                return EditorExportPath;
+            }
+
+            EditorExportPath = string.Format(@"{0}/Editor/Export/", Application.dataPath);
+
+            if (!Directory.Exists(EditorExportPath))
+            {
+                Directory.CreateDirectory(EditorExportPath);
+            }
+
+            return EditorExportPath;
+        }
+
+#endif
+
+
+        static string RootSymbol = "{ROOT}";
+
+
+        static public string GetConfigAbsoluteFilePath(string filename, string extionsion = ".txt")
+        {
+#if UNITY_EDITOR
+            return string.Format(@"{0}/Resources/Config/{1}{2}", Application.dataPath, filename, extionsion);
+#endif
+
             return string.Empty;
         }
 
-        static string RootSymbol = "{ROOT}";
-        static string EditorSymbol = "{EDITOR}";
-        
-        static  public  bool GetAbsolutePath(Type t,ref string fileNameOrPath)
+
+        static public bool GetAbsolutePath(Type t, ref string fileNameOrPath, string extension = ".txt")
         {
             if (fileNameOrPath.Contains(RootSymbol))
             {
                 fileNameOrPath = fileNameOrPath.Replace(RootSymbol, Application.dataPath);
-                if (!fileNameOrPath.EndsWith(".txt"))
-                    fileNameOrPath += ".txt";
+                if (!fileNameOrPath.EndsWith(extension))
+                    fileNameOrPath += extension;
             }
             else if (fileNameOrPath.Contains(EditorSymbol))
             {
+#if UNITY_EDITOR
+                //这里的逻辑只会在编辑器状态下被使用
                 fileNameOrPath =
-                    fileNameOrPath.Replace(EditorSymbol, Application.dataPath + "/SmartDataViewer");
-                if (!fileNameOrPath.EndsWith(".txt"))
-                    fileNameOrPath += ".txt";
+                    fileNameOrPath.Replace(EditorSymbol, GetRootEditorPath());
+                if (!fileNameOrPath.EndsWith(extension))
+                    fileNameOrPath += extension;
+#endif
             }
             else
             {
@@ -61,15 +116,16 @@ namespace SmartDataViewer
 
                 return false;
             }
+
             return true;
         }
-        
-        
-        static  public  bool GetAbsolutePath<T>(ref string fileNameOrPath)
+
+
+        static public bool GetAbsolutePath<T>(ref string fileNameOrPath, string extension = ".txt")
         {
-            return GetAbsolutePath(typeof(T),ref fileNameOrPath);
+            return GetAbsolutePath(typeof(T), ref fileNameOrPath, extension);
         }
-        
+
         static public string PathCombine(string pathA, string pathB)
         {
             return Path.Combine(pathA, pathB).Replace("\\", "/");
@@ -121,80 +177,5 @@ namespace SmartDataViewer
         {
             return Uri.UnescapeDataString(str);
         }
-
-        static public string GetFileURL(string path)
-        {
-            return (new Uri(path)).AbsoluteUri;
-        }
-
-        static public string GetTemplateTxtFolder()
-        {
-            string path = Application.dataPath + "/SmartDataViewer/CTS/";
-            return path;
-        }
-
-        static public string GetRelativePath(string content = "")
-        {
-            string path = Application.dataPath + "/SmartDataViewer/CTS/";
-
-            if (string.IsNullOrEmpty(path))
-            {
-                return path;
-            }
-
-            return PathCombine(path, content);
-        }
-
-
-        static public string GetLocalAssetBundleFolder()
-        {
-            return PathCombine(Application.persistentDataPath, GetPlatformName());
-        }
-
-        /**
-         *  随机数函数
-         */
-        static char[] constant = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-
-        static public string GenerateRandomNumber(int length)
-        {
-            System.Text.StringBuilder newRandom = new System.Text.StringBuilder();
-            System.Random rd = new System.Random();
-            for (int i = 0; i < length; i++)
-            {
-                newRandom.Append(constant[rd.Next(10)]);
-            }
-
-            return newRandom.ToString();
-        }
-
-#if UNITY_EDITOR
-        public static string GetEditorOutPutPath(RuntimePlatform platform, bool isRoot = false)
-        {
-            return string.Format("{0}/StreamingAssets/{1}", Application.dataPath, GetPlatformForAssetBundles(platform));
-        }
-
-
-        public static void DebugWrite(string currentLog)
-        {
-            string logFilePath = string.Format("{0}/Logs", Application.dataPath);
-
-            if (!Directory.Exists(logFilePath))
-            {
-                Directory.CreateDirectory(logFilePath);
-            }
-
-            if (File.Exists(logFilePath))
-            {
-                File.Delete(logFilePath);
-            }
-
-            if (!string.IsNullOrEmpty(currentLog))
-            {
-                File.WriteAllText(string.Format("{0}/{1}.txt", logFilePath, System.DateTime.Now.ToLongDateString()),
-                    currentLog);
-            }
-        }
-#endif
     }
 }

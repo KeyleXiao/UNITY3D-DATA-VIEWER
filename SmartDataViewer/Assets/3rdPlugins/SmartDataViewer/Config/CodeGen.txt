@@ -1,0 +1,18 @@
+{
+  "ConfigList": [
+    {
+      "ID": 1,
+      "NickName": "",
+      "EditorName": "SupportsConfigEditor",
+      "ClassType": "SupportsConfig",
+      "SubType": "Supports"
+    },
+    {
+      "ID": 2,
+      "NickName": "",
+      "EditorName": "DemoConfigEditor",
+      "ClassType": "DemoConfig",
+      "SubType": "Demo"
+    }
+  ]
+}
