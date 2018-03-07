@@ -375,6 +375,7 @@ namespace SmartDataViewer.Editor
             {
                 if (enable)
                 {
+                    
                     value = EditorGUILayout.EnumPopup(value as Enum, new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
@@ -528,6 +529,9 @@ namespace SmartDataViewer.Editor
         }
 
 
+        /// <summary>
+        /// 重新加载外链类缓存
+        /// </summary>
         protected virtual void ReloadOutLinkChache()
         {
             if (outLinkRawData == null)
@@ -647,6 +651,10 @@ namespace SmartDataViewer.Editor
             GUILayout.EndHorizontal();
         }
 
+        
+        /// <summary>
+        /// 创建新行
+        /// </summary>
         protected virtual void NewLineButton()
         {
             if (GUILayout.Button("New Line", GUI.skin.GetStyle("ButtonMid"),
@@ -654,6 +662,10 @@ namespace SmartDataViewer.Editor
                 config_current.ConfigList.Add(CreateValue());
         }
 
+        /// <summary>
+        /// 页头按钮
+        /// </summary>
+        /// <param name="field_name"></param>
         protected virtual void HeadButton_Click(string field_name)
         {
             if (field_name == "ID")
@@ -814,6 +826,10 @@ namespace SmartDataViewer.Editor
         }
 
 
+        /// <summary>
+        /// 扩展按钮
+        /// </summary>
+        /// <param name="item"></param>
         protected virtual void RenderExtensionButton(T item)
         {
             if (current_windowType == WindowType.CALLBACK)

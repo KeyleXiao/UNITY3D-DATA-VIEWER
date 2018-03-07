@@ -1,6 +1,10 @@
 # UNITY3D-DATA-VIEWER
 UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
+
+![GitHub stars](https://img.shields.io/github/stars/KeyleXiao/UNITY3D-DATA-VIEWER.svg)
+![GitHub license](https://img.shields.io/github/license/KeyleXiao/UNITY3D-DATA-VIEWER.svg)
+
 ```
 ├── 3rdPlugins
 │   └── SmartDataViewer  --主程序
@@ -13,6 +17,8 @@ UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
     └── Config           --序列化文件导出路径 可修改
 
 ```
+
+
 
 # Current Version 1.2.2 BETA
 
