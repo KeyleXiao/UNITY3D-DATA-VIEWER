@@ -1,22 +1,31 @@
 # UNITY3D-DATA-VIEWER
 UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
-# Version 1.2.2 BETA
-
+```
 ├── 3rdPlugins
-│   └── SmartDataViewer
-│       ├── CTS
+│   └── SmartDataViewer  --主程序
+│       ├── CTS          
 │       ├── Config
 │       ├── Editor
 │       └── Script
-├── DemoEntity
-├── Plugins
-│   └── Editor
-│       └── JetBrains
+├── DemoEntity           --测试用的实体类
 └── Resources
-    └── Config
+    └── Config           --序列化文件导出路径 可修改
+
+```
+
+# Current Version 1.2.2 BETA
 
 初次尝试轻直接在UNITY菜单中选择 <code>SmartDataViewer/CodeGen -> build</code> 即可在工程中创建编辑器导出路径 <code>Editor/Export/</code> 。其中有已经成功生成的编辑器脚本。
+
+
+# Next Version 
+
+下个版本核心：
+1. 优化编辑器编辑体验
+2. 增加多总类的数据序列化，暂定 lua ,json(支持更多序列化插件),protobuf,YamlDotNet,Excel
+
+敬请期待。
 
 ## Video on YouTube
 
