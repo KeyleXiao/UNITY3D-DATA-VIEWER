@@ -717,6 +717,8 @@ namespace SmartDataViewer.Editor
             }
 
             EditorGUILayout.Space();
+            
+            //--- 顶部 功能按钮 ---
             GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
 
             if (GUILayout.Button("Refresh", GUI.skin.GetStyle("ButtonLeft"),
@@ -731,12 +733,15 @@ namespace SmartDataViewer.Editor
                 SaveButton();
 
             GUILayout.EndHorizontal();
-
+            
 
             if (!configSetting.Setting.DisableSearch)
                 SearchField();
+            //--- 顶部 功能按钮 ---
 
-
+            
+            
+            //--- 表头 ---
             GUILayout.BeginScrollView(new Vector2(posv.x, 0), false, false, GUIStyle.none, GUIStyle.none,
                 new GUILayoutOption[] {GUILayout.Height(45)});
             GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
@@ -763,7 +768,9 @@ namespace SmartDataViewer.Editor
 
             GUILayout.EndHorizontal();
             GUILayout.EndScrollView();
-
+            //--- 表头 ---
+            
+            
 
             GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
             posv = GUILayout.BeginScrollView(posv, true, false, GUI.skin.GetStyle("horizontalScrollbar"), GUIStyle.none,

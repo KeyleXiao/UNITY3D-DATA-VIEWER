@@ -29,21 +29,39 @@ namespace SmartDataViewer
     public static class PathHelper
     {
 #if UNITY_EDITOR
-        static string EditorClassTemplate = "{EDITOR}/CTS/EditorClassTemplate.txt";
+        static string EditorResourcesPath = "{EDITOR}/EditorResources/";
+        static string EditorClassTemplate = "{EDITOR}/EditorResources/EditorClassTemplate.txt";
         static string EditorSymbol = "{EDITOR}";
         static string RealEditorPath = "";
-        static string EditorExportPath = "";
-        static string EditorClassTemplatePath = "";
+        static string RealEditorExportPath = "";
+        static string RealEditorClassTemplatePath = "";
+        static string RealEditorResourcesPath = "";
+
+
+        static public string GetEditorResourcePath(string resourceName = "")
+        {
+            if (string.IsNullOrEmpty(RealEditorResourcesPath))
+            {
+                RealEditorResourcesPath = EditorResourcesPath.Replace(EditorSymbol,GetRootEditorPath());
+            }
+
+            if (!string.IsNullOrEmpty(resourceName))
+            {
+                return PathCombine(RealEditorClassTemplatePath,resourceName);
+            }
+            
+            return RealEditorResourcesPath;
+        }
 
         static public string GetTemplatetEditorClassPath()
         {
-            if (!string.IsNullOrEmpty(EditorClassTemplatePath))
-                return EditorClassTemplatePath;
+            if (!string.IsNullOrEmpty(RealEditorClassTemplatePath))
+                return RealEditorClassTemplatePath;
 
             if (string.IsNullOrEmpty(RealEditorPath))
                 RealEditorPath = GetRootEditorPath();
 
-            return EditorClassTemplatePath = EditorClassTemplate.Replace("{EDITOR}", RealEditorPath);
+            return RealEditorClassTemplatePath = EditorClassTemplate.Replace("{EDITOR}", RealEditorPath);
         }
 
         static public string GetRootEditorPath()
@@ -58,19 +76,19 @@ namespace SmartDataViewer
 
         static public string GetEditorExportPath()
         {
-            if (!string.IsNullOrEmpty(EditorExportPath))
+            if (!string.IsNullOrEmpty(RealEditorExportPath))
             {
-                return EditorExportPath;
+                return RealEditorExportPath;
             }
 
-            EditorExportPath = string.Format(@"{0}/Editor/Export/", Application.dataPath);
+            RealEditorExportPath = string.Format(@"{0}/Editor/Export/", Application.dataPath);
 
-            if (!Directory.Exists(EditorExportPath))
+            if (!Directory.Exists(RealEditorExportPath))
             {
-                Directory.CreateDirectory(EditorExportPath);
+                Directory.CreateDirectory(RealEditorExportPath);
             }
 
-            return EditorExportPath;
+            return RealEditorExportPath;
         }
 
 #endif
@@ -97,6 +115,7 @@ namespace SmartDataViewer
                 if (!fileNameOrPath.EndsWith(extension))
                     fileNameOrPath += extension;
             }
+            #if UNITY_EDITOR
             else if (fileNameOrPath.Contains(EditorSymbol))
             {
 #if UNITY_EDITOR
@@ -107,6 +126,7 @@ namespace SmartDataViewer
                     fileNameOrPath += extension;
 #endif
             }
+            #endif
             else
             {
                 if (string.IsNullOrEmpty(fileNameOrPath))
