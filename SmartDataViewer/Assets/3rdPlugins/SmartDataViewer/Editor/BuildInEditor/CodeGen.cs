@@ -18,6 +18,7 @@ using System;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using SmartDataViewer.Helpers;
 
 namespace SmartDataViewer.Editor
 {
@@ -32,10 +33,14 @@ namespace SmartDataViewer.Editor
 		}
 
 
+		protected override void RenderExtensionHead()
+		{
+			GUILayout.Label("GenCode",new GUILayoutOption[] { GUILayout.Width(90) });
+		}
+
+
 		protected override void RenderExtensionButton(CodeGen item)
 		{
-			base.RenderExtensionButton(item);
-			
 			string errorInfo = string.Empty;
 
 			if (string.IsNullOrEmpty(item.EditorName))
@@ -54,7 +59,7 @@ namespace SmartDataViewer.Editor
 			}
 			else
 			{
-				if (GUILayout.Button("", GUI.skin.GetStyle("CN EntryWarn"), new GUILayoutOption[] { GUILayout.Width(50) }))
+				if (GUILayout.Button(EditorGUIStyle.LoadEditorResource<Texture2D>("warning.png"), new GUILayoutOption[] { GUILayout.Width(90),GUILayout.Height(18) } ))
 				{
 					ShowNotification(new GUIContent(errorInfo));
 				}

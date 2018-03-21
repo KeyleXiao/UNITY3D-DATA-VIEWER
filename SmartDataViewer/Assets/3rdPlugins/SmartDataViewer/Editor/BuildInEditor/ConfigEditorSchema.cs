@@ -43,9 +43,18 @@ namespace SmartDataViewer.Editor
             get { return false; }
         }
 
+        /// <summary>
+        /// 设置列间间隔
+        /// </summary>
+        protected int ColumnSpan = 3;
+
+        /// <summary>
+        /// 表头高度
+        /// </summary>
+        protected int TableHeadHeight = 28;
+
         protected ConfigEditorAttribute configSetting { get; set; }
         protected ConfigBase<T> config_current { get; set; }
-        protected int Index { get; set; }
         protected Vector2 posv { get; set; }
         protected List<int> deleteList = new List<int>();
         protected string SearchResourceName { get; set; }
@@ -375,7 +384,6 @@ namespace SmartDataViewer.Editor
             {
                 if (enable)
                 {
-                    
                     value = EditorGUILayout.EnumPopup(value as Enum, new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
@@ -636,8 +644,7 @@ namespace SmartDataViewer.Editor
         protected virtual void SaveButton()
         {
             GUI.backgroundColor = Color.green;
-            if (GUILayout.Button("Save", GUI.skin.GetStyle("ButtonRight"),
-                new GUILayoutOption[] {GUILayout.Height(30)}))
+            if (GUILayout.Button("Save", GUI.skin.GetStyle("ButtonRight")))
                 SaveConfig();
             GUI.backgroundColor = Color.white;
         }
@@ -645,20 +652,19 @@ namespace SmartDataViewer.Editor
         protected virtual void SearchField()
         {
             GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(Language.NickName, GUILayout.Width(100));
+            EditorGUILayout.LabelField(Language.NickName, GUILayout.Width(70));
             SearchResourceName =
                 EditorGUILayout.TextField(SearchResourceName, GUI.skin.GetStyle("ToolbarSeachTextField"));
             GUILayout.EndHorizontal();
         }
 
-        
+
         /// <summary>
         /// 创建新行
         /// </summary>
         protected virtual void NewLineButton()
         {
-            if (GUILayout.Button("New Line", GUI.skin.GetStyle("ButtonMid"),
-                new GUILayoutOption[] {GUILayout.Height(30)}))
+            if (GUILayout.Button("New Line", GUI.skin.GetStyle("ButtonMid")))
                 config_current.ConfigList.Add(CreateValue());
         }
 
@@ -683,6 +689,124 @@ namespace SmartDataViewer.Editor
                 else
                     config_current.ConfigList = config_current.ConfigList.OrderByDescending(x => x.NickName).ToList();
             }
+        }
+
+        protected virtual void RenderHead()
+        {
+            GUILayout.BeginScrollView(new Vector2(posv.x, 0), false, false, GUIStyle.none, GUIStyle.none,
+                new GUILayoutOption[] {GUILayout.Height(TableHeadHeight)});
+
+            GUILayout.BeginHorizontal(EditorGUIStyle.GetGroupBoxStyle(),
+                new GUILayoutOption[] {GUILayout.Width(position.width)});
+
+            //TODO Set Order
+            foreach (var item in Chache)
+            {
+                if (GUILayout.Button(
+                    string.IsNullOrEmpty(item.config_editor_setting.Display)
+                        ? item.field_info.Name
+                        : item.config_editor_setting.Display, EditorGUIStyle.GetTagButtonStyle(),
+                    GUILayout.Width(item.config_editor_setting.Width)))
+                    HeadButton_Click(item.field_info.Name);
+
+                GUILayout.Space(ColumnSpan);
+            }
+
+            RenderExtensionHead();
+
+            if (current_windowType != WindowType.CALLBACK)
+                EditorGUILayout.LabelField(new GUIContent(Language.Operation), GUILayout.Width(80));
+            if (current_windowType == WindowType.CALLBACK)
+                EditorGUILayout.LabelField(new GUIContent(Language.Select), GUILayout.Width(80));
+
+
+            GUILayout.EndHorizontal();
+            GUILayout.EndScrollView();
+        }
+
+
+        protected virtual void RenderExtensionHead()
+        {
+        }
+
+        protected virtual void RenderExtensionButton(T item)
+        {
+        }
+
+        protected virtual void RenderTable()
+        {
+            posv = GUILayout.BeginScrollView(posv, false, false, EditorGUIStyle.GetHorizontalScrollbarStyle(),
+                GUIStyle.none, EditorGUIStyle.GetTableGroupBoxStyle());
+
+            if (!string.IsNullOrEmpty(SearchResourceName))
+            {
+                ItemMaxCount = config_current.ConfigList.Count(x =>
+                    x.NickName.ToLower().Contains(SearchResourceName.ToLower().Trim()));
+                Finallylist = config_current.ConfigList
+                    .Where(x => x.NickName.ToLower().Contains(SearchResourceName.ToLower().Trim()))
+                    .Skip(PageIndex * PageAmount).Take(PageAmount).ToList();
+            }
+            else
+            {
+                ItemMaxCount = config_current.ConfigList.Count;
+                Finallylist = config_current.ConfigList.Skip(PageIndex * PageAmount).Take(PageAmount).ToList();
+            }
+
+            //foreach (var item in Finallylist)
+            for (int i = 0; i < Finallylist.Count; i++)
+            {
+                T item = Finallylist[i];
+
+                if (deleteList.Contains(item.ID))
+                    continue;
+
+                //Select effect diaplay
+                if (current_windowType == WindowType.CALLBACK && SelctList.Contains(item.ID))
+                    GUI.backgroundColor = Color.green;
+                else GUI.backgroundColor = Color.white;
+
+
+                GUILayout.BeginHorizontal(EditorGUIStyle.GetGroupBoxStyle());
+
+                foreach (var schema in Chache)
+                {
+                    var rawData = schema.field_info.GetValue(item);
+                    RenderRawLine(schema, rawData, item);
+                    GUILayout.Space(ColumnSpan);
+                }
+
+                RenderExtensionButton(item);
+
+                RenderFunctionButton(item);
+
+                GUILayout.Space(ColumnSpan);
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.Space(15);
+            GUILayout.EndScrollView();
+        }
+
+
+
+        protected virtual void RenderMenu()
+        {
+            GUILayout.BeginHorizontal(GUIStyle.none,new GUILayoutOption[] {GUILayout.Height(25)});
+
+            if (GUILayout.Button("Refresh", GUI.skin.GetStyle("ButtonLeft")))
+                Reload();
+
+
+            if (!configSetting.Setting.DisableCreate && current_windowType != WindowType.CALLBACK)
+                NewLineButton();
+
+            if (!configSetting.Setting.DisableSave && current_windowType != WindowType.CALLBACK)
+                SaveButton();
+
+            GUILayout.EndHorizontal();
+
+
+            if (!configSetting.Setting.DisableSearch)
+                SearchField();
         }
 
         /// <summary>
@@ -717,115 +841,22 @@ namespace SmartDataViewer.Editor
             }
 
             EditorGUILayout.Space();
-            
+
             //--- 顶部 功能按钮 ---
-            GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
-
-            if (GUILayout.Button("Refresh", GUI.skin.GetStyle("ButtonLeft"),
-                new GUILayoutOption[] {GUILayout.Height(30)}))
-                Reload();
-
-
-            if (!configSetting.Setting.DisableCreate && current_windowType != WindowType.CALLBACK)
-                NewLineButton();
-
-            if (!configSetting.Setting.DisableSave && current_windowType != WindowType.CALLBACK)
-                SaveButton();
-
-            GUILayout.EndHorizontal();
-            
-
-            if (!configSetting.Setting.DisableSearch)
-                SearchField();
+            RenderMenu();
             //--- 顶部 功能按钮 ---
 
-            
-            
             //--- 表头 ---
-            GUILayout.BeginScrollView(new Vector2(posv.x, 0), false, false, GUIStyle.none, GUIStyle.none,
-                new GUILayoutOption[] {GUILayout.Height(45)});
-            GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
-            GUILayout.Space(20);
-
-            //TODO Set Order
-            foreach (var item in Chache)
-            {
-                if (GUILayout.Button(
-                    string.IsNullOrEmpty(item.config_editor_setting.Display)
-                        ? item.field_info.Name
-                        : item.config_editor_setting.Display, GUI.skin.GetStyle("WhiteLabel"),
-                    GUILayout.Width(item.config_editor_setting.Width)))
-                    HeadButton_Click(item.field_info.Name);
-
-                GUILayout.Space(20);
-            }
-
-            if (current_windowType != WindowType.CALLBACK)
-                EditorGUILayout.LabelField(new GUIContent(Language.Operation), GUILayout.Width(80));
-            if (current_windowType == WindowType.CALLBACK)
-                EditorGUILayout.LabelField(new GUIContent(Language.Select), GUILayout.Width(80));
-
-
-            GUILayout.EndHorizontal();
-            GUILayout.EndScrollView();
+            RenderHead();
             //--- 表头 ---
-            
-            
 
-            GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
-            posv = GUILayout.BeginScrollView(posv, true, false, GUI.skin.GetStyle("horizontalScrollbar"), GUIStyle.none,
-                GUI.skin.GetStyle("GroupBox"));
-            GUILayout.BeginVertical();
+            //--- 主表 ---
+            RenderTable();
+            //--- 主表 ---
 
-
-            if (!string.IsNullOrEmpty(SearchResourceName))
-            {
-                ItemMaxCount = config_current.ConfigList.Count(x =>
-                    x.NickName.ToLower().Contains(SearchResourceName.ToLower().Trim()));
-                Finallylist = config_current.ConfigList
-                    .Where(x => x.NickName.ToLower().Contains(SearchResourceName.ToLower().Trim()))
-                    .Skip(PageIndex * PageAmount).Take(PageAmount).ToList();
-            }
-            else
-            {
-                ItemMaxCount = config_current.ConfigList.Count;
-                Finallylist = config_current.ConfigList.Skip(PageIndex * PageAmount).Take(PageAmount).ToList();
-            }
-
-            //foreach (var item in Finallylist)
-            for (int i = 0; i < Finallylist.Count; i++)
-            {
-                T item = Finallylist[i];
-
-                if (deleteList.Contains(item.ID))
-                    continue;
-
-                //Select effect diaplay
-                if (current_windowType == WindowType.CALLBACK && SelctList.Contains(item.ID))
-                    GUI.backgroundColor = Color.green;
-                else GUI.backgroundColor = Color.white;
-
-                GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
-
-                foreach (var schema in Chache)
-                {
-                    var rawData = schema.field_info.GetValue(item);
-                    RenderRawLine(schema, rawData, item);
-                    GUILayout.Space(20);
-                }
-
-
-                RenderExtensionButton(item);
-
-                GUILayout.Space(20);
-                GUILayout.EndHorizontal();
-            }
-
-            GUILayout.EndVertical();
-            GUILayout.EndScrollView();
-            GUILayout.EndHorizontal();
-
+            //--- 分页 ---
             Page();
+            //--- 分页 ---
 
             GUILayout.BeginHorizontal();
             GUILayout.Label(Language.Contract);
@@ -837,7 +868,7 @@ namespace SmartDataViewer.Editor
         /// 扩展按钮
         /// </summary>
         /// <param name="item"></param>
-        protected virtual void RenderExtensionButton(T item)
+        protected virtual void RenderFunctionButton(T item)
         {
             if (current_windowType == WindowType.CALLBACK)
             {
@@ -882,14 +913,15 @@ namespace SmartDataViewer.Editor
         /// </summary>
         protected virtual void Page()
         {
-            GUILayout.BeginHorizontal(GUI.skin.GetStyle("GroupBox"));
+            GUILayout.BeginHorizontal(EditorGUIStyle.GetGroupBoxStyle(),
+                new GUILayoutOption[] {GUILayout.Width(position.width)});
             int maxIndex = Mathf.FloorToInt((ItemMaxCount - 1) / (float) PageAmount);
             if (maxIndex < PageIndex)
                 PageIndex = 0;
 
             GUILayout.Label(string.Format(Language.PageInfoFormate, PageIndex + 1, maxIndex + 1), GUILayout.Width(80));
-            GUILayout.Label(Language.OnePageMaxNumber, GUILayout.Width(80));
-            int.TryParse(GUILayout.TextField(PageAmount.ToString(), GUILayout.Width(80)), out PageAmount);
+            GUILayout.Label(Language.OnePageMaxNumber, EditorGUIStyle.GetPageLabelGuiStyle(), GUILayout.Width(80));
+            int.TryParse(GUILayout.TextField(PageAmount.ToString(), GUILayout.Width(40)), out PageAmount);
 
             if (GUILayout.Button(Language.Previous, GUI.skin.GetStyle("ButtonLeft"), GUILayout.Height(16)))
             {

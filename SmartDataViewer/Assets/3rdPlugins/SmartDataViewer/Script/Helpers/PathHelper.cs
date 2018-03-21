@@ -18,17 +18,25 @@
 using System;
 using System.IO;
 using System.Runtime.Remoting;
+using SmartDataViewer.Helpers;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
 #endif
 
-namespace SmartDataViewer
+namespace SmartDataViewer.Helpers
 {
     public static class PathHelper
     {
 #if UNITY_EDITOR
+        
+        public enum PATH_TYPE
+        {
+            ASSETDATABASE,
+            ABSOLUTE
+        }
+        
         static string EditorResourcesPath = "{EDITOR}/EditorResources/";
         static string EditorClassTemplate = "{EDITOR}/EditorResources/EditorClassTemplate.txt";
         static string EditorSymbol = "{EDITOR}";
@@ -38,19 +46,35 @@ namespace SmartDataViewer
         static string RealEditorResourcesPath = "";
 
 
-        static public string GetEditorResourcePath(string resourceName = "")
+        /// <summary>
+        /// 默认获取SmartDataViewer的 EditorResources 绝对路径 使用枚举来控制是否使用Assetdatabase路径
+        /// </summary>
+        /// <param name="resourceName"></param>
+        /// <param name="pathType"></param>
+        /// <returns></returns>
+        static public string GetEditorResourcePath(string resourceName = "",PATH_TYPE pathType = PATH_TYPE.ABSOLUTE)
         {
             if (string.IsNullOrEmpty(RealEditorResourcesPath))
             {
                 RealEditorResourcesPath = EditorResourcesPath.Replace(EditorSymbol,GetRootEditorPath());
             }
 
+
+            var result = RealEditorResourcesPath;
+
             if (!string.IsNullOrEmpty(resourceName))
             {
-                return PathCombine(RealEditorClassTemplatePath,resourceName);
+                result = PathCombine(RealEditorResourcesPath,resourceName);
             }
             
-            return RealEditorResourcesPath;
+            //处理多种路径情况
+            if (pathType == PATH_TYPE.ASSETDATABASE)
+            {
+                var splitIndex = result.IndexOf("Assets/");
+                result = result.Substring(splitIndex);
+            }
+            
+            return result;
         }
 
         static public string GetTemplatetEditorClassPath()
