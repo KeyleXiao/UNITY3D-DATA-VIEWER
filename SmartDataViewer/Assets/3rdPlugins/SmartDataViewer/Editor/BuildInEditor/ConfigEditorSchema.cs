@@ -643,10 +643,10 @@ namespace SmartDataViewer.Editor
 
         protected virtual void SaveButton()
         {
-            GUI.backgroundColor = Color.green;
+         
             if (GUILayout.Button("Save", GUI.skin.GetStyle("ButtonRight")))
                 SaveConfig();
-            GUI.backgroundColor = Color.white;
+            
         }
 
         protected virtual void SearchField()
@@ -664,8 +664,10 @@ namespace SmartDataViewer.Editor
         /// </summary>
         protected virtual void NewLineButton()
         {
-            if (GUILayout.Button("New Line", GUI.skin.GetStyle("ButtonMid")))
+            GUI.backgroundColor = Color.green;
+            if (GUILayout.Button(Language.NewLine, GUI.skin.GetStyle("ButtonMid")))
                 config_current.ConfigList.Add(CreateValue());
+            GUI.backgroundColor = Color.white;
         }
 
         /// <summary>
@@ -782,17 +784,17 @@ namespace SmartDataViewer.Editor
                 GUILayout.Space(ColumnSpan);
                 GUILayout.EndHorizontal();
             }
+
             GUILayout.Space(15);
             GUILayout.EndScrollView();
         }
 
 
-
         protected virtual void RenderMenu()
         {
-            GUILayout.BeginHorizontal(GUIStyle.none,new GUILayoutOption[] {GUILayout.Height(25)});
+            GUILayout.BeginHorizontal(GUIStyle.none, new GUILayoutOption[] {GUILayout.Height(25)});
 
-            if (GUILayout.Button("Refresh", GUI.skin.GetStyle("ButtonLeft")))
+            if (GUILayout.Button(Language.DiscardChange, GUI.skin.GetStyle("ButtonLeft")))
                 Reload();
 
 
@@ -961,10 +963,10 @@ namespace SmartDataViewer.Editor
         /// <param name="a"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T DeepClone<T>(T a)
+        public K DeepClone<K>(K a)
         {
             var content = JsonUtility.ToJson(a);
-            return JsonUtility.FromJson<T>(content);
+            return JsonUtility.FromJson<K>(content);
         }
 
         /// <summary>

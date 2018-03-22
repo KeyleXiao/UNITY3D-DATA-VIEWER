@@ -46,13 +46,15 @@ namespace SmartDataViewer
 		[ConfigEditorField(visibility: false)]
 		public string OutLinkSubClass;
 
+		[ConfigEditorField(visibility: false)]
 		public string OutLinkClass;
 
-		[ConfigEditorField(visibility: true)]
 		public bool Visibility;
 
+		[ConfigEditorField(visibility: false)]
 		public string OutLinkDisplay;
 
+		[ConfigEditorField(visibility: false)]
 		public string OutLinkFilePath;
 	}
 }

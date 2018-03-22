@@ -37,13 +37,13 @@ namespace SmartDataViewer.Editor
 			FieldName = string.Empty;
 			Description = string.Empty;
 		}
-		[ConfigEditorField(can_editor: true)]
+		
 		public ReflectionHelper.FieldType CurrentType;
-		[ConfigEditorField(can_editor: true)]
+
 		public string FieldName;
-		[ConfigEditorField(can_editor: true)]
+
 		public bool CanEditor;
-		[ConfigEditorField(can_editor: true)]
+
 		public string Description;
 	}
 

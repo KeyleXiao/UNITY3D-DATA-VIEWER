@@ -59,6 +59,8 @@ namespace SmartDataViewer.Editor
 		//public static string OnePageMaxNumber = "单页最大数量";
 		//public static string PageInfoFormate = @"|{0}|页-共|{1}|页";
 
+		public static string NewLine = "NewLine";
+		public static string DiscardChange = "Discard";
 		public static string Menu = "Menu";
 		public static string Build = "Build";
 		public static string Select = "Select";

@@ -36,12 +36,14 @@ namespace SmartDataViewer.Editor
         private static GUIStyle horizontalScrollbarStyle;
         private static GUIStyle pageLabelGuiStyle;
         private static GUIStyle tableGroupBoxStyle;
+        
+        
         public static GUIStyle GetTagButtonStyle()
         {
             if (tagButtonStyle == null)
             {
                 tagButtonStyle = new GUIStyle(GUI.skin.button);
-                tagButtonStyle.padding = new RectOffset(4,0,2,2);
+                tagButtonStyle.padding = new RectOffset(4,0,4,2);
                 tagButtonStyle.normal.background = LoadEditorResource<Texture2D>("HeadBg.jpg");
                 tagButtonStyle.alignment = TextAnchor.MiddleLeft;
             }

@@ -29,16 +29,18 @@ namespace SmartDataViewer.Helpers
 {
     public static class PathHelper
     {
-#if UNITY_EDITOR
-        
         public enum PATH_TYPE
         {
             ASSETDATABASE,
-            ABSOLUTE
+            ABSOLUTE,
+            RESOURCES,
+            PERSISTENT
         }
-        
+#if UNITY_EDITOR
+
+
         static string EditorResourcesPath = "{EDITOR}/EditorResources/";
-        static string EditorClassTemplate = "{EDITOR}/EditorResources/EditorClassTemplate.txt";
+        static string EditorClassTemplate = "{EDITOR}/CTS/EditorClassTemplate.txt";
         static string EditorSymbol = "{EDITOR}";
         static string RealEditorPath = "";
         static string RealEditorExportPath = "";
@@ -52,11 +54,11 @@ namespace SmartDataViewer.Helpers
         /// <param name="resourceName"></param>
         /// <param name="pathType"></param>
         /// <returns></returns>
-        static public string GetEditorResourcePath(string resourceName = "",PATH_TYPE pathType = PATH_TYPE.ABSOLUTE)
+        static public string GetEditorResourcePath(string resourceName = "", PATH_TYPE pathType = PATH_TYPE.ABSOLUTE)
         {
             if (string.IsNullOrEmpty(RealEditorResourcesPath))
             {
-                RealEditorResourcesPath = EditorResourcesPath.Replace(EditorSymbol,GetRootEditorPath());
+                RealEditorResourcesPath = EditorResourcesPath.Replace(EditorSymbol, GetRootEditorPath());
             }
 
 
@@ -64,16 +66,16 @@ namespace SmartDataViewer.Helpers
 
             if (!string.IsNullOrEmpty(resourceName))
             {
-                result = PathCombine(RealEditorResourcesPath,resourceName);
+                result = PathCombine(RealEditorResourcesPath, resourceName);
             }
-            
+
             //处理多种路径情况
             if (pathType == PATH_TYPE.ASSETDATABASE)
             {
                 var splitIndex = result.IndexOf("Assets/");
                 result = result.Substring(splitIndex);
             }
-            
+
             return result;
         }
 
@@ -139,7 +141,7 @@ namespace SmartDataViewer.Helpers
                 if (!fileNameOrPath.EndsWith(extension))
                     fileNameOrPath += extension;
             }
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             else if (fileNameOrPath.Contains(EditorSymbol))
             {
 #if UNITY_EDITOR
@@ -150,7 +152,7 @@ namespace SmartDataViewer.Helpers
                     fileNameOrPath += extension;
 #endif
             }
-            #endif
+#endif
             else
             {
                 if (string.IsNullOrEmpty(fileNameOrPath))
@@ -207,7 +209,7 @@ namespace SmartDataViewer.Helpers
 #endif
 
 #if UNITY_EDITOR && UNITY_ANDROID
-		return GetPlatformForAssetBundles(RuntimePlatform.Android);
+            return GetPlatformForAssetBundles(RuntimePlatform.Android);
 #endif
             return GetPlatformForAssetBundles(Application.platform);
         }

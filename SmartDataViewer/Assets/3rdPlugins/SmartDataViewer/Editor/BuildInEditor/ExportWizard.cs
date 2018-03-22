@@ -15,37 +15,37 @@
 //     		limitations under the License.
 //
 
-using  UnityEditor;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace SmartDataViewer.Editor
 {
-    
-    public class ExportWizard:EditorWindow
+    public class ExportWizard : EditorWindow
     {
         [MenuItem("SmartDataViewer/ExportWizard")]
         static public void OpenView()
         {
-            var w = CreateInstance<ExportWizard >();
-            
-            w.minSize = new Vector2(350,250);
+            var w = CreateInstance<ExportWizard>();
+
+            w.minSize = new Vector2(350, 250);
             w.maxSize = w.minSize;
-            Vector2 pos =new Vector2( Screen.width/2-w.minSize.x,Screen.height/2-w.minSize.y);
-            w.position = new Rect(pos,w.minSize);
-            
+            Vector2 pos = new Vector2(Screen.width / 2 - w.minSize.x, Screen.height / 2 - w.minSize.y);
+            w.position = new Rect(pos, w.minSize);
+
             w.ShowUtility();
         }
 
 
         static public void OpenView<T>(T obj)
         {
-            var w = CreateInstance<ExportWizard >();
-            
-            w.minSize = new Vector2(350,250);
+            var w = CreateInstance<ExportWizard>();
+
+            w.minSize = new Vector2(350, 250);
             w.maxSize = w.minSize;
-            Vector2 pos =new Vector2( Screen.width/2,Screen.height/2);
-            w.position = new Rect(pos,w.minSize);
-            
+            Vector2 pos = new Vector2(Screen.width / 2, Screen.height / 2);
+            w.position = new Rect(pos, w.minSize);
+
             w.ShowUtility();
         }
 
@@ -55,8 +55,57 @@ namespace SmartDataViewer.Editor
         {
             rawData = data;
         }
+
+
+        private Vector2 scrollPos = Vector2.zero;
+
+        float currentScrollViewWidth;
+        bool resize = false;
+        Rect cursorChangeRect;
+
+        void OnEnable()
+        {
+            this.position = new Rect(200, 200, 400, 300);
+            currentScrollViewWidth = this.position.width / 2;
+            cursorChangeRect = new Rect(currentScrollViewWidth, 10, 4f, 25);
+        }
+
+        void OnGUI()
+        {
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label(" part 1",GUILayout.Width(currentScrollViewWidth));
+            
+            ResizeScrollView();
+
+            GUILayout.Label(" part 2");
+            
+            GUILayout.EndHorizontal();
+
+            if (resize) Repaint();
+        }
         
         
-        
+
+        private void ResizeScrollView()
+        {
+            GUI.DrawTexture(cursorChangeRect, EditorGUIUtility.whiteTexture);
+            EditorGUIUtility.AddCursorRect(cursorChangeRect, MouseCursor.ResizeHorizontal);
+
+            if (Event.current.type == EventType.MouseDown && cursorChangeRect.Contains(Event.current.mousePosition))
+            {
+                resize = true;
+            }
+
+            if (resize)
+            {
+                currentScrollViewWidth = Event.current.mousePosition.x;
+                cursorChangeRect.Set(currentScrollViewWidth, cursorChangeRect.y, cursorChangeRect.width,
+                    cursorChangeRect.height);
+            }
+
+            if (Event.current.type == EventType.MouseUp)
+                resize = false;
+        }
     }
 }
