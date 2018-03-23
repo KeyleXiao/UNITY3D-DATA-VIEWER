@@ -37,19 +37,23 @@ namespace SmartDataViewer.Editor
         private static GUIStyle pageLabelGuiStyle;
         private static GUIStyle tableGroupBoxStyle;
         private static GUIStyle textGuiStyle;
-//        private static GUIStyle addValueButtonGuiStyle;
-//
-//        public static GUIStyle GetAddValueButtonGuiStyle()
-//        {
-//            if (addValueButtonGuiStyle == null)
-//            {
-//                addValueButtonGuiStyle = new GUIStyle(GUI.skin.button);
-//                addValueButtonGuiStyle.normal.background = LoadEditorResource<Texture2D>("addvalue.png");
-//            }
-//
-//            return addValueButtonGuiStyle;
-//        }
+        private static GUIStyle jumpButtonGuiStyle;
 
+        public static GUIStyle GetJumpButtonGuiStyle()
+        {
+            if (jumpButtonGuiStyle == null)
+            {
+                jumpButtonGuiStyle = new GUIStyle(GUI.skin.button);
+                jumpButtonGuiStyle.margin = new RectOffset(0,0,3,0);
+                jumpButtonGuiStyle.padding = new RectOffset(0,0,0,0);
+                jumpButtonGuiStyle.alignment = TextAnchor.MiddleRight;
+            }
+
+            return jumpButtonGuiStyle;
+        }
+
+        
+        
         public static GUIStyle GetTagButtonStyle()
         {
             if (tagButtonStyle == null)
@@ -122,6 +126,7 @@ namespace SmartDataViewer.Editor
                 textGuiStyle =  new GUIStyle(GUI.skin.textField);
                 textGuiStyle.margin = new RectOffset(0,0,0,0);
                 textGuiStyle.padding = new RectOffset(0,0,0,0);
+                textGuiStyle.wordWrap = false;
             }
 
             return textGuiStyle;

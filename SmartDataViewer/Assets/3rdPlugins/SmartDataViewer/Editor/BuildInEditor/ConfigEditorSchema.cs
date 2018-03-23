@@ -672,7 +672,10 @@ namespace SmartDataViewer.Editor
         {
             GUI.backgroundColor = Color.green;
             if (GUILayout.Button(Language.NewLine, GUI.skin.GetStyle("ButtonMid")))
-                config_current.ConfigList.Add(CreateValue());
+                for (int i = 0; i < 9999; i++)
+                {
+                    config_current.ConfigList.Add(CreateValue());
+                }
             GUI.backgroundColor = Color.white;
         }
 
@@ -917,6 +920,9 @@ namespace SmartDataViewer.Editor
             }
         }
 
+
+        protected int jumpTo { get; set; }
+
         /// <summary>
         /// 分页算法
         /// </summary>
@@ -928,10 +934,23 @@ namespace SmartDataViewer.Editor
             if (maxIndex < PageIndex)
                 PageIndex = 0;
 
-            GUILayout.Label(string.Format(Language.PageInfoFormate, PageIndex + 1, maxIndex + 1), GUILayout.Width(80));
+            GUILayout.Label(string.Format(Language.PageInfoFormate, PageIndex + 1, maxIndex + 1), GUILayout.Width(100));
             GUILayout.Label(Language.OnePageMaxNumber, EditorGUIStyle.GetPageLabelGuiStyle(), GUILayout.Width(80));
             int.TryParse(GUILayout.TextField(PageAmount.ToString(), GUILayout.Width(40)), out PageAmount);
 
+
+            if (GUILayout.Button("Jump:",EditorGUIStyle.GetJumpButtonGuiStyle(),GUILayout.Width(36)))
+            {
+                if (jumpTo-1 <0)
+                    jumpTo = 0;
+
+                if (jumpTo-1 >maxIndex)
+                    jumpTo = maxIndex;
+
+                PageIndex = jumpTo -1;
+            }
+            jumpTo = EditorGUILayout.IntField(jumpTo,GUILayout.Width(40));
+            
             if (GUILayout.Button(Language.Previous, GUI.skin.GetStyle("ButtonLeft"), GUILayout.Height(16)))
             {
                 if (PageIndex - 1 < 0)
