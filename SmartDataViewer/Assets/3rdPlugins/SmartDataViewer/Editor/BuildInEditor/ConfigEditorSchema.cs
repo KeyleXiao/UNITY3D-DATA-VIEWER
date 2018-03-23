@@ -52,7 +52,7 @@ namespace SmartDataViewer.Editor
         /// 表头高度
         /// </summary>
         protected int TableHeadHeight = 26;
-        
+
         /// <summary>
         /// 缩放
         /// </summary>
@@ -74,7 +74,6 @@ namespace SmartDataViewer.Editor
         protected int ItemMaxCount { get; set; }
         protected Dictionary<string, bool> FieldsOrder { get; set; }
 
-      
 
         //TODO 2.0 外联表原始数据
         protected Dictionary<string, object> outLinkRawData { get; set; }
@@ -392,37 +391,41 @@ namespace SmartDataViewer.Editor
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.EnumPopup(value as Enum, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.EnumPopup(value as Enum,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
                     EditorGUILayout.LabelField((value as Enum).ToString(),
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
             else if (value is Bounds)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.BoundsField((Bounds) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.BoundsField((Bounds) value,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.BoundsField((Bounds) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.BoundsField((Bounds) value,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
             else if (value is Color)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.ColorField((Color) value,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
             else if (value is AnimationCurve)
@@ -430,61 +433,69 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.CurveField((AnimationCurve) value,
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.CurveField((AnimationCurve) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.CurveField((AnimationCurve) value,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
             else if (value is string)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.TextField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.TextField(value as string,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.LabelField(value as string,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
             else if (value is float)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.FloatField((float) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.FloatField((float) value,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.LabelField(value as string,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
             else if (value is int)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.IntField((int) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.IntField((int) value,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.LabelField(value as string,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
             else if (value is bool)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.Toggle((bool) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.Toggle((bool) value,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
                     EditorGUILayout.LabelField(((bool) value).ToString(),
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
             else if (value is Vector2)
@@ -492,12 +503,13 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.Vector2Field("", (Vector2) value,
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.Vector2Field("", (Vector2) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.Vector2Field("", (Vector2) value,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
             else if (value is Vector3)
@@ -505,12 +517,13 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.Vector3Field("", (Vector3) value,
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.Vector3Field("", (Vector3) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.Vector3Field("", (Vector3) value,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
             else if (value is Vector4)
@@ -518,12 +531,13 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.Vector3Field("", (Vector4) value,
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.Vector3Field("", (Vector4) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.Vector3Field("", (Vector4) value,
+                        new GUILayoutOption[] {GUILayout.Width(width * Resize)});
                 }
             }
         }
@@ -672,10 +686,7 @@ namespace SmartDataViewer.Editor
         {
             GUI.backgroundColor = Color.green;
             if (GUILayout.Button(Language.NewLine, GUI.skin.GetStyle("ButtonMid")))
-                for (int i = 0; i < 9999; i++)
-                {
-                    config_current.ConfigList.Add(CreateValue());
-                }
+                config_current.ConfigList.Add(CreateValue());
             GUI.backgroundColor = Color.white;
         }
 
@@ -939,18 +950,19 @@ namespace SmartDataViewer.Editor
             int.TryParse(GUILayout.TextField(PageAmount.ToString(), GUILayout.Width(40)), out PageAmount);
 
 
-            if (GUILayout.Button("Jump:",EditorGUIStyle.GetJumpButtonGuiStyle(),GUILayout.Width(36)))
+            if (GUILayout.Button("Jump:", EditorGUIStyle.GetJumpButtonGuiStyle(), GUILayout.Width(36)))
             {
-                if (jumpTo-1 <0)
+                if (jumpTo - 1 < 0)
                     jumpTo = 0;
 
-                if (jumpTo-1 >maxIndex)
+                if (jumpTo - 1 > maxIndex)
                     jumpTo = maxIndex;
 
-                PageIndex = jumpTo -1;
+                PageIndex = jumpTo - 1;
             }
-            jumpTo = EditorGUILayout.IntField(jumpTo,GUILayout.Width(40));
-            
+
+            jumpTo = EditorGUILayout.IntField(jumpTo, GUILayout.Width(40));
+
             if (GUILayout.Button(Language.Previous, GUI.skin.GetStyle("ButtonLeft"), GUILayout.Height(16)))
             {
                 if (PageIndex - 1 < 0)
