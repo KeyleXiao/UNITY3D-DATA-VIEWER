@@ -16,8 +16,6 @@
 //
 
 using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SmartDataViewer
 {
@@ -26,10 +24,10 @@ namespace SmartDataViewer
 	{
 		public IModel() { }
 
-		[ConfigEditorField(99, true)]
+		[ConfigEditorField(99)]
 		public int ID;
 
-		[ConfigEditorField(98, true)]
+		[ConfigEditorField(98)]
 		public string NickName;
 	}
 }

@@ -135,7 +135,7 @@ namespace SmartDataViewer
         #endregion
 
 
-#if UNITY_EDITOR
+
 
         #region 编辑器状态下资源读取，如果是实际项目中使用还请根据实际情况作出修改
 
@@ -243,6 +243,5 @@ namespace SmartDataViewer
 
         #endregion
 
-#endif
     }
 }

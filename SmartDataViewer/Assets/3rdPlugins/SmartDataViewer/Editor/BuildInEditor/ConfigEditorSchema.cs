@@ -27,6 +27,9 @@ using SmartDataViewer.Helpers;
 
 namespace SmartDataViewer.Editor
 {
+    /// <summary>
+    /// 存储反射字段信息的容器
+    /// </summary>
     public class ConfigEditorSchemaChache
     {
         public FieldInfo field_info { get; set; }
@@ -36,8 +39,15 @@ namespace SmartDataViewer.Editor
         public int order { get; set; }
     }
 
+    /// <summary>
+    /// 泛化数据编辑器
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class ConfigEditorSchema<T> : IMultipleWindow where T : IModel, new()
     {
+        /// <summary>
+        /// 测试工具
+        /// </summary>
         protected bool isLog
         {
             get { return false; }
@@ -58,30 +68,95 @@ namespace SmartDataViewer.Editor
         /// </summary>
         protected float Resize = 1;
 
+        /// <summary>
+        /// 编辑器通用配置
+        /// </summary>
         protected ConfigEditorAttribute configSetting { get; set; }
+        
+        /// <summary>
+        /// 当前编辑对象
+        /// </summary>
         protected ConfigBase<T> config_current { get; set; }
+        
+        /// <summary>
+        /// 纵向拖动
+        /// </summary>
         protected Vector2 posv { get; set; }
+        
+        /// <summary>
+        /// 待删除列表
+        /// </summary>
         protected List<int> deleteList = new List<int>();
+        
+        /// <summary>
+        /// 搜索字段
+        /// </summary>
         protected string SearchResourceName { get; set; }
+        
+        /// <summary>
+        /// 默认一页数量
+        /// </summary>
         protected int PageAmount = 50;
+        
+        /// <summary>
+        /// 当前页
+        /// </summary>
         protected int PageIndex = 0;
+        
+        /// <summary>
+        /// 是否初始化完毕
+        /// </summary>
         protected bool initialized { get; set; }
+        
+        /// <summary>
+        /// 缓存反射字段
+        /// </summary>
         protected List<FieldInfo> fieldinfos { get; set; }
+        
+        /// <summary>
+        /// 缓存反射字段信息
+        /// </summary>
         protected List<ConfigEditorSchemaChache> Chache { get; set; }
+        
+        /// <summary>
+        /// 首次加载标示
+        /// </summary>
         protected bool FirstLoadFlag { get; set; }
 
+        /// <summary>
+        /// 搜索结果
+        /// </summary>
         protected List<T> Finallylist { get; set; }
+        
+        /// <summary>
+        /// 页上限
+        /// </summary>
         protected int ItemMaxCount { get; set; }
+        
+        /// <summary>
+        /// 字段排序
+        /// </summary>
         protected Dictionary<string, bool> FieldsOrder { get; set; }
 
       
 
+        
         //TODO 2.0 外联表原始数据
+        /// <summary>
+        /// 外链表数据
+        /// </summary>
         protected Dictionary<string, object> outLinkRawData { get; set; }
 
 
+        /// <summary>
+        /// 选择模式下 选中的列ID
+        /// </summary>
         public List<int> SelctList { get; set; }
 
+
+        /// <summary>
+        /// 粘贴行数据
+        /// </summary>
         protected T PasteItem { get; set; }
 
 
@@ -699,6 +774,9 @@ namespace SmartDataViewer.Editor
             }
         }
 
+        /// <summary>
+        /// 处理表头
+        /// </summary>
         protected virtual void RenderHead()
         {
             GUILayout.BeginScrollView(new Vector2(posv.x, 0), false, false, GUIStyle.none, GUIStyle.none,
@@ -733,14 +811,25 @@ namespace SmartDataViewer.Editor
         }
 
 
+        /// <summary>
+        /// 用户可扩展表头
+        /// </summary>
         protected virtual void RenderExtensionHead()
         {
         }
 
+        /// <summary>
+        /// 用户可扩展行按钮
+        /// </summary>
+        /// <param name="item">当前行的数据</param>
         protected virtual void RenderExtensionButton(T item)
         {
         }
 
+        
+        /// <summary>
+        /// 处理表主体
+        /// </summary>
         protected virtual void RenderTable()
         {
             posv = GUILayout.BeginScrollView(posv, false, false, EditorGUIStyle.GetHorizontalScrollbarStyle(),
@@ -797,6 +886,9 @@ namespace SmartDataViewer.Editor
         }
 
 
+        /// <summary>
+        /// 处理顶部按钮
+        /// </summary>
         protected virtual void RenderMenu()
         {
             GUILayout.BeginHorizontal(GUIStyle.none, new GUILayoutOption[] {GUILayout.Height(25)});
