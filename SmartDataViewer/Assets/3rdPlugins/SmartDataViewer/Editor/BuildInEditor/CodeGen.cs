@@ -24,8 +24,7 @@ namespace SmartDataViewer.Editor
 {
 	public class CodeGenConfigEditor : ConfigEditorSchema<CodeGen>
 	{
-		//{ROOT}/Editor/SceneEditor/NewEventEditor
-		[MenuItem("SmartDataViewer/CodeGen")]
+		[MenuItem("SmartDataViewer/Code Generator")]
 		static public void OpenView()
 		{
 			CodeGenConfigEditor w = CreateInstance<CodeGenConfigEditor>();
