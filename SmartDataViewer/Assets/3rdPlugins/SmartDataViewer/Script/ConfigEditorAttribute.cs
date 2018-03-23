@@ -51,7 +51,7 @@ namespace SmartDataViewer
 		/// <param name="outLinkDisplay">将显示外联数据的别名 默认显示外联数据的NickName如果没有则显示ID</param>
 		/// <param name="outLinkFilePath">外联数据的文件位置</param>
 		public ConfigEditorFieldAttribute(int order = 0, bool can_editor = true, string display = "",
-										  int width = 100, string outLinkEditor = "",
+										  int width = 0, string outLinkEditor = "",
 										  string outLinkSubClass = "", string outLinkClass = "",
 										  bool visibility = true, string outLinkDisplay = "",
 										  string outLinkFilePath = ""

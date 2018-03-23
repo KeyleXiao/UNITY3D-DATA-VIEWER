@@ -29,7 +29,7 @@ namespace SmartDataViewer
 			OutLinkDisplay = string.Empty;
 			OutLinkFilePath = string.Empty;
 			CanEditor = true;
-			Width = 150;
+			Width = 0;
 		}
 		public int Order;
 

@@ -135,7 +135,9 @@ namespace SmartDataViewer
         #endregion
 
 
-        #region IO
+#if UNITY_EDITOR
+
+        #region 编辑器状态下资源读取，如果是实际项目中使用还请根据实际情况作出修改
 
         public virtual void DeleteFromDisk(string fileWithNoExcension = "", bool absolute = false)
         {
@@ -156,7 +158,7 @@ namespace SmartDataViewer
         {
             absolute = PathHelper.GetAbsolutePath<T>(ref fileWithNoExcension);
             string configPath = fileWithNoExcension;
-            
+
             //Modified by keyle 2016.11.29 缩减配置尺寸
             string content = JsonUtility.ToJson(this, false);
 
@@ -166,7 +168,7 @@ namespace SmartDataViewer
             {
                 configPath = PathHelper.GetConfigAbsoluteFilePath(configPath);
             }
-            
+
             File.WriteAllText(configPath, content);
         }
 
@@ -209,7 +211,7 @@ namespace SmartDataViewer
 
         public static object LoadRawConfig(Type t, string fileWithNoExcension, bool absolute = false)
         {
-            absolute = PathHelper.GetAbsolutePath(t,ref fileWithNoExcension);
+            absolute = PathHelper.GetAbsolutePath(t, ref fileWithNoExcension);
             //Check Is Null
 
             string str = string.Empty;
@@ -240,5 +242,7 @@ namespace SmartDataViewer
         }
 
         #endregion
+
+#endif
     }
 }

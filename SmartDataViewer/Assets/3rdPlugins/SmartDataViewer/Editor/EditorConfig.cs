@@ -34,7 +34,7 @@ namespace SmartDataViewer.Editor
 		{
 			if (ControlConfig == null)
 			{
-				ControlConfig = DefaultControlConfig.LoadConfig<DefaultControlConfig>("{ROOT}/SmartDataViewer/Config/DefaultControlPropertity");
+				ControlConfig = DefaultControlConfig.LoadConfig<DefaultControlConfig>("{EDITOR}/Config/DefaultControlPropertity");
 			}
 			return ControlConfig;
 		}

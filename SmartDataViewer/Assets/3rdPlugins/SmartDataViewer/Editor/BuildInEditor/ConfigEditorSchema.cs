@@ -517,13 +517,13 @@ namespace SmartDataViewer.Editor
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.Vector3Field("", (Vector4) value,
+                    value = EditorGUILayout.Vector4Field("", (Vector4) value,
                         new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.Vector3Field("", (Vector4) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.Vector4Field("", (Vector4) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
         }
@@ -936,7 +936,7 @@ namespace SmartDataViewer.Editor
             int.TryParse(GUILayout.TextField(PageAmount.ToString(), GUILayout.Width(40)), out PageAmount);
 
 
-            if (GUILayout.Button("Jump:",EditorGUIStyle.GetJumpButtonGuiStyle(),GUILayout.Width(36)))
+            if (GUILayout.Button("Jump:",EditorGUIStyle.GetJumpButtonGuiStyle(),GUILayout.Width(38)))
             {
                 if (jumpTo-1 <0)
                     jumpTo = 0;
