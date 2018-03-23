@@ -169,6 +169,11 @@ namespace SmartDataViewer
                 configPath = PathHelper.GetConfigAbsoluteFilePath(configPath);
             }
 
+
+            var dir = Path.GetDirectoryName(configPath);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            
             File.WriteAllText(configPath, content);
         }
 
