@@ -36,14 +36,27 @@ namespace SmartDataViewer.Editor
         private static GUIStyle horizontalScrollbarStyle;
         private static GUIStyle pageLabelGuiStyle;
         private static GUIStyle tableGroupBoxStyle;
-        
-        
+        private static GUIStyle textGuiStyle;
+//        private static GUIStyle addValueButtonGuiStyle;
+//
+//        public static GUIStyle GetAddValueButtonGuiStyle()
+//        {
+//            if (addValueButtonGuiStyle == null)
+//            {
+//                addValueButtonGuiStyle = new GUIStyle(GUI.skin.button);
+//                addValueButtonGuiStyle.normal.background = LoadEditorResource<Texture2D>("addvalue.png");
+//            }
+//
+//            return addValueButtonGuiStyle;
+//        }
+
         public static GUIStyle GetTagButtonStyle()
         {
             if (tagButtonStyle == null)
             {
                 tagButtonStyle = new GUIStyle(GUI.skin.button);
-                tagButtonStyle.padding = new RectOffset(4,0,4,2);
+                tagButtonStyle.padding = new RectOffset(4,0,4,0);
+//                tagButtonStyle.margin = new RectOffset(0,0,0,0);
                 tagButtonStyle.normal.background = LoadEditorResource<Texture2D>("HeadBg.jpg");
                 tagButtonStyle.alignment = TextAnchor.MiddleLeft;
             }
@@ -81,7 +94,7 @@ namespace SmartDataViewer.Editor
             if (tableGroupBoxStyle == null)
             {
                 tableGroupBoxStyle  = new GUIStyle(GUI.skin.box);
-                tableGroupBoxStyle.margin = new RectOffset(2,4,0,0);
+                tableGroupBoxStyle.margin = new RectOffset(0,0,0,0);
                 tableGroupBoxStyle.padding = new RectOffset(0,0,0,0);
             }
 
@@ -99,6 +112,19 @@ namespace SmartDataViewer.Editor
             }
 
             return horizontalScrollbarStyle;
+        }
+
+
+        public static GUIStyle GetTextGuiStyle()
+        {
+            if (textGuiStyle ==null)
+            {
+                textGuiStyle =  new GUIStyle(GUI.skin.textField);
+                textGuiStyle.margin = new RectOffset(0,0,0,0);
+                textGuiStyle.padding = new RectOffset(0,0,0,0);
+            }
+
+            return textGuiStyle;
         }
 
         public static void DrawLine(GUIStyle rLineStyle)

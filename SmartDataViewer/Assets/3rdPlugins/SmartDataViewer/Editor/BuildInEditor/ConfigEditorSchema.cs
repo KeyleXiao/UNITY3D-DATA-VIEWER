@@ -51,7 +51,12 @@ namespace SmartDataViewer.Editor
         /// <summary>
         /// 表头高度
         /// </summary>
-        protected int TableHeadHeight = 28;
+        protected int TableHeadHeight = 26;
+        
+        /// <summary>
+        /// 缩放
+        /// </summary>
+        protected float Resize = 1;
 
         protected ConfigEditorAttribute configSetting { get; set; }
         protected ConfigBase<T> config_current { get; set; }
@@ -68,6 +73,8 @@ namespace SmartDataViewer.Editor
         protected List<T> Finallylist { get; set; }
         protected int ItemMaxCount { get; set; }
         protected Dictionary<string, bool> FieldsOrder { get; set; }
+
+      
 
         //TODO 2.0 外联表原始数据
         protected Dictionary<string, object> outLinkRawData { get; set; }
@@ -203,7 +210,7 @@ namespace SmartDataViewer.Editor
             if (value.GetType().IsGenericType)
             {
                 GUILayout.BeginVertical(GUIStyle.none,
-                    new GUILayoutOption[] {GUILayout.Width(data.config_editor_setting.Width)});
+                    new GUILayoutOption[] {GUILayout.Width(data.config_editor_setting.Width * Resize)});
 
                 int deleteIndex = -1;
 
@@ -266,7 +273,8 @@ namespace SmartDataViewer.Editor
 
 
                         GUILayout.BeginHorizontal();
-                        RenderBaseControl(data.config_editor_setting.Width - 18, data.config_editor_setting.CanEditor,
+                        //alignment
+                        RenderBaseControl(data.config_editor_setting.Width - 22, data.config_editor_setting.CanEditor,
                             listItem,
                             v => { value.GetType().GetProperty("Item").SetValue(value, v, new object[] {i}); });
 
@@ -297,7 +305,7 @@ namespace SmartDataViewer.Editor
                         data.config_editor_setting.OutLinkDisplay);
 
                     if (GUILayout.Button(buttonName,
-                        new GUILayoutOption[] {GUILayout.Width(data.config_editor_setting.Width)}))
+                        new GUILayoutOption[] {GUILayout.Width(data.config_editor_setting.Width * Resize)}))
                     {
                         Assembly assembly = Assembly.GetExecutingAssembly();
                         IMultipleWindow e =
@@ -384,37 +392,37 @@ namespace SmartDataViewer.Editor
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.EnumPopup(value as Enum, new GUILayoutOption[] {GUILayout.Width(width)});
+                    value = EditorGUILayout.EnumPopup(value as Enum, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
                     EditorGUILayout.LabelField((value as Enum).ToString(),
-                        new GUILayoutOption[] {GUILayout.Width(width)});
+                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
             else if (value is Bounds)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.BoundsField((Bounds) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    value = EditorGUILayout.BoundsField((Bounds) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.BoundsField((Bounds) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    EditorGUILayout.BoundsField((Bounds) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
             else if (value is Color)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    value = EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
             else if (value is AnimationCurve)
@@ -422,61 +430,61 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.CurveField((AnimationCurve) value,
-                        new GUILayoutOption[] {GUILayout.Width(width)});
+                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.CurveField((AnimationCurve) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    EditorGUILayout.CurveField((AnimationCurve) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
             else if (value is string)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.TextField(value as string, new GUILayoutOption[] {GUILayout.Width(width)});
+                    value = EditorGUILayout.TextField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width)});
+                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
             else if (value is float)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.FloatField((float) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    value = EditorGUILayout.FloatField((float) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width)});
+                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
             else if (value is int)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.IntField((int) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    value = EditorGUILayout.IntField((int) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width)});
+                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
             else if (value is bool)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.Toggle((bool) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    value = EditorGUILayout.Toggle((bool) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
                     EditorGUILayout.LabelField(((bool) value).ToString(),
-                        new GUILayoutOption[] {GUILayout.Width(width)});
+                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
             else if (value is Vector2)
@@ -484,12 +492,12 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.Vector2Field("", (Vector2) value,
-                        new GUILayoutOption[] {GUILayout.Width(width)});
+                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.Vector2Field("", (Vector2) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    EditorGUILayout.Vector2Field("", (Vector2) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
             else if (value is Vector3)
@@ -497,12 +505,12 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.Vector3Field("", (Vector3) value,
-                        new GUILayoutOption[] {GUILayout.Width(width)});
+                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.Vector3Field("", (Vector3) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    EditorGUILayout.Vector3Field("", (Vector3) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
             else if (value is Vector4)
@@ -510,12 +518,12 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.Vector3Field("", (Vector4) value,
-                        new GUILayoutOption[] {GUILayout.Width(width)});
+                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.Vector3Field("", (Vector4) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    EditorGUILayout.Vector3Field("", (Vector4) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
                 }
             }
         }
@@ -602,7 +610,7 @@ namespace SmartDataViewer.Editor
                     string rawClass = Chache[i].config_editor_setting.OutLinkClass;
                     if (string.IsNullOrEmpty(rawClass))
                         rawClass = Chache[i].config_editor_setting.OutLinkSubClass + "Config";
-                    Type classType = GetType(rawClass);
+                    Type classType = ReflectionHelper.GetCurrnetAssemblyType(rawClass);
                     if (classType == null)
                     {
                         Log("Can't find calss " + rawClass);
@@ -643,10 +651,8 @@ namespace SmartDataViewer.Editor
 
         protected virtual void SaveButton()
         {
-         
             if (GUILayout.Button("Save", GUI.skin.GetStyle("ButtonRight")))
                 SaveConfig();
-            
         }
 
         protected virtual void SearchField()
@@ -708,7 +714,7 @@ namespace SmartDataViewer.Editor
                     string.IsNullOrEmpty(item.config_editor_setting.Display)
                         ? item.field_info.Name
                         : item.config_editor_setting.Display, EditorGUIStyle.GetTagButtonStyle(),
-                    GUILayout.Width(item.config_editor_setting.Width)))
+                    new GUILayoutOption[] {GUILayout.Width(item.config_editor_setting.Width * Resize)}))
                     HeadButton_Click(item.field_info.Name);
 
                 GUILayout.Space(ColumnSpan);
@@ -754,7 +760,7 @@ namespace SmartDataViewer.Editor
                 Finallylist = config_current.ConfigList.Skip(PageIndex * PageAmount).Take(PageAmount).ToList();
             }
 
-            //foreach (var item in Finallylist)
+            //遍历搜索结果
             for (int i = 0; i < Finallylist.Count; i++)
             {
                 T item = Finallylist[i];
@@ -773,12 +779,13 @@ namespace SmartDataViewer.Editor
                 foreach (var schema in Chache)
                 {
                     var rawData = schema.field_info.GetValue(item);
+                    //一条一条加载
                     RenderRawLine(schema, rawData, item);
                     GUILayout.Space(ColumnSpan);
                 }
 
                 RenderExtensionButton(item);
-
+                GUILayout.Space(ColumnSpan);
                 RenderFunctionButton(item);
 
                 GUILayout.Space(ColumnSpan);
@@ -941,6 +948,8 @@ namespace SmartDataViewer.Editor
                     PageIndex++;
             }
 
+            Resize = GUILayout.HorizontalSlider(Resize, 1, 10, GUILayout.Width(70));
+
             GUILayout.EndHorizontal();
         }
 
@@ -969,14 +978,14 @@ namespace SmartDataViewer.Editor
             return JsonUtility.FromJson<K>(content);
         }
 
-        /// <summary>
-        /// 在当前程序集总获取Type 不能放在其他程序集
-        /// </summary>
-        /// <param name="type_name"></param>
-        /// <returns></returns>
-        protected virtual Type GetType(string type_name)
-        {
-            return Assembly.GetExecutingAssembly().GetType(type_name);
-        }
+//        /// <summary>
+//        /// 在当前程序集总获取Type 不能放在其他程序集
+//        /// </summary>
+//        /// <param name="type_name"></param>
+//        /// <returns></returns>
+//        protected virtual Type GetType(string type_name)
+//        {
+//            return Assembly.GetExecutingAssembly().GetType(type_name);
+//        }
     }
 }

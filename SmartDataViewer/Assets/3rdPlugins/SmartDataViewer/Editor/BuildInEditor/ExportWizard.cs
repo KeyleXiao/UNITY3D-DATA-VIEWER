@@ -70,26 +70,34 @@ namespace SmartDataViewer.Editor
             cursorChangeRect = new Rect(currentScrollViewWidth, 10, 4f, 25);
         }
 
+        public void Callback(object obj)
+        {
+            Debug.Log("Selected: " + obj);
+        }
+
         void OnGUI()
         {
-            GUILayout.BeginHorizontal();
+            GenericMenu menu = new GenericMenu();
 
-            GUILayout.Label(" part 1",GUILayout.Width(currentScrollViewWidth));
-            
-            ResizeScrollView();
+            menu.AddItem(new GUIContent("MenuItem1"), false, Callback, "item 1");
+            menu.AddItem(new GUIContent("MenuItem2"), false, Callback, "item 2");
+            menu.AddSeparator("");
+            menu.AddItem(new GUIContent("SubMenu/MenuItem3"), false, Callback, "item 3");
+            menu.AddItem(new GUIContent("SubMenu/MenuItem4"), false, Callback, "item 4");
+            menu.AddItem(new GUIContent("SubMenu/MenuItem5"), false, Callback, "item 5");
+            menu.AddSeparator("SubMenu/");
+            menu.AddItem(new GUIContent("SubMenu/MenuItem6"), false, Callback, "item 6");
 
-            GUILayout.Label(" part 2");
-            
-            GUILayout.EndHorizontal();
+            menu.ShowAsContext();
 
-            if (resize) Repaint();
         }
-        
-        
+
 
         private void ResizeScrollView()
         {
-            GUI.DrawTexture(cursorChangeRect, EditorGUIUtility.whiteTexture);
+            
+            GUI.DrawTexture(cursorChangeRect,EditorGUIUtility.whiteTexture);
+            
             EditorGUIUtility.AddCursorRect(cursorChangeRect, MouseCursor.ResizeHorizontal);
 
             if (Event.current.type == EventType.MouseDown && cursorChangeRect.Contains(Event.current.mousePosition))

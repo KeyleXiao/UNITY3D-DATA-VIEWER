@@ -374,6 +374,16 @@ namespace SmartDataViewer.Helpers
 
             return FieldType.STRING;
         }
+        
+        /// <summary>
+        /// 在当前程序集总获取Type 不能放在其他程序集
+        /// </summary>
+        /// <param name="type_name"></param>
+        /// <returns></returns>
+        public static Type GetCurrnetAssemblyType(string type_name)
+        {
+            return Assembly.GetExecutingAssembly().GetType(type_name);
+        }
 
         public enum FieldType
         {
