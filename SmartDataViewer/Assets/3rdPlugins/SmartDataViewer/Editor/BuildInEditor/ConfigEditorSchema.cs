@@ -45,6 +45,19 @@ namespace SmartDataViewer.Editor
     /// <typeparam name="T"></typeparam>
     public class ConfigEditorSchema<T> : IMultipleWindow where T : IModel, new()
     {
+        
+        
+        /// <summary>
+        /// 扩展部分列宽
+        /// </summary>
+        protected int ExtensionHeadTagWith = 90;
+
+
+        /// <summary>
+        /// 工具栏按钮统一宽度
+        /// </summary>
+        protected int KitButtonWidth = 18;
+        
         /// <summary>
         /// 测试工具
         /// </summary>
@@ -97,11 +110,16 @@ namespace SmartDataViewer.Editor
         /// 默认一页数量
         /// </summary>
         protected int PageAmount = 50;
-        
+
         /// <summary>
         /// 当前页
         /// </summary>
-        protected int PageIndex = 0;
+        protected int PageIndex { get; set; }
+
+        /// <summary>
+        /// 当前页转跳位置
+        /// </summary>
+        protected int jumpTo = 1;
         
         /// <summary>
         /// 是否初始化完毕
@@ -313,7 +331,7 @@ namespace SmartDataViewer.Editor
                         GUILayout.BeginHorizontal();
                         GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutLinkClass,
                             data.config_editor_setting.OutLinkDisplay));
-                        if (GUILayout.Button("X", GUILayout.Width(18)))
+                        if (GUILayout.Button(Language.Delete, GUILayout.Width(KitButtonWidth)))
                             deleteIndex = i;
 
                         GUILayout.EndHorizontal();
@@ -353,7 +371,7 @@ namespace SmartDataViewer.Editor
                             listItem,
                             v => { value.GetType().GetProperty("Item").SetValue(value, v, new object[] {i}); });
 
-                        if (GUILayout.Button("X", new GUILayoutOption[] {GUILayout.Width(18)}))
+                        if (GUILayout.Button(Language.Delete, new GUILayoutOption[] {GUILayout.Width(KitButtonWidth)}))
                         {
                             removeIndex = i;
                         }
@@ -801,9 +819,9 @@ namespace SmartDataViewer.Editor
             RenderExtensionHead();
 
             if (current_windowType != WindowType.CALLBACK)
-                EditorGUILayout.LabelField(new GUIContent(Language.Operation), GUILayout.Width(80));
+                GUILayout.Label(Language.Operation,EditorGUIStyle.GetTagButtonStyle(), GUILayout.Width(ExtensionHeadTagWith));
             if (current_windowType == WindowType.CALLBACK)
-                EditorGUILayout.LabelField(new GUIContent(Language.Select), GUILayout.Width(80));
+                GUILayout.Label(Language.Operation,EditorGUIStyle.GetTagButtonStyle(), GUILayout.Width(ExtensionHeadTagWith));
 
 
             GUILayout.EndHorizontal();
@@ -875,10 +893,12 @@ namespace SmartDataViewer.Editor
 
                 RenderExtensionButton(item);
                 GUILayout.Space(ColumnSpan);
+                
                 RenderFunctionButton(item);
-
                 GUILayout.Space(ColumnSpan);
+                
                 GUILayout.EndHorizontal();
+                GUILayout.Space(5);
             }
 
             GUILayout.Space(15);
@@ -984,20 +1004,26 @@ namespace SmartDataViewer.Editor
             if (current_windowType != WindowType.CALLBACK)
             {
                 if (GUILayout.Button(Language.Copy, GUI.skin.GetStyle("ButtonLeft"),
-                    new GUILayoutOption[] {GUILayout.Width(19)}))
+                    new GUILayoutOption[] {GUILayout.Width(KitButtonWidth)}))
                 {
                     PasteItem = DeepClone(item);
                 }
 
                 if (GUILayout.Button(Language.Delete, GUI.skin.GetStyle("ButtonMid"),
-                    new GUILayoutOption[] {GUILayout.Width(19)}))
+                    new GUILayoutOption[] {GUILayout.Width(KitButtonWidth)}))
                 {
                     deleteList.Add(item.ID);
                     ShowNotification(new GUIContent(Language.Success));
                 }
+                
+                if (GUILayout.Button(Language.Verfiy, GUI.skin.GetStyle("ButtonMid"),
+                    new GUILayoutOption[] {GUILayout.Width(19)}))
+                {
+                    VerfiyButtonClick(item);
+                }
 
                 if (GUILayout.Button(Language.Paste, GUI.skin.GetStyle("ButtonRight"),
-                    new GUILayoutOption[] {GUILayout.Width(19)}))
+                    new GUILayoutOption[] {GUILayout.Width(KitButtonWidth)}))
                 {
                     if (PasteItem != null)
                     {
@@ -1008,9 +1034,19 @@ namespace SmartDataViewer.Editor
                 }
             }
         }
+        
+        /// <summary>
+        /// 程序预留 数据逻辑校验接口
+        /// </summary>
+        /// <param name="data"></param>
+        protected virtual void VerfiyButtonClick(T data)
+        {
+            ShowNotification(new GUIContent(string.Format(Language.VerfiyMessageSuccess, data.ID)));
+        }
 
 
-        protected int jumpTo { get; set; }
+
+
 
         /// <summary>
         /// 分页算法

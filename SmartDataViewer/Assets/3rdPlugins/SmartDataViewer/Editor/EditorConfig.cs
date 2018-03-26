@@ -76,6 +76,8 @@ namespace SmartDataViewer.Editor
 		public static string Delete = @"X";
 		public static string Copy = @"C";
 		public static string Paste = @"P";
+		public static string Verfiy = @"V";
+		public static string VerfiyMessageSuccess = @"ID: {0} 当前数据有效！";
 		public static string Operation = @"Operation";
 		public static string Contract = @"Version 1.2 Beta   --Keyle";
 		public static string OnePageMaxNumber = "Max In Page";
