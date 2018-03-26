@@ -79,7 +79,7 @@ namespace SmartDataViewer.Editor
         /// <summary>
         /// 缩放
         /// </summary>
-        protected float Resize = 1;
+        protected int Resize = 1;
 
         /// <summary>
         /// 编辑器通用配置
@@ -330,7 +330,7 @@ namespace SmartDataViewer.Editor
                     {
                         GUILayout.BeginHorizontal();
                         GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutLinkClass,
-                            data.config_editor_setting.OutLinkDisplay));
+                            data.config_editor_setting.OutLinkDisplay),GUILayout.Width((data.config_editor_setting.Width * Resize - KitButtonWidth - ColumnSpan)));
                         if (GUILayout.Button(Language.Delete, GUILayout.Width(KitButtonWidth)))
                             deleteIndex = i;
 
@@ -367,7 +367,7 @@ namespace SmartDataViewer.Editor
 
                         GUILayout.BeginHorizontal();
                         //alignment
-                        RenderBaseControl(data.config_editor_setting.Width - 22, data.config_editor_setting.CanEditor,
+                        RenderBaseControl((int)(data.config_editor_setting.Width - KitButtonWidth - ColumnSpan) * Resize, data.config_editor_setting.CanEditor,
                             listItem,
                             v => { value.GetType().GetProperty("Item").SetValue(value, v, new object[] {i}); });
 
@@ -415,7 +415,7 @@ namespace SmartDataViewer.Editor
                 }
                 else
                 {
-                    RenderBaseControl(data.config_editor_setting.Width, data.config_editor_setting.CanEditor, value,
+                    RenderBaseControl(data.config_editor_setting.Width * Resize, data.config_editor_setting.CanEditor, value,
                         v => { data.field_info.SetValue(raw, v); });
                 }
             }
@@ -485,37 +485,37 @@ namespace SmartDataViewer.Editor
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.EnumPopup(value as Enum, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.EnumPopup(value as Enum, new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
                     EditorGUILayout.LabelField((value as Enum).ToString(),
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
             else if (value is Bounds)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.BoundsField((Bounds) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.BoundsField((Bounds) value, new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.BoundsField((Bounds) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.BoundsField((Bounds) value, new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
             else if (value is Color)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.ColorField((Color) value, new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
             else if (value is AnimationCurve)
@@ -523,61 +523,61 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.CurveField((AnimationCurve) value,
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.CurveField((AnimationCurve) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.CurveField((AnimationCurve) value, new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
             else if (value is string)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.TextField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.TextField(value as string, new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
             else if (value is float)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.FloatField((float) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.FloatField((float) value, new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
             else if (value is int)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.IntField((int) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.IntField((int) value, new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.LabelField(value as string, new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
             else if (value is bool)
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.Toggle((bool) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    value = EditorGUILayout.Toggle((bool) value, new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
                     EditorGUILayout.LabelField(((bool) value).ToString(),
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
             else if (value is Vector2)
@@ -585,12 +585,12 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.Vector2Field("", (Vector2) value,
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.Vector2Field("", (Vector2) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.Vector2Field("", (Vector2) value, new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
             else if (value is Vector3)
@@ -598,12 +598,12 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.Vector3Field("", (Vector3) value,
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.Vector3Field("", (Vector3) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.Vector3Field("", (Vector3) value, new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
             else if (value is Vector4)
@@ -611,12 +611,12 @@ namespace SmartDataViewer.Editor
                 if (enable)
                 {
                     value = EditorGUILayout.Vector4Field("", (Vector4) value,
-                        new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                        new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
                 {
-                    EditorGUILayout.Vector4Field("", (Vector4) value, new GUILayoutOption[] {GUILayout.Width(width*Resize)});
+                    EditorGUILayout.Vector4Field("", (Vector4) value, new GUILayoutOption[] {GUILayout.Width(width)});
                 }
             }
         }
@@ -1092,7 +1092,7 @@ namespace SmartDataViewer.Editor
                     PageIndex++;
             }
 
-            Resize = GUILayout.HorizontalSlider(Resize, 1, 10, GUILayout.Width(70));
+            Resize = (int)GUILayout.HorizontalSlider(Resize, 1, 10, GUILayout.Width(70));
 
             GUILayout.EndHorizontal();
         }
