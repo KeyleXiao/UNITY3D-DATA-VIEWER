@@ -49,13 +49,13 @@ namespace SmartDataViewer.Editor
         /// <summary>
         /// 扩展部分列宽
         /// </summary>
-        protected int ExtensionHeadTagWith = 80;
+        protected int ExtensionHeadTagWith = 88;
 
 
         /// <summary>
         /// 工具栏按钮统一宽度
         /// </summary>
-        protected int KitButtonWidth = 18;
+        protected int KitButtonWidth = 19;
         
         /// <summary>
         /// 测试工具
