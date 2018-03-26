@@ -46,11 +46,10 @@ namespace SmartDataViewer.Editor
     public class ConfigEditorSchema<T> : IMultipleWindow where T : IModel, new()
     {
         
-        
         /// <summary>
         /// 扩展部分列宽
         /// </summary>
-        protected int ExtensionHeadTagWith = 90;
+        protected int ExtensionHeadTagWith = 80;
 
 
         /// <summary>
@@ -69,7 +68,7 @@ namespace SmartDataViewer.Editor
         /// <summary>
         /// 设置列间间隔
         /// </summary>
-        protected int ColumnSpan = 3;
+        protected int ColumnSpan = 4;
 
         /// <summary>
         /// 表头高度
@@ -330,7 +329,7 @@ namespace SmartDataViewer.Editor
                     {
                         GUILayout.BeginHorizontal();
                         GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutLinkClass,
-                            data.config_editor_setting.OutLinkDisplay),GUILayout.Width((data.config_editor_setting.Width * Resize - KitButtonWidth - ColumnSpan)));
+                            data.config_editor_setting.OutLinkDisplay),GUILayout.Width(data.config_editor_setting.Width * Resize - KitButtonWidth - ColumnSpan));
                         if (GUILayout.Button(Language.Delete, GUILayout.Width(KitButtonWidth)))
                             deleteIndex = i;
 
@@ -367,7 +366,7 @@ namespace SmartDataViewer.Editor
 
                         GUILayout.BeginHorizontal();
                         //alignment
-                        RenderBaseControl((int)(data.config_editor_setting.Width - KitButtonWidth - ColumnSpan) * Resize, data.config_editor_setting.CanEditor,
+                        RenderBaseControl(data.config_editor_setting.Width  * Resize - KitButtonWidth - ColumnSpan, data.config_editor_setting.CanEditor,
                             listItem,
                             v => { value.GetType().GetProperty("Item").SetValue(value, v, new object[] {i}); });
 
@@ -818,12 +817,13 @@ namespace SmartDataViewer.Editor
 
             RenderExtensionHead();
 
-            if (current_windowType != WindowType.CALLBACK)
-                GUILayout.Label(Language.Operation,EditorGUIStyle.GetTagButtonStyle(), GUILayout.Width(ExtensionHeadTagWith));
             if (current_windowType == WindowType.CALLBACK)
+                GUILayout.Label(Language.Select,EditorGUIStyle.GetTagButtonStyle(), GUILayout.Width(ExtensionHeadTagWith));
+            else if (current_windowType == WindowType.INPUT)
                 GUILayout.Label(Language.Operation,EditorGUIStyle.GetTagButtonStyle(), GUILayout.Width(ExtensionHeadTagWith));
-
-
+            else
+                GUILayout.Label(Language.Operation,EditorGUIStyle.GetTagButtonStyle(), GUILayout.Width(ExtensionHeadTagWith));
+            
             GUILayout.EndHorizontal();
             GUILayout.EndScrollView();
         }
@@ -993,7 +993,7 @@ namespace SmartDataViewer.Editor
         {
             if (current_windowType == WindowType.CALLBACK)
             {
-                if (GUILayout.Button(Language.Select, new GUILayoutOption[] {GUILayout.Width(80)}))
+                if (GUILayout.Button(Language.Select, new GUILayoutOption[] {GUILayout.Width(KitButtonWidth*4)}))
                 {
                     SelctList.Add(item.ID);
                     select_callback(current_list, item);
@@ -1017,7 +1017,7 @@ namespace SmartDataViewer.Editor
                 }
                 
                 if (GUILayout.Button(Language.Verfiy, GUI.skin.GetStyle("ButtonMid"),
-                    new GUILayoutOption[] {GUILayout.Width(19)}))
+                    new GUILayoutOption[] {GUILayout.Width(KitButtonWidth)}))
                 {
                     VerfiyButtonClick(item);
                 }
