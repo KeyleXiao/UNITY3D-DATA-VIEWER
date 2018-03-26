@@ -53,8 +53,17 @@ namespace SmartDataViewer.Editor
 
 			if (string.IsNullOrEmpty(errorInfo))
 			{
-				if (GUILayout.Button(Language.Build, new GUILayoutOption[] { GUILayout.Width(90) }))
-					WriteFile(item);
+				//检测代码是否已存在
+				string path = string.Format("{0}/{1}.cs", PathHelper.GetEditorExportPath(), item.EditorName);
+				string disPlay = Language.Build;
+				if (File.Exists(path))
+				{
+					GUI.color = Color.green;
+					disPlay = Language.ReBuild;
+				}
+				if (GUILayout.Button(disPlay, new GUILayoutOption[] { GUILayout.Width(90) }))
+					WriteFile(item,path);
+				GUI.color = Color.white;
 			}
 			else
 			{
@@ -81,7 +90,7 @@ namespace SmartDataViewer.Editor
 			
 		}
 
-		public void WriteFile(CodeGen item)
+		public void WriteFile(CodeGen item,string path)
 		{
 			if (string.IsNullOrEmpty(templateFile)) return;
 			string temp = templateFile;
@@ -89,11 +98,9 @@ namespace SmartDataViewer.Editor
 			temp = temp.Replace("$[ClassType]", item.ClassType);
 			temp = temp.Replace("$[SubType]", item.SubType);
 			temp = temp.Replace("$[EditorPath]", item.EditorPath);
-
-			//Gen file path
-			string path = string.Format("{0}/{1}.cs", PathHelper.GetEditorExportPath(), item.EditorName);
 			
 			if (File.Exists(path)) File.Delete(path);
+			
 			File.WriteAllText(path, temp, System.Text.Encoding.UTF8);
 			Debug.LogWarning(string.Format("Success Build !\n{0}",path));
 			AssetDatabase.Refresh();

@@ -36,6 +36,8 @@ namespace SmartDataViewer.Helpers
             RESOURCES,
             PERSISTENT
         }
+
+        // ## 当前代码只在编辑器下使用
 #if UNITY_EDITOR
 
 
@@ -127,9 +129,9 @@ namespace SmartDataViewer.Helpers
         {
 #if UNITY_EDITOR
             return string.Format(@"{0}/Resources/Config/{1}{2}", Application.dataPath, filename, extionsion);
-#endif
-
+#else
             return string.Empty;
+#endif
         }
 
 
@@ -210,8 +212,9 @@ namespace SmartDataViewer.Helpers
 
 #if UNITY_EDITOR && UNITY_ANDROID
             return GetPlatformForAssetBundles(RuntimePlatform.Android);
-#endif
+#else
             return GetPlatformForAssetBundles(Application.platform);
+#endif
         }
 
         static public string UrlEncode(string str)

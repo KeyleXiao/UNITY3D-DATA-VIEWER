@@ -56,9 +56,6 @@ namespace SmartDataViewer.Editor
             rawData = data;
         }
 
-
-        private Vector2 scrollPos = Vector2.zero;
-
         float currentScrollViewWidth;
         bool resize = false;
         Rect cursorChangeRect;

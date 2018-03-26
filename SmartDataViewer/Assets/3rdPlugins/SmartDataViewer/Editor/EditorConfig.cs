@@ -63,6 +63,7 @@ namespace SmartDataViewer.Editor
 		public static string DiscardChange = "Discard";
 		public static string Menu = "Menu";
 		public static string Build = "Build";
+		public static string ReBuild = "Rebuild";
 		public static string Select = "Select";
 		public static string Previous = "Previous";
 		public static string Next = "Next";
