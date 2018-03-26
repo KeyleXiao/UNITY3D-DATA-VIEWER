@@ -46,7 +46,6 @@ namespace SmartDataViewer.Editor
                 jumpButtonGuiStyle = new GUIStyle(GUI.skin.button);
                 jumpButtonGuiStyle.margin = new RectOffset(0,0,3,0);
                 jumpButtonGuiStyle.padding = new RectOffset(0,0,0,0);
-                jumpButtonGuiStyle.alignment = TextAnchor.MiddleRight;
             }
 
             return jumpButtonGuiStyle;

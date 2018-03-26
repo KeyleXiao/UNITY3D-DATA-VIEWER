@@ -1028,7 +1028,7 @@ namespace SmartDataViewer.Editor
             int.TryParse(GUILayout.TextField(PageAmount.ToString(), GUILayout.Width(40)), out PageAmount);
 
 
-            if (GUILayout.Button("Jump:",EditorGUIStyle.GetJumpButtonGuiStyle(),GUILayout.Width(38)))
+            if (GUILayout.Button(Language.Jump,EditorGUIStyle.GetJumpButtonGuiStyle(),GUILayout.Width(40)))
             {
                 if (jumpTo-1 <0)
                     jumpTo = 0;
