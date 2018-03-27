@@ -23,7 +23,7 @@ public class $[EditorName] : ConfigEditorSchema<$[SubType]>
 	[MenuItem("$[EditorPath]/$[EditorName]")]
 	static public void OpenView()
 	{
-		$[EditorName] w = CreateInstance<$[EditorName]>();
+		$[EditorName] w = UnityEngine.ScriptableObject.CreateInstance<$[EditorName]>();
 		w.ShowUtility();
 	}
 

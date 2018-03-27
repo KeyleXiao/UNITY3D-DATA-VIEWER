@@ -23,7 +23,7 @@ public class SupportsConfigEditor : ConfigEditorSchema<Supports>
 	[MenuItem("CustomEditor/SupportsConfigEditor")]
 	static public void OpenView()
 	{
-		SupportsConfigEditor w = CreateInstance<SupportsConfigEditor>();
+		SupportsConfigEditor w =  UnityEngine.ScriptableObject.CreateInstance<SupportsConfigEditor>();
 		w.ShowUtility();
 	}
 
