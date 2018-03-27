@@ -25,7 +25,7 @@ using System.Reflection;
 using System.Linq;
 using SmartDataViewer.Helpers;
 
-namespace SmartDataViewer.Editor
+namespace SmartDataViewer.Editor.BuildInEditor
 {
     /// <summary>
     /// 存储反射字段信息的容器

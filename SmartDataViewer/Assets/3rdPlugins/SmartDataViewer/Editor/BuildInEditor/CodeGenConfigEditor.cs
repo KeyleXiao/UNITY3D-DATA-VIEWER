@@ -20,7 +20,7 @@ using UnityEditor;
 using System.IO;
 using SmartDataViewer.Helpers;
 
-namespace SmartDataViewer.Editor
+namespace SmartDataViewer.Editor.BuildInEditor
 {
 	public class CodeGenConfigEditor : ConfigEditorSchema<CodeGen>
 	{

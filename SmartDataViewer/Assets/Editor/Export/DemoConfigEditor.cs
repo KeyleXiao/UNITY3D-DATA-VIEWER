@@ -16,7 +16,7 @@
 //
 using System;
 using UnityEditor;
-using SmartDataViewer.Editor;
+using SmartDataViewer.Editor.BuildInEditor;
 
 public class DemoConfigEditor : ConfigEditorSchema<Demo>
 {

@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SmartDataViewer.Editor
+namespace SmartDataViewer.Editor.BuildInEditor
 {
 
 	public class IMultipleWindow : UnityEditor.EditorWindow

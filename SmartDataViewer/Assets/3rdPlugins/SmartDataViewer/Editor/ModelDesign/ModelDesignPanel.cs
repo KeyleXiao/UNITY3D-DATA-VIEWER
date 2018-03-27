@@ -1,5 +1,5 @@
 ﻿//
-//   		Copyright 2017 KeyleXiao.
+//   		Copyright 2018 KeyleXiao.
 //     		Contact : Keyle_xiao@hotmail.com 
 //
 //     		Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,26 +15,11 @@
 //     		limitations under the License.
 //
 
-using System;
-namespace SmartDataViewer.Editor.BuildInEditor
+using UnityEditor;
+namespace SmartDataViewer.Editor.ModelDesign
 {
-    [Serializable]
-    [ConfigEditor(disableSearch: true, load_path: "{EDITOR}/Config/CodeGen")]
-    public class CodeGenConfig : ConfigBase<CodeGen> { }
-
-    [Serializable]
-    public class CodeGen : IModel
+    public class ModelDesignPanel:EditorWindow
     {
-        public CodeGen()
-        {
-            EditorName = string.Empty;
-            ClassType = string.Empty;
-            SubType = string.Empty;
-            EditorPath = "CustomEditor";
-        }
-        public string EditorPath;
-        public string EditorName;
-        public string ClassType;
-        public string SubType;
+        
     }
 }

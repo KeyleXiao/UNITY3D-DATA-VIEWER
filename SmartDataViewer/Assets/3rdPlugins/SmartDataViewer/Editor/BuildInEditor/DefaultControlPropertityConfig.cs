@@ -18,7 +18,7 @@ using System;
 using SmartDataViewer;
 using UnityEditor;
 
-namespace SmartDataViewer.Editor
+namespace SmartDataViewer.Editor.BuildInEditor
 {
 
 	public class DefaultControlConfigEditor : ConfigEditorSchema<DefaultControlPropertity>

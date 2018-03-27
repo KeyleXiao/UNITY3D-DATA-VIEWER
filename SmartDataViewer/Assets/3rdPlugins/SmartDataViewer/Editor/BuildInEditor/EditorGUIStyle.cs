@@ -18,7 +18,7 @@ using SmartDataViewer.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace SmartDataViewer.Editor
+namespace SmartDataViewer.Editor.BuildInEditor
 {
     public class EditorGUIStyle
     {
