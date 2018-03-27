@@ -1,0 +1,1 @@
+{"ConfigList":[{"ID":1,"NickName":"","strList":[],"list":[],"supports":[2,3,4,1],"description":"","support":1}]}
