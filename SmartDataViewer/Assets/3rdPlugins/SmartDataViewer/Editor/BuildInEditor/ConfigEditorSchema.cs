@@ -1027,9 +1027,11 @@ namespace SmartDataViewer.Editor
                 {
                     if (PasteItem != null)
                     {
+                        //Bug fix : 从指定位置删除插入
+                        var insertPos = config_current.ConfigList.IndexOf(item);
                         config_current.ConfigList.Remove(item);
                         PasteItem.ID = item.ID;
-                        config_current.ConfigList.Add(DeepClone<T>(PasteItem));
+                        config_current.ConfigList.Insert(insertPos,DeepClone(PasteItem));
                     }
                 }
             }
