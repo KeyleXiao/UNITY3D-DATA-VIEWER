@@ -28,15 +28,15 @@ namespace SmartDataViewer.Editor
 	
 	public class EditorConfig
 	{
-		public static DefaultControlConfig ControlConfig { get; set; }
+		public static DefaultControlPropertityConfig ControlPropertityConfig { get; set; }
 
-		public static DefaultControlConfig GetDefaultControlConfig()
+		public static DefaultControlPropertityConfig GetDefaultControlConfig()
 		{
-			if (ControlConfig == null)
+			if (ControlPropertityConfig == null)
 			{
-				ControlConfig = DefaultControlConfig.LoadConfig<DefaultControlConfig>("{EDITOR}/Config/DefaultControlPropertity");
+				ControlPropertityConfig = DefaultControlPropertityConfig.LoadConfig<DefaultControlPropertityConfig>("{EDITOR}/Config/DefaultControlPropertity");
 			}
-			return ControlConfig;
+			return ControlPropertityConfig;
 		}
 	}		
 

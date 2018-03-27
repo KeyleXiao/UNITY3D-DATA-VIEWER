@@ -14,14 +14,27 @@
 //     		See the License for the specific language governing permissions and
 //     		limitations under the License.
 //
+
 using System;
 namespace SmartDataViewer.Editor
 {
-	public class DefaultEditorPropertityConfig : ConfigBase<DefaultEditorPropertity>
-	{
+    [Serializable]
+    [ConfigEditor(disableSearch: true, load_path: "{EDITOR}/Config/CodeGen")]
+    public class CodeGenConfig : ConfigBase<CodeGen> { }
 
-	}
-
-
-
+    [Serializable]
+    public class CodeGen : IModel
+    {
+        public CodeGen()
+        {
+            EditorName = string.Empty;
+            ClassType = string.Empty;
+            SubType = string.Empty;
+            EditorPath = "CustomEditor";
+        }
+        public string EditorPath;
+        public string EditorName;
+        public string ClassType;
+        public string SubType;
+    }
 }

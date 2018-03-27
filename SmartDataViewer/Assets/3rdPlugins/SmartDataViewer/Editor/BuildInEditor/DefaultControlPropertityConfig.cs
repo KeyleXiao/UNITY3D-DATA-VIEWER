@@ -20,12 +20,6 @@ using UnityEditor;
 
 namespace SmartDataViewer.Editor
 {
-	[Serializable]
-	[ConfigEditor(load_path: @"{EDITOR}/Config/DefaultControlPropertity")]
-	public class DefaultControlConfig : ConfigBase<DefaultControlPropertity>
-	{
-
-	}
 
 	public class DefaultControlConfigEditor : ConfigEditorSchema<DefaultControlPropertity>
 	{
@@ -45,11 +39,11 @@ namespace SmartDataViewer.Editor
 		public override void Initialize()
 		{
 			base.Initialize();
-			SetConfigType(new DefaultControlConfig());
+			SetConfigType(new DefaultControlPropertityConfig());
 		}
 		protected override void SaveButton()
 		{
-			EditorConfig.ControlConfig = DefaultControlConfig.LoadConfig<DefaultControlConfig>("{EDITOR}/Config/DefaultControlPropertity");
+			EditorConfig.ControlPropertityConfig = DefaultControlPropertityConfig.LoadConfig<DefaultControlPropertityConfig>("{EDITOR}/Config/DefaultControlPropertity");
 			base.SaveButton();
 		}
 	}

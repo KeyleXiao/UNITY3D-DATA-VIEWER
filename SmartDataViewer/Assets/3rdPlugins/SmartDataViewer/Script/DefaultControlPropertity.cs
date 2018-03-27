@@ -23,6 +23,14 @@ using System;
 
 namespace SmartDataViewer
 {
+    
+    [Serializable]
+    [ConfigEditor(load_path: @"{EDITOR}/Config/DefaultControlPropertity")]
+    public class DefaultControlPropertityConfig : ConfigBase<DefaultControlPropertity>
+    {
+
+    }
+    
     [Serializable]
     public class DefaultControlPropertity : IModel
     {
