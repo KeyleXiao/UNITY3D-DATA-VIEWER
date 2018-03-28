@@ -273,7 +273,7 @@ namespace SmartDataViewer.Helpers
         }
 
 
-        public static FieldType GetCurrentFieldType(Type value)
+        public static FieldType GetFieldTypeMapping(Type value)
         {
             if (value.IsGenericType)
             {
@@ -374,7 +374,7 @@ namespace SmartDataViewer.Helpers
 
             return FieldType.STRING;
         }
-        
+
         /// <summary>
         /// 在当前程序集总获取Type 不能放在其他程序集
         /// </summary>
@@ -387,32 +387,30 @@ namespace SmartDataViewer.Helpers
 
         public enum FieldType
         {
-            INT,
-            STRING,
-            FLOAT,
-            BOOL,
-            VECTOR2,
-            VECTOR3,
-            VECTOR4,
-            COLOR,
-            CURVE,
-            BOUNDS,
+            INT = 1,
+            STRING = 2,
+            FLOAT = 3,
+            BOOL = 4,
+            VECTOR2 = 5,
+            VECTOR3 = 6,
+            VECTOR4 = 7,
+            COLOR = 8,
+            BOUNDS = 9,
 
-            GEN_INT,
-            GEN_STRING,
-            GEN_FLOAT,
-            GEN_BOOL,
-            GEN_VECTOR2,
-            GEN_VECTOR3,
-            GEN_VECTOR4,
-            GEN_COLOR,
-            GEN_CURVE,
-            GEN_BOUNDS,
+            GEN_INT = 10,
+            GEN_STRING = 11,
+            GEN_FLOAT = 12,
+            GEN_BOOL = 13,
+            GEN_VECTOR2 = 14,
+            GEN_VECTOR3 = 15,
+            GEN_VECTOR4 = 16,
+            GEN_COLOR = 17,
+            GEN_BOUNDS = 18,
 
-            ANIMATIONCURVE,
-            GEN_ANIMATIONCURVE,
-            ENUM,
-            GEN_ENUM,
+            ANIMATIONCURVE = 19,
+            GEN_ANIMATIONCURVE = 20,
+            ENUM = 21,
+            GEN_ENUM = 22,
         }
     }
 }

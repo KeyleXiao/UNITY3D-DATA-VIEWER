@@ -25,16 +25,23 @@ namespace SmartDataViewer
 {
     
     [Serializable]
-    [ConfigEditor(load_path: @"{EDITOR}/Config/DefaultControlPropertity")]
-    public class DefaultControlPropertityConfig : ConfigBase<DefaultControlPropertity>
+    [ConfigEditor(load_path: @"{EDITOR}/Config/CustomControlPropertity")]
+    public class CustomControlPropertityConfig : ConfigBase<ControlPropertity>
     {
 
     }
     
     [Serializable]
-    public class DefaultControlPropertity : IModel
+    [ConfigEditor(load_path: @"{EDITOR}/Config/DefaultControlProperty")]
+    public class DefaultControlPropertityConfig : ConfigBase<ControlPropertity>
     {
-        public DefaultControlPropertity()
+
+    }
+    
+    [Serializable]
+    public class ControlPropertity : IModel
+    {
+        public ControlPropertity()
         {
             Display = string.Empty;
             OutLinkEditor = string.Empty;

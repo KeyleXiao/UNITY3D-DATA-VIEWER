@@ -15,6 +15,7 @@
 //   		limitations under the License.
 
 using System.Collections.Generic;
+using SmartDataViewer.Editor.BuildInEditor;
 
 namespace SmartDataViewer.Editor
 {
@@ -28,59 +29,71 @@ namespace SmartDataViewer.Editor
 	
 	public class EditorConfig
 	{
-		public static DefaultControlPropertityConfig ControlPropertityConfig { get; set; }
+		public static DefaultControlPropertityConfig ControlPropertyConfig { private get; set; }
+		public static DefaultEditorPropertyConfig EditorPropertyConfig { private get; set; }
+		
 
-		public static DefaultControlPropertityConfig GetDefaultControlConfig()
+		public static DefaultControlPropertityConfig GetDefaultControlConfig(bool reload = false)
 		{
-			if (ControlPropertityConfig == null)
+			if (ControlPropertyConfig == null || reload)
 			{
-				ControlPropertityConfig = DefaultControlPropertityConfig.LoadConfig<DefaultControlPropertityConfig>("{EDITOR}/Config/DefaultControlPropertity");
+				ControlPropertyConfig = DefaultControlPropertityConfig.LoadConfig<DefaultControlPropertityConfig>("{EDITOR}/Config/DefaultControlProperty");
 			}
-			return ControlPropertityConfig;
+			return ControlPropertyConfig;
 		}
+		
+		public static DefaultEditorPropertyConfig GetDefaultEditorConfig(bool reload = false)
+		{
+			if (EditorPropertyConfig == null || reload)
+			{
+				EditorPropertyConfig = DefaultEditorPropertyConfig.LoadConfig<DefaultEditorPropertyConfig>("{EDITOR}/Config/DefaultEditorPropertyConfig");
+			}
+			return EditorPropertyConfig;
+		}
+		
 	}		
 
 	public class Language
 	{
-		//public static string Build = "生成";
-		//public static string Select = "选择";
-		//public static string Previous = "前页";
-		//public static string Next = "后页";
-		//public static string Add = "添加";
-		//public static string OutLinkIsNull = "请设置外链编辑器";
-		//public static string Success = "成功..";
-		//public static string SuccessAdd = "成功添加 {0}";
-		//public static string NickName = @"别名";
-		//public static string Delete = @"X";
-		//public static string Copy = @"C";
-		//public static string Paste = @"P";
-		//public static string Operation = @"操作";
-		//public static string Contract = @"Version 1.2 Beta   --Keyle";
-		//public static string OnePageMaxNumber = "单页最大数量";
-		//public static string PageInfoFormate = @"|{0}|页-共|{1}|页";
+		//public static readonly string Build = "生成";
+		//public static readonly string Select = "选择";
+		//public static readonly string Previous = "前页";
+		//public static readonly string Next = "后页";
+		//public static readonly string Add = "添加";
+		//public static readonly string OutLinkIsNull = "请设置外链编辑器";
+		//public static readonly string Success = "成功..";
+		//public static readonly string SuccessAdd = "成功添加 {0}";
+		//public static readonly string NickName = @"别名";
+		//public static readonly string Delete = @"X";
+		//public static readonly string Copy = @"C";
+		//public static readonly string Paste = @"P";
+		//public static readonly string Operation = @"操作";
+		//public static readonly string Contract = @"Version 1.2 Beta   --Keyle";
+		//public static readonly string OnePageMaxNumber = "单页最大数量";
+		//public static readonly string PageInfoFormate = @"|{0}|页-共|{1}|页";
 
-		public static string Jump = "Jump:";
-		public static string NewLine = "NewLine";
-		public static string DiscardChange = "Discard";
-		public static string Menu = "Menu";
-		public static string Build = "Build";
-		public static string ReBuild = "Rebuild";
-		public static string Select = "Select";
-		public static string Previous = "Previous";
-		public static string Next = "Next";
-		public static string Add = "Add";
-		public static string OutLinkIsNull = "Out link editor field is null";
-		public static string Success = "Success ..";
-		public static string SuccessAdd = "Success add {0}";
-		public static string NickName = @"NickName";
-		public static string Delete = @"X";
-		public static string Copy = @"C";
-		public static string Paste = @"P";
-		public static string Verfiy = @"V";
-		public static string VerfiyMessageSuccess = @"ID: {0} 当前数据有效！";
-		public static string Operation = @"Operation";
-		public static string Contract = @"Version 1.2 Beta   --Keyle";
-		public static string OnePageMaxNumber = "Max In Page";
-		public static string PageInfoFormate = @"Page |{0}|-|{1}|";
+		public static readonly string Jump = "Jump:";
+		public static readonly string NewLine = "NewLine";
+		public static readonly string DiscardChange = "Discard";
+		public static readonly string Menu = "Menu";
+		public static readonly string Build = "Build";
+		public static readonly string ReBuild = "Rebuild";
+		public static readonly string Select = "Select";
+		public static readonly string Previous = "Previous";
+		public static readonly string Next = "Next";
+		public static readonly string Add = "Add";
+		public static readonly string OutLinkIsNull = "Out link editor field is null";
+		public static readonly string Success = "Success ..";
+		public static readonly string SuccessAdd = "Success add {0}";
+		public static readonly string NickName = @"NickName";
+		public static readonly string Delete = @"X";
+		public static readonly string Copy = @"C";
+		public static readonly string Paste = @"P";
+		public static readonly string Verfiy = @"V";
+		public static readonly string VerfiyMessageSuccess = @"ID: {0} 当前数据有效！";
+		public static readonly string Operation = @"Operation";
+		public static readonly string Contract = @"Version 1.2 Beta   --Keyle";
+		public static readonly string OnePageMaxNumber = "Max In Page";
+		public static readonly string PageInfoFormate = @"Page |{0}|-|{1}|";
 	}
 }

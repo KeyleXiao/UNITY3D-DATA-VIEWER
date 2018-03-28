@@ -38,6 +38,21 @@ namespace SmartDataViewer.Editor.BuildInEditor
         private static GUIStyle tableGroupBoxStyle;
         private static GUIStyle textGuiStyle;
         private static GUIStyle jumpButtonGuiStyle;
+        private static GUIStyle ToggleStyle;
+
+
+        public static GUIStyle GetTogleStyle()
+        {
+            if (ToggleStyle == null)
+            {
+                ToggleStyle = new GUIStyle(GUI.skin.toggle);
+                ToggleStyle.margin = new RectOffset(0,0,3,0);
+                ToggleStyle.padding = new RectOffset(0,0,0,0);
+            }
+
+            return ToggleStyle;
+        }
+
 
         public static GUIStyle GetJumpButtonGuiStyle()
         {
@@ -50,6 +65,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             return jumpButtonGuiStyle;
         }
+
 
         
         

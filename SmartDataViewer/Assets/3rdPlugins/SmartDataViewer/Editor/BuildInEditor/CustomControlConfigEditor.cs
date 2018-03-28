@@ -15,17 +15,31 @@
 //     		limitations under the License.
 //
 
-using System.Collections.Generic;
-using SmartDataViewer.Helpers;
+using System;
+using SmartDataViewer.Editor.BuildInEditor;
 using UnityEditor;
 
-namespace SmartDataViewer.Editor.ModelDesign
+namespace SmartDataViewer.Editor.BuildInEditor
 {
- 
-    public class ModelDesignPanel : EditorWindow
+    public class CustomControlConfigEditor : ConfigEditorSchema<ControlPropertity>
     {
-        private void OnGUI()
+        [MenuItem("SmartDataViewer/Control Setting/Custom")]
+        static public void OpenView()
         {
+            var w = CreateInstance<CustomControlConfigEditor>();
+            w.ShowUtility();
+        }
+
+        public override ControlPropertity CreateValue()
+        {
+            var r = base.CreateValue();
+            return r;
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            SetConfigType(new CustomControlPropertityConfig());
         }
     }
 }

@@ -23,10 +23,11 @@ using System;
 
 namespace SmartDataViewer
 {
+    [Obsolete("写好功能就把这个类拿掉")]
     [Serializable]
-    public class DefaultEditorPropertity : IModel
+    public class EditorPropertity : IModel
     {
-        public DefaultEditorPropertity()
+        public EditorPropertity()
         {
             LoadPath = string.Empty;
             OutputPath = string.Empty;

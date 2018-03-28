@@ -33,10 +33,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
     public class ConfigEditorSchemaChache
     {
         public FieldInfo field_info { get; set; }
-
-        //public ConfigEditorFieldAttribute config_editor_field { get; set; }
-        public DefaultControlPropertity config_editor_setting { get; set; }
-        public int order { get; set; }
+        public ControlPropertity config_editor_setting { get; set; }
     }
 
     /// <summary>
@@ -51,19 +48,15 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// </summary>
         protected int ExtensionHeadTagWith = 88;
 
-
         /// <summary>
         /// 工具栏按钮统一宽度
         /// </summary>
         protected int KitButtonWidth = 19;
-        
+
         /// <summary>
         /// 测试工具
         /// </summary>
-        protected bool isLog
-        {
-            get { return false; }
-        }
+        protected bool isLog { get; set; }
 
         /// <summary>
         /// 设置列间间隔
@@ -79,7 +72,34 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// 缩放
         /// </summary>
         protected int Resize = 1;
+        
+        /// <summary>
+        /// 页上限
+        /// </summary>
+        protected int ItemMaxCount { get; set; }
+        
+        /// <summary>
+        /// 隐藏缩放
+        /// </summary>
+        protected bool HideResizeSlider { get; set; }
+        
+        /// <summary>
+        /// 搜索字段
+        /// </summary>
+        protected string SearchResourceName { get; set; }
+        
+        
+        /// <summary>
+        /// 默认一页数量
+        /// </summary>
+        protected int PageAmount = 50;
 
+        /// <summary>
+        /// 当前页
+        /// </summary>
+        protected int PageIndex { get; set; }
+        
+        
         /// <summary>
         /// 编辑器通用配置
         /// </summary>
@@ -100,21 +120,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// </summary>
         protected List<int> deleteList = new List<int>();
         
-        /// <summary>
-        /// 搜索字段
-        /// </summary>
-        protected string SearchResourceName { get; set; }
-        
-        /// <summary>
-        /// 默认一页数量
-        /// </summary>
-        protected int PageAmount = 50;
-
-        /// <summary>
-        /// 当前页
-        /// </summary>
-        protected int PageIndex { get; set; }
-
         /// <summary>
         /// 当前页转跳位置
         /// </summary>
@@ -140,22 +145,18 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// </summary>
         protected bool FirstLoadFlag { get; set; }
 
+
         /// <summary>
         /// 搜索结果
         /// </summary>
         protected List<T> Finallylist { get; set; }
         
-        /// <summary>
-        /// 页上限
-        /// </summary>
-        protected int ItemMaxCount { get; set; }
         
         /// <summary>
         /// 字段排序
         /// </summary>
         protected Dictionary<string, bool> FieldsOrder { get; set; }
 
-      
 
         
         //TODO 2.0 外联表原始数据
@@ -219,11 +220,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 var infos = item.GetCustomAttributes(typeof(ConfigEditorFieldAttribute), true);
                 ConfigEditorSchemaChache f = new ConfigEditorSchemaChache();
                 f.field_info = item;
-                f.order = 0;
 
                 if (infos.Length == 0)
                 {
-                    int id = (int) ReflectionHelper.GetCurrentFieldType(item.FieldType);
+                    int id = (int) ReflectionHelper.GetFieldTypeMapping(item.FieldType);
                     f.config_editor_setting = EditorConfig.GetDefaultControlConfig().SearchByID(id);
 
 
@@ -240,13 +240,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 else
                 {
                     ConfigEditorFieldAttribute cefa = (ConfigEditorFieldAttribute) infos[0];
-                    f.order = cefa.Setting.Order;
                     f.config_editor_setting = cefa.Setting;
 
 
                     if (f.config_editor_setting.Width == 0)
                     {
-                        int id = (int) ReflectionHelper.GetCurrentFieldType(item.FieldType);
+                        int id = (int) ReflectionHelper.GetFieldTypeMapping(item.FieldType);
                         var setting = EditorConfig.GetDefaultControlConfig().SearchByID(id);
                         f.config_editor_setting.Width = setting.Width;
                     }
@@ -260,7 +259,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             if (Chache.Count > 0)
             {
-                Chache = Chache.OrderByDescending(x => x.order).ToList();
+                Chache = Chache.OrderByDescending(x => x.config_editor_setting.Order).ToList();
             }
 
             initialized = true;
@@ -302,7 +301,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             if (value.GetType().IsGenericType)
             {
                 GUILayout.BeginVertical(GUIStyle.none,
-                    new GUILayoutOption[] {GUILayout.Width(data.config_editor_setting.Width * Resize)});
+                    new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width ))});
 
                 int deleteIndex = -1;
 
@@ -329,7 +328,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     {
                         GUILayout.BeginHorizontal();
                         GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutLinkClass,
-                            data.config_editor_setting.OutLinkDisplay),GUILayout.Width(data.config_editor_setting.Width * Resize - KitButtonWidth - ColumnSpan));
+                            data.config_editor_setting.OutLinkDisplay),GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width - KitButtonWidth - ColumnSpan)));
                         if (GUILayout.Button(Language.Delete, GUILayout.Width(KitButtonWidth)))
                             deleteIndex = i;
 
@@ -366,7 +365,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                         GUILayout.BeginHorizontal();
                         //alignment
-                        RenderBaseControl(data.config_editor_setting.Width  * Resize - KitButtonWidth - ColumnSpan, data.config_editor_setting.CanEditor,
+                        RenderBaseControl(GetResizeWidth(data.config_editor_setting.Width ) - KitButtonWidth - ColumnSpan, data.config_editor_setting.CanEditor,
                             listItem,
                             v => { value.GetType().GetProperty("Item").SetValue(value, v, new object[] {i}); });
 
@@ -397,7 +396,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                         data.config_editor_setting.OutLinkDisplay);
 
                     if (GUILayout.Button(buttonName,
-                        new GUILayoutOption[] {GUILayout.Width(data.config_editor_setting.Width * Resize)}))
+                        new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width))}))
                     {
                         Assembly assembly = Assembly.GetExecutingAssembly();
                         IMultipleWindow e =
@@ -414,7 +413,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 }
                 else
                 {
-                    RenderBaseControl(data.config_editor_setting.Width * Resize, data.config_editor_setting.CanEditor, value,
+                    RenderBaseControl(GetResizeWidth(data.config_editor_setting.Width ), data.config_editor_setting.CanEditor, value,
                         v => { data.field_info.SetValue(raw, v); });
                 }
             }
@@ -570,7 +569,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.Toggle((bool) value, new GUILayoutOption[] {GUILayout.Width(width)});
+                    value = EditorGUILayout.Toggle((bool) value,EditorGUIStyle.GetTogleStyle(), new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
@@ -651,7 +650,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             {
                 //Bug fix: 自动做默认参数初始化 
                 if (Chache[i].config_editor_setting == null)
-                    Chache[i].config_editor_setting = new DefaultControlPropertity();
+                    Chache[i].config_editor_setting = new ControlPropertity();
 
                 if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor))
                 {
@@ -809,7 +808,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     string.IsNullOrEmpty(item.config_editor_setting.Display)
                         ? item.field_info.Name
                         : item.config_editor_setting.Display, EditorGUIStyle.GetTagButtonStyle(),
-                    new GUILayoutOption[] {GUILayout.Width(item.config_editor_setting.Width * Resize)}))
+                    new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(item.config_editor_setting.Width))}))
                     HeadButton_Click(item.field_info.Name);
 
                 GUILayout.Space(ColumnSpan);
@@ -1094,9 +1093,22 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     PageIndex++;
             }
 
-            Resize = (int)GUILayout.HorizontalSlider(Resize, 1, 10, GUILayout.Width(70));
+            //处理缩放
+            if (!HideResizeSlider) Resize = (int)GUILayout.HorizontalSlider(Resize, 1, 10, GUILayout.Width(70));
 
             GUILayout.EndHorizontal();
+        }
+
+
+
+        /// <summary>
+        /// 计算缩放尺寸
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        protected virtual int GetResizeWidth(int value)
+        {
+            return HideResizeSlider? value :value * Resize;
         }
 
         /// <summary>

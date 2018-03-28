@@ -14,25 +14,23 @@
 //     		See the License for the specific language governing permissions and
 //     		limitations under the License.
 //
-using System;
-using SmartDataViewer;
 using UnityEditor;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
 
-	public class DefaultControlConfigEditor : ConfigEditorSchema<DefaultControlPropertity>
+	public class DefaultControlConfigEditor : ConfigEditorSchema<ControlPropertity>
 	{
-		[MenuItem("SmartDataViewer/Default Control Setting")]
+		[MenuItem("SmartDataViewer/Control Setting/Default")]
 		static public void OpenView()
 		{
-			DefaultControlConfigEditor w = CreateInstance<DefaultControlConfigEditor>();
+			var w = CreateInstance<DefaultControlConfigEditor>();
 			w.ShowUtility();
 		}
 
-		public override DefaultControlPropertity CreateValue()
+		public override ControlPropertity CreateValue()
 		{
-			DefaultControlPropertity r = base.CreateValue();
+			var r = base.CreateValue();
 			return r;
 		}
 
@@ -43,7 +41,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
 		}
 		protected override void SaveButton()
 		{
-			EditorConfig.ControlPropertityConfig = DefaultControlPropertityConfig.LoadConfig<DefaultControlPropertityConfig>("{EDITOR}/Config/DefaultControlPropertity");
+			//刷新编辑器缓存信息
+			EditorConfig.ControlPropertyConfig = DefaultControlPropertityConfig.LoadConfig<DefaultControlPropertityConfig>("{EDITOR}/Config/DefaultControlProperty");
 			base.SaveButton();
 		}
 	}

@@ -19,17 +19,18 @@ using System;
 
 namespace SmartDataViewer
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class,  AllowMultiple = true)]
     public sealed class ConfigEditorAttribute : BaseConfigFiedEditorAttribute
     {
         //## 当前代码只在编辑器下使用
 #if UNITY_EDITOR
-        public DefaultEditorPropertity Setting { get; set; }
+        public EditorPropertity Setting { get; set; }
 
 
         public ConfigEditorAttribute()
         {
-            Setting = new DefaultEditorPropertity();
+            
+            Setting = new EditorPropertity();
             Setting.EditorTitle = string.Empty;
             Setting.OutputPath = string.Empty;
             Setting.LoadPath = string.Empty;
@@ -56,7 +57,7 @@ namespace SmartDataViewer
         {
             //## 当前代码只在编辑器下使用
 #if UNITY_EDITOR
-            Setting = new DefaultEditorPropertity();
+            Setting = new EditorPropertity();
             Setting.EditorTitle = editor_title;
             Setting.OutputPath = output_path;
             Setting.LoadPath = load_path;

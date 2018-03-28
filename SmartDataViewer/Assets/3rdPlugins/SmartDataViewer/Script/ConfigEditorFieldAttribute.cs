@@ -23,7 +23,7 @@ namespace SmartDataViewer
     {
         //## 当前代码只在编辑器下使用
 #if UNITY_EDITOR
-        public DefaultControlPropertity Setting { get; private set; }
+        public ControlPropertity Setting { get; private set; }
 #endif
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace SmartDataViewer
         {
             //## 当前代码只在编辑器下使用
 #if UNITY_EDITOR
-            Setting = new DefaultControlPropertity
+            Setting = new ControlPropertity
             {
                 Order = order,
                 Display = display,
