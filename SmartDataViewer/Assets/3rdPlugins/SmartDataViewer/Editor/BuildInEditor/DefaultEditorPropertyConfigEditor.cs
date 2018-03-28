@@ -19,13 +19,7 @@ using UnityEditor;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
-    /// <summary>
-    /// 默认编辑器配置容器
-    /// </summary>
-    [System.Serializable]
-    public class DefaultEditorPropertyConfig : ConfigBase<EditorProperty>
-    {
-    }
+
 
     public class DefaultEditorPropertyConfigEditor:ConfigEditorSchema<EditorProperty>
     {
@@ -48,4 +42,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
             SetConfigType(new DefaultEditorPropertyConfig());
         }
     }
+    
+    
 }

@@ -2,6 +2,26 @@
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
+    /// <summary>
+    /// 默认编辑器配置容器
+    /// </summary>
+    [System.Serializable]
+    [ConfigEditor(load_path:"{EDITOR}/Config/DefaultEditorPropertyConfig")]
+    public class DefaultEditorPropertyConfig : ConfigBase<EditorProperty>
+    {
+    }
+    
+    
+    /// <summary>
+    /// 默认编辑器配置容器
+    /// </summary>
+    [System.Serializable]
+    [ConfigEditor(load_path:"{EDITOR}/Config/CustomEditorPropertyConfig")]
+    public class CustomEditorPropertyConfig : ConfigBase<EditorProperty>
+    {
+    }
+    
+    
     [Serializable]
     public class EditorProperty:IModel
     {
