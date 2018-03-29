@@ -19,7 +19,7 @@ using System;
 namespace SmartDataViewer.Editor.BuildInEditor
 {
     [Serializable]
-    [ConfigEditor(disableSearch: true, load_path: "{EDITOR}/Config/CodeGen")]
+    [ConfigEditor(10001)]
     public class CodeGenConfig : ConfigBase<CodeGen> { }
 
     [Serializable]

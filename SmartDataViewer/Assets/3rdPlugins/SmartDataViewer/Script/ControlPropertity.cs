@@ -25,15 +25,15 @@ namespace SmartDataViewer
 {
     
     [Serializable]
-    [ConfigEditor(load_path: @"{EDITOR}/Config/CustomControlPropertity")]
-    public class CustomControlPropertityConfig : ConfigBase<ControlPropertity>
+    [ConfigEditor(10005)]
+    public class DefaultControlPropertityConfig : ConfigBase<ControlPropertity>
     {
 
     }
     
     [Serializable]
-    [ConfigEditor(load_path: @"{EDITOR}/Config/DefaultControlProperty")]
-    public class DefaultControlPropertityConfig : ConfigBase<ControlPropertity>
+    [ConfigEditor(10004)]
+    public class CustomControlPropertityConfig : ConfigBase<ControlPropertity>
     {
 
     }

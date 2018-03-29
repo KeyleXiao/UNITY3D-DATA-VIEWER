@@ -22,49 +22,18 @@ namespace SmartDataViewer
     [AttributeUsage(AttributeTargets.Class,  AllowMultiple = true)]
     public sealed class ConfigEditorAttribute : BaseConfigFiedEditorAttribute
     {
-        //## 当前代码只在编辑器下使用
-#if UNITY_EDITOR
-        public EditorPropertity Setting { get; set; }
-
-
-        public ConfigEditorAttribute()
-        {
-            
-            Setting = new EditorPropertity();
-            Setting.EditorTitle = string.Empty;
-            Setting.OutputPath = string.Empty;
-            Setting.LoadPath = string.Empty;
-            Setting.DisableSave = false;
-            Setting.DisableCreate = false;
-            Setting.DisableSearch = false;
-        }
-#endif
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SmartDataViewer.ConfigEditorAttribute"/> class.
+        /// 编辑器配置ID
         /// </summary>
-        /// <param name="editor_title">当前编辑器显示的名词</param>
-        /// <param name="load_path">当前编辑器数据文件的位置</param>
-        /// <param name="output_path">编辑文件导出路径</param>
-        /// <param name="disableSearch">是否禁用搜索栏</param>
-        /// <param name="disableSave">是否禁用保存按钮</param>
-        /// <param name="disableCreate">是否禁用添加按钮</param>
-        public ConfigEditorAttribute(string editor_title = "",
-            string load_path = "",
-            string output_path = "",
-            bool disableSearch = false,
-            bool disableSave = false,
-            bool disableCreate = false)
+        public int EditorConfigID { get; set; }
+        
+        /// <summary>
+        /// 使用编辑器配置ID 来初始化编辑器 默认0
+        /// </summary>
+        /// <param name="editorConfigID"></param>
+        public ConfigEditorAttribute(int editorConfigID = 0)
         {
-            //## 当前代码只在编辑器下使用
-#if UNITY_EDITOR
-            Setting = new EditorPropertity();
-            Setting.EditorTitle = editor_title;
-            Setting.OutputPath = output_path;
-            Setting.LoadPath = load_path;
-            Setting.DisableSave = disableSave;
-            Setting.DisableCreate = disableCreate;
-            Setting.DisableSearch = disableSearch;
-#endif
+            EditorConfigID = editorConfigID;
         }
     }
 }

@@ -32,7 +32,28 @@ namespace SmartDataViewer.Editor
 		public static DefaultControlPropertityConfig ControlPropertyConfig { private get; set; }
 		public static DefaultEditorPropertyConfig EditorPropertyConfig { private get; set; }
 		
+		public static CustomControlPropertityConfig CustomControlPropertyConfig { private get; set; }
+		public static CustomEditorPropertyConfig CustomEditorPropertyConfig { private get; set; }
+		
 
+		public static CustomControlPropertityConfig GetCustomControlConfig(bool reload = false)
+		{
+			if (CustomControlPropertyConfig == null || reload)
+			{
+				CustomControlPropertyConfig = CustomControlPropertityConfig.LoadConfig<CustomControlPropertityConfig>("{EDITOR}/Config/CustomControlProperty");
+			}
+			return CustomControlPropertyConfig;
+		}
+		
+		public static CustomEditorPropertyConfig GetCustomEditorConfig(bool reload = false)
+		{
+			if (CustomEditorPropertyConfig == null || reload)
+			{
+				CustomEditorPropertyConfig = DefaultEditorPropertyConfig.LoadConfig<CustomEditorPropertyConfig>("{EDITOR}/Config/CustomEditorPropertyConfig");
+			}
+			return CustomEditorPropertyConfig;
+		}
+		
 		public static DefaultControlPropertityConfig GetDefaultControlConfig(bool reload = false)
 		{
 			if (ControlPropertyConfig == null || reload)

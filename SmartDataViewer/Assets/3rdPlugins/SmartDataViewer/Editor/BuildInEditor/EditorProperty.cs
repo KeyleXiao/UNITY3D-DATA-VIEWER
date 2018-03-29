@@ -6,7 +6,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
     /// 默认编辑器配置容器
     /// </summary>
     [System.Serializable]
-    [ConfigEditor(load_path:"{EDITOR}/Config/DefaultEditorPropertyConfig")]
+    [ConfigEditor(10002)]
     public class DefaultEditorPropertyConfig : ConfigBase<EditorProperty>
     {
     }
@@ -16,7 +16,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
     /// 默认编辑器配置容器
     /// </summary>
     [System.Serializable]
-    [ConfigEditor(load_path:"{EDITOR}/Config/CustomEditorPropertyConfig")]
+    [ConfigEditor(10003)]
     public class CustomEditorPropertyConfig : ConfigBase<EditorProperty>
     {
     }

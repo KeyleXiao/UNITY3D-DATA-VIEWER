@@ -42,104 +42,47 @@ namespace SmartDataViewer.Editor.BuildInEditor
     /// <typeparam name="T"></typeparam>
     public class ConfigEditorSchema<T> : IMultipleWindow where T : IModel, new()
     {
-        
         /// <summary>
-        /// 扩展部分列宽
+        /// 当前编辑器配置
         /// </summary>
-        protected int ExtensionHeadTagWith = 88;
+        protected EditorProperty currentEditorSetting;
 
-        /// <summary>
-        /// 工具栏按钮统一宽度
-        /// </summary>
-        protected int KitButtonWidth = 19;
 
-        /// <summary>
-        /// 测试工具
-        /// </summary>
-        protected bool isLog { get; set; }
-
-        /// <summary>
-        /// 设置列间间隔
-        /// </summary>
-        protected int ColumnSpan = 4;
-
-        /// <summary>
-        /// 表头高度
-        /// </summary>
-        protected int TableHeadHeight = 26;
-        
-        /// <summary>
-        /// 缩放
-        /// </summary>
-        protected int Resize = 1;
-        
-        /// <summary>
-        /// 页上限
-        /// </summary>
-        protected int ItemMaxCount { get; set; }
-        
-        /// <summary>
-        /// 隐藏缩放
-        /// </summary>
-        protected bool HideResizeSlider { get; set; }
-        
-        /// <summary>
-        /// 搜索字段
-        /// </summary>
-        protected string SearchResourceName { get; set; }
-        
-        
-        /// <summary>
-        /// 默认一页数量
-        /// </summary>
-        protected int PageAmount = 50;
-
-        /// <summary>
-        /// 当前页
-        /// </summary>
-        protected int PageIndex { get; set; }
-        
-        
-        /// <summary>
-        /// 编辑器通用配置
-        /// </summary>
-        protected ConfigEditorAttribute configSetting { get; set; }
-        
         /// <summary>
         /// 当前编辑对象
         /// </summary>
         protected ConfigBase<T> config_current { get; set; }
-        
+
         /// <summary>
         /// 纵向拖动
         /// </summary>
         protected Vector2 posv { get; set; }
-        
+
         /// <summary>
         /// 待删除列表
         /// </summary>
         protected List<int> deleteList = new List<int>();
-        
+
         /// <summary>
         /// 当前页转跳位置
         /// </summary>
         protected int jumpTo = 1;
-        
+
         /// <summary>
         /// 是否初始化完毕
         /// </summary>
         protected bool initialized { get; set; }
-        
+
         /// <summary>
         /// 缓存反射字段
         /// </summary>
         protected List<FieldInfo> fieldinfos { get; set; }
-        
+
         /// <summary>
         /// 缓存反射字段信息
         /// </summary>
         protected List<ConfigEditorSchemaChache> Chache { get; set; }
-        
+
         /// <summary>
         /// 首次加载标示
         /// </summary>
@@ -150,15 +93,14 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// 搜索结果
         /// </summary>
         protected List<T> Finallylist { get; set; }
-        
-        
+
+
         /// <summary>
         /// 字段排序
         /// </summary>
         protected Dictionary<string, bool> FieldsOrder { get; set; }
 
 
-        
         //TODO 2.0 外联表原始数据
         /// <summary>
         /// 外链表数据
@@ -204,12 +146,17 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             config_current = tp;
 
-            configSetting = ConfigEditorAttribute.GetCurrentAttribute<ConfigEditorAttribute>(tp) ??
+            var configSetting = ConfigEditorAttribute.GetCurrentAttribute<ConfigEditorAttribute>(tp) ??
                             new ConfigEditorAttribute();
 
-            titleContent = new GUIContent(string.IsNullOrEmpty(configSetting.Setting.EditorTitle)
+            //先读取用户定义的 如果没有配置直接读取默认的
+            currentEditorSetting = EditorConfig.GetCustomEditorConfig().SearchByID(configSetting.EditorConfigID) ??
+                                   EditorConfig.GetDefaultEditorConfig().SearchByID(configSetting.EditorConfigID);
+
+
+            titleContent = new GUIContent(string.IsNullOrEmpty(currentEditorSetting.EditorTitle)
                 ? typeof(T).Name
-                : configSetting.Setting.EditorTitle);
+                : currentEditorSetting.EditorTitle);
 
             fieldinfos = typeof(T).GetFields().ToList();
 
@@ -301,7 +248,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             if (value.GetType().IsGenericType)
             {
                 GUILayout.BeginVertical(GUIStyle.none,
-                    new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width ))});
+                    new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width))});
 
                 int deleteIndex = -1;
 
@@ -328,8 +275,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     {
                         GUILayout.BeginHorizontal();
                         GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutLinkClass,
-                            data.config_editor_setting.OutLinkDisplay),GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width - KitButtonWidth - ColumnSpan)));
-                        if (GUILayout.Button(Language.Delete, GUILayout.Width(KitButtonWidth)))
+                                data.config_editor_setting.OutLinkDisplay),
+                            GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width) -
+                                                           currentEditorSetting.KitButtonWidth -
+                                                           currentEditorSetting.ColumnSpan));
+                        if (GUILayout.Button(Language.Delete, GUILayout.Width(currentEditorSetting.KitButtonWidth)))
                             deleteIndex = i;
 
                         GUILayout.EndHorizontal();
@@ -365,11 +315,14 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                         GUILayout.BeginHorizontal();
                         //alignment
-                        RenderBaseControl(GetResizeWidth(data.config_editor_setting.Width ) - KitButtonWidth - ColumnSpan, data.config_editor_setting.CanEditor,
+                        RenderBaseControl(
+                            GetResizeWidth(data.config_editor_setting.Width) - currentEditorSetting.KitButtonWidth -
+                            currentEditorSetting.ColumnSpan, data.config_editor_setting.CanEditor,
                             listItem,
                             v => { value.GetType().GetProperty("Item").SetValue(value, v, new object[] {i}); });
 
-                        if (GUILayout.Button(Language.Delete, new GUILayoutOption[] {GUILayout.Width(KitButtonWidth)}))
+                        if (GUILayout.Button(Language.Delete,
+                            new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.KitButtonWidth)}))
                         {
                             removeIndex = i;
                         }
@@ -413,7 +366,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 }
                 else
                 {
-                    RenderBaseControl(GetResizeWidth(data.config_editor_setting.Width ), data.config_editor_setting.CanEditor, value,
+                    RenderBaseControl(GetResizeWidth(data.config_editor_setting.Width),
+                        data.config_editor_setting.CanEditor, value,
                         v => { data.field_info.SetValue(raw, v); });
                 }
             }
@@ -421,12 +375,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
 
         /// <summary>
-        /// 使用isLog控制输出
+        /// 使用currentEditorSetting.isLog控制输出
         /// </summary>
         /// <param name="str"></param>
         public virtual void Log(string str)
         {
-            if (isLog) Debug.Log(str);
+            if (currentEditorSetting.isLog) Debug.Log(str);
         }
 
 
@@ -569,7 +523,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
             {
                 if (enable)
                 {
-                    value = EditorGUILayout.Toggle((bool) value,EditorGUIStyle.GetTogleStyle(), new GUILayoutOption[] {GUILayout.Width(width)});
+                    value = EditorGUILayout.Toggle((bool) value, EditorGUIStyle.GetTogleStyle(),
+                        new GUILayoutOption[] {GUILayout.Width(width)});
                     setValue(value);
                 }
                 else
@@ -627,7 +582,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             AssetDatabase.Refresh();
             FieldsOrder = new Dictionary<string, bool>();
-            config_current = ConfigBase<T>.LoadConfig<ConfigBase<T>>(configSetting.Setting.LoadPath);
+            config_current = ConfigBase<T>.LoadConfig<ConfigBase<T>>(currentEditorSetting.LoadPath);
 
             if (config_current == null)
                 config_current = new ConfigBase<T>();
@@ -731,12 +686,19 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             deleteList.Clear();
 
-            string outPutPath = configSetting.Setting.OutputPath;
-            if (string.IsNullOrEmpty(outPutPath) && !string.IsNullOrEmpty(configSetting.Setting.LoadPath))
-                outPutPath = configSetting.Setting.LoadPath;
+            string outPutPath = currentEditorSetting.OutputPath;
+            if (string.IsNullOrEmpty(outPutPath) && !string.IsNullOrEmpty(currentEditorSetting.LoadPath))
+                outPutPath = currentEditorSetting.LoadPath;
 
             config_current.SaveToDisk(outPutPath);
             AssetDatabase.Refresh();
+            
+            //刷新编辑器配置
+            EditorConfig.GetCustomControlConfig(true);
+            EditorConfig.GetCustomEditorConfig(true);
+            EditorConfig.GetDefaultControlConfig(true);
+            EditorConfig.GetDefaultEditorConfig(true);
+            
             ShowNotification(new GUIContent(Language.Success));
         }
 
@@ -750,8 +712,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             GUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(Language.NickName, GUILayout.Width(70));
-            SearchResourceName =
-                EditorGUILayout.TextField(SearchResourceName, GUI.skin.GetStyle("ToolbarSeachTextField"));
+            currentEditorSetting.SearchResourceName =
+                EditorGUILayout.TextField(currentEditorSetting.SearchResourceName,
+                    GUI.skin.GetStyle("ToolbarSeachTextField"));
             GUILayout.EndHorizontal();
         }
 
@@ -796,7 +759,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         protected virtual void RenderHead()
         {
             GUILayout.BeginScrollView(new Vector2(posv.x, 0), false, false, GUIStyle.none, GUIStyle.none,
-                new GUILayoutOption[] {GUILayout.Height(TableHeadHeight)});
+                new GUILayoutOption[] {GUILayout.Height(currentEditorSetting.TableHeadHeight)});
 
             GUILayout.BeginHorizontal(EditorGUIStyle.GetGroupBoxStyle(),
                 new GUILayoutOption[] {GUILayout.Width(position.width)});
@@ -811,18 +774,21 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(item.config_editor_setting.Width))}))
                     HeadButton_Click(item.field_info.Name);
 
-                GUILayout.Space(ColumnSpan);
+                GUILayout.Space(currentEditorSetting.ColumnSpan);
             }
 
             RenderExtensionHead();
 
             if (current_windowType == WindowType.CALLBACK)
-                GUILayout.Label(Language.Select,EditorGUIStyle.GetTagButtonStyle(), GUILayout.Width(ExtensionHeadTagWith));
+                GUILayout.Label(Language.Select, EditorGUIStyle.GetTagButtonStyle(),
+                    GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith));
             else if (current_windowType == WindowType.INPUT)
-                GUILayout.Label(Language.Operation,EditorGUIStyle.GetTagButtonStyle(), GUILayout.Width(ExtensionHeadTagWith));
+                GUILayout.Label(Language.Operation, EditorGUIStyle.GetTagButtonStyle(),
+                    GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith));
             else
-                GUILayout.Label(Language.Operation,EditorGUIStyle.GetTagButtonStyle(), GUILayout.Width(ExtensionHeadTagWith));
-            
+                GUILayout.Label(Language.Operation, EditorGUIStyle.GetTagButtonStyle(),
+                    GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith));
+
             GUILayout.EndHorizontal();
             GUILayout.EndScrollView();
         }
@@ -843,7 +809,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
         }
 
-        
+
         /// <summary>
         /// 处理表主体
         /// </summary>
@@ -852,18 +818,21 @@ namespace SmartDataViewer.Editor.BuildInEditor
             posv = GUILayout.BeginScrollView(posv, false, false, EditorGUIStyle.GetHorizontalScrollbarStyle(),
                 GUIStyle.none, EditorGUIStyle.GetTableGroupBoxStyle());
 
-            if (!string.IsNullOrEmpty(SearchResourceName))
+            if (!string.IsNullOrEmpty(currentEditorSetting.SearchResourceName))
             {
-                ItemMaxCount = config_current.ConfigList.Count(x =>
-                    x.NickName.ToLower().Contains(SearchResourceName.ToLower().Trim()));
+                currentEditorSetting.ItemMaxCount = config_current.ConfigList.Count(x =>
+                    x.NickName.ToLower().Contains(currentEditorSetting.SearchResourceName.ToLower().Trim()));
                 Finallylist = config_current.ConfigList
-                    .Where(x => x.NickName.ToLower().Contains(SearchResourceName.ToLower().Trim()))
-                    .Skip(PageIndex * PageAmount).Take(PageAmount).ToList();
+                    .Where(x => x.NickName.ToLower().Contains(currentEditorSetting.SearchResourceName.ToLower().Trim()))
+                    .Skip(currentEditorSetting.PageIndex * currentEditorSetting.PageAmount)
+                    .Take(currentEditorSetting.PageAmount).ToList();
             }
             else
             {
-                ItemMaxCount = config_current.ConfigList.Count;
-                Finallylist = config_current.ConfigList.Skip(PageIndex * PageAmount).Take(PageAmount).ToList();
+                currentEditorSetting.ItemMaxCount = config_current.ConfigList.Count;
+                Finallylist = config_current.ConfigList
+                    .Skip(currentEditorSetting.PageIndex * currentEditorSetting.PageAmount)
+                    .Take(currentEditorSetting.PageAmount).ToList();
             }
 
             //遍历搜索结果
@@ -887,15 +856,15 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     var rawData = schema.field_info.GetValue(item);
                     //一条一条加载
                     RenderRawLine(schema, rawData, item);
-                    GUILayout.Space(ColumnSpan);
+                    GUILayout.Space(currentEditorSetting.ColumnSpan);
                 }
 
                 RenderExtensionButton(item);
-                GUILayout.Space(ColumnSpan);
-                
+                GUILayout.Space(currentEditorSetting.ColumnSpan);
+
                 RenderFunctionButton(item);
-                GUILayout.Space(ColumnSpan);
-                
+                GUILayout.Space(currentEditorSetting.ColumnSpan);
+
                 GUILayout.EndHorizontal();
                 GUILayout.Space(5);
             }
@@ -916,16 +885,16 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 Reload();
 
 
-            if (!configSetting.Setting.DisableCreate && current_windowType != WindowType.CALLBACK)
+            if (!currentEditorSetting.DisableCreate && current_windowType != WindowType.CALLBACK)
                 NewLineButton();
 
-            if (!configSetting.Setting.DisableSave && current_windowType != WindowType.CALLBACK)
+            if (!currentEditorSetting.DisableSave && current_windowType != WindowType.CALLBACK)
                 SaveButton();
 
             GUILayout.EndHorizontal();
 
 
-            if (!configSetting.Setting.DisableSearch)
+            if (!currentEditorSetting.DisableSearch)
                 SearchField();
         }
 
@@ -954,7 +923,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             }
 
             //TODO: 有一种情况 生成需要unity编译的脚本 这时候打开编辑器会报错(存留在内存的数据被clear) 这时候需要先关闭编辑器
-            if (configSetting == null)
+            if (currentEditorSetting == null)
             {
                 Close();
                 return;
@@ -992,7 +961,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             if (current_windowType == WindowType.CALLBACK)
             {
-                if (GUILayout.Button(Language.Select, new GUILayoutOption[] {GUILayout.Width(KitButtonWidth*4)}))
+                if (GUILayout.Button(Language.Select,
+                    new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.KitButtonWidth * 4)}))
                 {
                     SelctList.Add(item.ID);
                     select_callback(current_list, item);
@@ -1003,26 +973,26 @@ namespace SmartDataViewer.Editor.BuildInEditor
             if (current_windowType != WindowType.CALLBACK)
             {
                 if (GUILayout.Button(Language.Copy, GUI.skin.GetStyle("ButtonLeft"),
-                    new GUILayoutOption[] {GUILayout.Width(KitButtonWidth)}))
+                    new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.KitButtonWidth)}))
                 {
                     PasteItem = DeepClone(item);
                 }
 
                 if (GUILayout.Button(Language.Delete, GUI.skin.GetStyle("ButtonMid"),
-                    new GUILayoutOption[] {GUILayout.Width(KitButtonWidth)}))
+                    new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.KitButtonWidth)}))
                 {
                     deleteList.Add(item.ID);
                     ShowNotification(new GUIContent(Language.Success));
                 }
-                
+
                 if (GUILayout.Button(Language.Verfiy, GUI.skin.GetStyle("ButtonMid"),
-                    new GUILayoutOption[] {GUILayout.Width(KitButtonWidth)}))
+                    new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.KitButtonWidth)}))
                 {
                     VerfiyButtonClick(item);
                 }
 
                 if (GUILayout.Button(Language.Paste, GUI.skin.GetStyle("ButtonRight"),
-                    new GUILayoutOption[] {GUILayout.Width(KitButtonWidth)}))
+                    new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.KitButtonWidth)}))
                 {
                     if (PasteItem != null)
                     {
@@ -1030,12 +1000,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
                         var insertPos = config_current.ConfigList.IndexOf(item);
                         config_current.ConfigList.Remove(item);
                         PasteItem.ID = item.ID;
-                        config_current.ConfigList.Insert(insertPos,DeepClone(PasteItem));
+                        config_current.ConfigList.Insert(insertPos, DeepClone(PasteItem));
                     }
                 }
             }
         }
-        
+
         /// <summary>
         /// 程序预留 数据逻辑校验接口
         /// </summary>
@@ -1046,9 +1016,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
         }
 
 
-
-
-
         /// <summary>
         /// 分页算法
         /// </summary>
@@ -1056,49 +1023,54 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             GUILayout.BeginHorizontal(EditorGUIStyle.GetGroupBoxStyle(),
                 new GUILayoutOption[] {GUILayout.Width(position.width)});
-            int maxIndex = Mathf.FloorToInt((ItemMaxCount - 1) / (float) PageAmount);
-            if (maxIndex < PageIndex)
-                PageIndex = 0;
+            int maxIndex =
+                Mathf.FloorToInt((currentEditorSetting.ItemMaxCount - 1) / (float) currentEditorSetting.PageAmount);
+            if (maxIndex < currentEditorSetting.PageIndex)
+                currentEditorSetting.PageIndex = 0;
 
-            GUILayout.Label(string.Format(Language.PageInfoFormate, PageIndex + 1, maxIndex + 1), GUILayout.Width(100));
+            GUILayout.Label(string.Format(Language.PageInfoFormate, currentEditorSetting.PageIndex + 1, maxIndex + 1),
+                GUILayout.Width(100));
             GUILayout.Label(Language.OnePageMaxNumber, EditorGUIStyle.GetPageLabelGuiStyle(), GUILayout.Width(80));
-            int.TryParse(GUILayout.TextField(PageAmount.ToString(), GUILayout.Width(40)), out PageAmount);
+            int.TryParse(GUILayout.TextField(currentEditorSetting.PageAmount.ToString(), GUILayout.Width(40)),
+                out currentEditorSetting.PageAmount);
 
 
-            if (GUILayout.Button(Language.Jump,EditorGUIStyle.GetJumpButtonGuiStyle(),GUILayout.Width(40)))
+            if (GUILayout.Button(Language.Jump, EditorGUIStyle.GetJumpButtonGuiStyle(), GUILayout.Width(40)))
             {
-                if (jumpTo-1 <0)
+                if (jumpTo - 1 < 0)
                     jumpTo = 0;
 
-                if (jumpTo-1 >maxIndex)
+                if (jumpTo - 1 > maxIndex)
                     jumpTo = maxIndex;
 
-                PageIndex = jumpTo -1;
+                currentEditorSetting.PageIndex = jumpTo - 1;
             }
-            jumpTo = EditorGUILayout.IntField(jumpTo,GUILayout.Width(40));
-            
+
+            jumpTo = EditorGUILayout.IntField(jumpTo, GUILayout.Width(40));
+
             if (GUILayout.Button(Language.Previous, GUI.skin.GetStyle("ButtonLeft"), GUILayout.Height(16)))
             {
-                if (PageIndex - 1 < 0)
-                    PageIndex = 0;
+                if (currentEditorSetting.PageIndex - 1 < 0)
+                    currentEditorSetting.PageIndex = 0;
                 else
-                    PageIndex -= 1;
+                    currentEditorSetting.PageIndex -= 1;
             }
 
             if (GUILayout.Button(Language.Next, GUI.skin.GetStyle("ButtonRight"), GUILayout.Height(16)))
             {
-                if (PageIndex + 1 > maxIndex)
-                    PageIndex = maxIndex;
+                if (currentEditorSetting.PageIndex + 1 > maxIndex)
+                    currentEditorSetting.PageIndex = maxIndex;
                 else
-                    PageIndex++;
+                    currentEditorSetting.PageIndex++;
             }
 
             //处理缩放
-            if (!HideResizeSlider) Resize = (int)GUILayout.HorizontalSlider(Resize, 1, 10, GUILayout.Width(70));
+            if (!currentEditorSetting.HideResizeSlider)
+                currentEditorSetting.Resize =
+                    (int) GUILayout.HorizontalSlider(currentEditorSetting.Resize, 1, 10, GUILayout.Width(70));
 
             GUILayout.EndHorizontal();
         }
-
 
 
         /// <summary>
@@ -1108,7 +1080,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// <returns></returns>
         protected virtual int GetResizeWidth(int value)
         {
-            return HideResizeSlider? value :value * Resize;
+            return currentEditorSetting.HideResizeSlider ? value : value * currentEditorSetting.Resize;
         }
 
         /// <summary>
