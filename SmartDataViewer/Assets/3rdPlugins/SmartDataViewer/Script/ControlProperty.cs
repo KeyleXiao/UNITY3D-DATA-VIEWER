@@ -17,27 +17,25 @@
 
 
 // ## 当前代码只在编辑器下使用
+
 #if UNITY_EDITOR
 
 using System;
 
 namespace SmartDataViewer
 {
-    
     [Serializable]
     [ConfigEditor(10005)]
     public class DefaultControlPropertityConfig : ConfigBase<ControlPropertity>
     {
-
     }
-    
+
     [Serializable]
     [ConfigEditor(10004)]
     public class CustomControlPropertityConfig : ConfigBase<ControlPropertity>
     {
-
     }
-    
+
     [Serializable]
     public class ControlPropertity : IModel
     {
@@ -50,27 +48,28 @@ namespace SmartDataViewer
             OutLinkDisplay = string.Empty;
             OutLinkFilePath = string.Empty;
             CanEditor = true;
+            Visibility = true;
         }
 
         public int Order;
 
-        [ConfigEditorField(visibility: false)] public string Display;
+        public string Display;
 
         public bool CanEditor;
 
         public int Width;
 
-        [ConfigEditorField(visibility: false)] public string OutLinkEditor;
+        public string OutLinkEditor;
 
-        [ConfigEditorField(visibility: false)] public string OutLinkSubClass;
+        public string OutLinkSubClass;
 
-        [ConfigEditorField(visibility: false)] public string OutLinkClass;
+        public string OutLinkClass;
 
         public bool Visibility;
 
-        [ConfigEditorField(visibility: false)] public string OutLinkDisplay;
+        public string OutLinkDisplay;
 
-        [ConfigEditorField(visibility: false)] public string OutLinkFilePath;
+        public string OutLinkFilePath;
     }
 }
 
