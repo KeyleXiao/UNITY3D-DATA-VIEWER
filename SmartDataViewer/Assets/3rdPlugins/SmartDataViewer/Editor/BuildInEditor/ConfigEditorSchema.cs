@@ -33,7 +33,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
     public class ConfigEditorSchemaChache
     {
         public FieldInfo field_info { get; set; }
-        public ControlPropertity config_editor_setting { get; set; }
+        public ControlProperty config_editor_setting { get; set; }
     }
 
     /// <summary>
@@ -187,17 +187,31 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 else
                 {
                     ConfigEditorFieldAttribute cefa = (ConfigEditorFieldAttribute) infos[0];
-                    f.config_editor_setting = cefa.Setting;
-
-
-                    if (f.config_editor_setting.Width == 0)
+                    
+                    //先查Custom配置
+                    f.config_editor_setting = EditorConfig.GetCustomControlConfig().SearchByID(cefa.ControlPropertyID);
+                    
+                    //走属性默认配置
+                    if (f.config_editor_setting == null && cefa.ControlPropertyID == 0)
                     {
                         int id = (int) ReflectionHelper.GetFieldTypeMapping(item.FieldType);
-                        var setting = EditorConfig.GetDefaultControlConfig().SearchByID(id);
-                        f.config_editor_setting.Width = setting.Width;
+                        f.config_editor_setting = EditorConfig.GetDefaultControlConfig().SearchByID(id);
+                    }
+                    
+                    //走默认配置
+                    if (f.config_editor_setting == null && cefa.ControlPropertyID != 0)
+                    {
+                        f.config_editor_setting = EditorConfig.GetDefaultControlConfig().SearchByID(cefa.ControlPropertyID);
                     }
 
-                    if (!cefa.Setting.Visibility)
+                    //如果默认配置被删除 为了防止报错 
+                    if (f.config_editor_setting == null)
+                    {
+                        Log("Can't find default control id :" + cefa.ControlPropertyID);
+                        continue;
+                    }
+
+                    if (!f.config_editor_setting.Visibility)
                         continue;
                 }
 
@@ -605,7 +619,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             {
                 //Bug fix: 自动做默认参数初始化 
                 if (Chache[i].config_editor_setting == null)
-                    Chache[i].config_editor_setting = new ControlPropertity();
+                    Chache[i].config_editor_setting = new ControlProperty();
 
                 if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor))
                 {

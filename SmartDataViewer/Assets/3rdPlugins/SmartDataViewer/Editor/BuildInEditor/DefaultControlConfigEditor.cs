@@ -19,7 +19,7 @@ using UnityEditor;
 namespace SmartDataViewer.Editor.BuildInEditor
 {
 
-	public class DefaultControlConfigEditor : ConfigEditorSchema<ControlPropertity>
+	public class DefaultControlConfigEditor : ConfigEditorSchema<ControlProperty>
 	{
 		[MenuItem("SmartDataViewer/Control Setting/Default")]
 		static public void OpenView()
@@ -28,7 +28,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 			w.ShowUtility();
 		}
 
-		public override ControlPropertity CreateValue()
+		public override ControlProperty CreateValue()
 		{
 			var r = base.CreateValue();
 			return r;
@@ -37,12 +37,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
 		public override void Initialize()
 		{
 			base.Initialize();
-			SetConfigType(new DefaultControlPropertityConfig());
+			SetConfigType(new DefaultControlPropertyConfig());
 		}
 		protected override void SaveButton()
 		{
 			//刷新编辑器缓存信息
-			EditorConfig.ControlPropertyConfig = DefaultControlPropertityConfig.LoadConfig<DefaultControlPropertityConfig>("{EDITOR}/Config/DefaultControlProperty");
+			EditorConfig.ControlPropertyConfig = DefaultControlPropertyConfig.LoadConfig<DefaultControlPropertyConfig>("{EDITOR}/Config/DefaultControlProperty");
 			base.SaveButton();
 		}
 	}

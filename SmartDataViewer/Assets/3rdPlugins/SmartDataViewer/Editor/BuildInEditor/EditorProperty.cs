@@ -41,16 +41,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
         public string SearchResourceName ;
 
-        [ConfigEditorField(display:"禁搜索")] 
         public bool DisableSearch;
 
-        [ConfigEditorField(display:"禁保存")]
         public bool DisableSave;
 
-        [ConfigEditorField(display:"禁创建")]
         public bool DisableCreate;
         
-        [ConfigEditorField(display:"禁缩放")]
         public bool HideResizeSlider ;
         
         /// <summary>

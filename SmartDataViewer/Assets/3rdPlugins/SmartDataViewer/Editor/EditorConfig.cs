@@ -29,18 +29,18 @@ namespace SmartDataViewer.Editor
 	
 	public class EditorConfig
 	{
-		public static DefaultControlPropertityConfig ControlPropertyConfig { private get; set; }
+		public static DefaultControlPropertyConfig ControlPropertyConfig { private get; set; }
 		public static DefaultEditorPropertyConfig EditorPropertyConfig { private get; set; }
 		
-		public static CustomControlPropertityConfig CustomControlPropertyConfig { private get; set; }
+		public static CustomControlPropertyConfig CustomControlPropertyConfig { private get; set; }
 		public static CustomEditorPropertyConfig CustomEditorPropertyConfig { private get; set; }
 		
 
-		public static CustomControlPropertityConfig GetCustomControlConfig(bool reload = false)
+		public static CustomControlPropertyConfig GetCustomControlConfig(bool reload = false)
 		{
 			if (CustomControlPropertyConfig == null || reload)
 			{
-				CustomControlPropertyConfig = CustomControlPropertityConfig.LoadConfig<CustomControlPropertityConfig>("{EDITOR}/Config/CustomControlProperty");
+				CustomControlPropertyConfig = CustomControlPropertyConfig.LoadConfig<CustomControlPropertyConfig>("{EDITOR}/Config/CustomControlProperty");
 			}
 			return CustomControlPropertyConfig;
 		}
@@ -54,11 +54,11 @@ namespace SmartDataViewer.Editor
 			return CustomEditorPropertyConfig;
 		}
 		
-		public static DefaultControlPropertityConfig GetDefaultControlConfig(bool reload = false)
+		public static DefaultControlPropertyConfig GetDefaultControlConfig(bool reload = false)
 		{
 			if (ControlPropertyConfig == null || reload)
 			{
-				ControlPropertyConfig = DefaultControlPropertityConfig.LoadConfig<DefaultControlPropertityConfig>("{EDITOR}/Config/DefaultControlProperty");
+				ControlPropertyConfig = DefaultControlPropertyConfig.LoadConfig<DefaultControlPropertyConfig>("{EDITOR}/Config/DefaultControlProperty");
 			}
 			return ControlPropertyConfig;
 		}

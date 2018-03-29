@@ -59,7 +59,7 @@ namespace SmartDataViewer.Editor.ModelDesign
         /// <summary>
         /// 生成的编辑器属性配置
         /// </summary>
-        public ControlPropertity controlSetting { get; set; }
+        public ControlProperty controlSetting { get; set; }
 
         /// <summary>
         /// 当前字段属性

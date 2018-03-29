@@ -36,11 +36,11 @@ public class Demo : IModel
 
 	public List<int> list;
 
-	[ConfigEditorField(outLinkSubClass: "Supports")]
+	[ConfigEditorField(19)]
 	public List<int> supports;
 
 	public string description;
 
-	[ConfigEditorField(outLinkSubClass: "Supports")]
+	[ConfigEditorField(19)]
 	public int support;
 }

@@ -24,10 +24,10 @@ namespace SmartDataViewer
 	{
 		public IModel() { }
 
-		[ConfigEditorField(order:100)]
+		[ConfigEditorField(11000)]
 		public int ID;
 
-		[ConfigEditorField(order:99)]
+		[ConfigEditorField(11001)]
 		public string NickName;
 	}
 }

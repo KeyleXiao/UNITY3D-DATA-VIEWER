@@ -21,7 +21,7 @@ using UnityEditor;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
-    public class CustomControlConfigEditor : ConfigEditorSchema<ControlPropertity>
+    public class CustomControlConfigEditor : ConfigEditorSchema<ControlProperty>
     {
         [MenuItem("SmartDataViewer/Control Setting/Custom")]
         static public void OpenView()
@@ -30,7 +30,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             w.ShowUtility();
         }
 
-        public override ControlPropertity CreateValue()
+        public override ControlProperty CreateValue()
         {
             var r = base.CreateValue();
             return r;
@@ -39,7 +39,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public override void Initialize()
         {
             base.Initialize();
-            SetConfigType(new CustomControlPropertityConfig());
+            SetConfigType(new CustomControlPropertyConfig());
         }
     }
 }
