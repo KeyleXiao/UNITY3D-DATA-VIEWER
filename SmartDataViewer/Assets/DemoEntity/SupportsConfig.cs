@@ -27,6 +27,7 @@ public class Supports : IModel
 {
 	public Supports()
 	{
+		testFloat = 0;
 		boolList = new List<bool>();
 		description = string.Empty;
 		colorList = new List<Color>();
@@ -38,6 +39,7 @@ public class Supports : IModel
 		testPointlist = new List<Vector2>();
 		testPointlist3 = new List<Vector3>();
 		testPointlist4 = new List<Vector4>();
+		floatList = new List<float>();
 	}
 	
 	
