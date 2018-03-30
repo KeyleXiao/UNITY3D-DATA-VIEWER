@@ -93,6 +93,7 @@ namespace SmartDataViewer.Editor
 		//public static readonly string OnePageMaxNumber = "单页最大数量";
 		//public static readonly string PageInfoFormate = @"|{0}|页-共|{1}|页";
 
+		public static readonly string Save = "Save";
 		public static readonly string Jump = "Jump:";
 		public static readonly string NewLine = "NewLine";
 		public static readonly string DiscardChange = "Discard";

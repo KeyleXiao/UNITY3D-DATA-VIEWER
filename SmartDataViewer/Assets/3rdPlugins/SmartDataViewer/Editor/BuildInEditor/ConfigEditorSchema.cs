@@ -36,6 +36,16 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public ControlProperty config_editor_setting { get; set; }
     }
 
+    public class ConfigEditorLineChache
+    {
+        public int HashCode { get; set; }
+        public bool IsGenericType { get; set; }
+        public MethodInfo Add { get; set; }
+        public MethodInfo RemoveAt { get; set; }
+        public PropertyInfo Count { get; set; }
+        public PropertyInfo Item { get; set; }
+    }
+
     /// <summary>
     /// 泛化数据编辑器
     /// </summary>
@@ -82,6 +92,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// 缓存反射字段信息
         /// </summary>
         protected List<ConfigEditorSchemaChache> Chache { get; set; }
+
+        /// <summary>
+        /// 缓存行级别结构
+        /// </summary>
+        public Dictionary<int, ConfigEditorLineChache> LineChache { get; set; }
 
         /// <summary>
         /// 首次加载标示
@@ -147,11 +162,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
             config_current = tp;
 
             var configSetting = ConfigEditorAttribute.GetCurrentAttribute<ConfigEditorAttribute>(tp) ??
-                            new ConfigEditorAttribute();
+                                new ConfigEditorAttribute();
 
             //先读取用户定义的 如果没有配置直接读取默认的
-            currentEditorSetting = EditorConfig.GetCustomEditorPropertyConfig().SearchByID(configSetting.EditorConfigID) ??
-                                   EditorConfig.GetDefaultEditorPropertyConfig().SearchByID(configSetting.EditorConfigID);
+            currentEditorSetting =
+                EditorConfig.GetCustomEditorPropertyConfig().SearchByID(configSetting.EditorConfigID) ??
+                EditorConfig.GetDefaultEditorPropertyConfig().SearchByID(configSetting.EditorConfigID);
 
 
             titleContent = new GUIContent(string.IsNullOrEmpty(currentEditorSetting.EditorTitle)
@@ -160,7 +176,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             fieldinfos = typeof(T).GetFields().ToList();
 
+            //-- Chache --
             Chache = new List<ConfigEditorSchemaChache>();
+            LineChache = new Dictionary<int, ConfigEditorLineChache>();
+            CurrentAssembly = Assembly.GetExecutingAssembly();
+            //-- Chache --
 
             foreach (var item in fieldinfos)
             {
@@ -187,21 +207,23 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 else
                 {
                     ConfigEditorFieldAttribute cefa = (ConfigEditorFieldAttribute) infos[0];
-                    
+
                     //先查Custom配置
-                    f.config_editor_setting = EditorConfig.GetCustomControlPropertyConfig().SearchByID(cefa.ControlPropertyID);
-                    
+                    f.config_editor_setting =
+                        EditorConfig.GetCustomControlPropertyConfig().SearchByID(cefa.ControlPropertyID);
+
                     //走属性默认配置
                     if (f.config_editor_setting == null && cefa.ControlPropertyID == 0)
                     {
                         int id = (int) ReflectionHelper.GetFieldTypeMapping(item.FieldType);
                         f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByID(id);
                     }
-                    
+
                     //走默认配置
                     if (f.config_editor_setting == null && cefa.ControlPropertyID != 0)
                     {
-                        f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByID(cefa.ControlPropertyID);
+                        f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig()
+                            .SearchByID(cefa.ControlPropertyID);
                     }
 
                     //如果默认配置被删除 为了防止报错 
@@ -248,9 +270,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
             return t;
         }
 
-
+        public Assembly CurrentAssembly { get; set; }
+        public int TempHashCode { get; set; }
+        public ConfigEditorLineChache TempLineChache { get; set; }
+        
         /// <summary>
-        /// 反射原始数据
+        /// 反射原始数据 TODO: 加入缓存来优化反射
         /// </summary>
         /// <param name="data"></param>
         /// <param name="value"></param>
@@ -259,7 +284,29 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             if (value == null) return;
 
-            if (value.GetType().IsGenericType)
+            TempHashCode = value.GetHashCode();
+            
+            if (LineChache.ContainsKey(TempHashCode))
+            {
+                TempLineChache = LineChache[TempHashCode];
+            }
+            else
+            {
+                var currentLineChache = new ConfigEditorLineChache();
+                currentLineChache.HashCode = value.GetHashCode();
+                currentLineChache.IsGenericType = value.GetType().IsGenericType;
+                currentLineChache.Add = value.GetType().GetMethod("Add");
+                currentLineChache.RemoveAt= value.GetType().GetMethod("RemoveAt");
+                currentLineChache.Count = value.GetType().GetProperty("Count");
+                currentLineChache.Item = value.GetType().GetProperty("Item");
+                
+                LineChache.Add(TempHashCode,currentLineChache);
+                TempLineChache = currentLineChache;
+            }
+            
+            
+
+            if (TempLineChache.IsGenericType)
             {
                 GUILayout.BeginVertical(GUIStyle.none,
                     new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width))});
@@ -291,8 +338,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
                         GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutLinkClass,
                                 data.config_editor_setting.OutLinkDisplay),
                             GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width) -
-                                                           currentEditorSetting.KitButtonWidth -
-                                                           currentEditorSetting.ColumnSpan));
+                                            currentEditorSetting.KitButtonWidth -
+                                            currentEditorSetting.ColumnSpan));
                         if (GUILayout.Button(Language.Delete, GUILayout.Width(currentEditorSetting.KitButtonWidth)))
                             deleteIndex = i;
 
@@ -308,23 +355,19 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 {
                     Type t = value.GetType().GetGenericArguments()[0];
 
-                    var addMethod = value.GetType().GetMethod("Add");
-                    var removeMethod = value.GetType().GetMethod("RemoveAt");
-
                     if (GUILayout.Button(Language.Add))
                     {
-                        addMethod.Invoke(value,
+                        TempLineChache.Add.Invoke(value,
                             new object[] {t == typeof(string) ? string.Empty : Activator.CreateInstance(t)});
                     }
 
-
-                    int count = Convert.ToInt32(value.GetType().GetProperty("Count").GetValue(value, null));
+                    int count = Convert.ToInt32(TempLineChache.Count.GetValue(value, null));
 
                     int removeIndex = -1;
 
                     for (int i = 0; i < count; i++)
                     {
-                        object listItem = value.GetType().GetProperty("Item").GetValue(value, new object[] {i});
+                        object listItem = TempLineChache.Item.GetValue(value, new object[] {i});
 
 
                         GUILayout.BeginHorizontal();
@@ -333,7 +376,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                             GetResizeWidth(data.config_editor_setting.Width) - currentEditorSetting.KitButtonWidth -
                             currentEditorSetting.ColumnSpan, data.config_editor_setting.CanEditor,
                             listItem,
-                            v => { value.GetType().GetProperty("Item").SetValue(value, v, new object[] {i}); });
+                            v => { TempLineChache.Item.SetValue(value, v, new object[] {i}); });
 
                         if (GUILayout.Button(Language.Delete,
                             new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.KitButtonWidth)}))
@@ -346,7 +389,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                     if (removeIndex != -1)
                     {
-                        removeMethod.Invoke(value, new object[] {removeIndex});
+                        TempLineChache.RemoveAt.Invoke(value, new object[] {removeIndex});
                     }
                 }
 
@@ -365,9 +408,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     if (GUILayout.Button(buttonName,
                         new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width))}))
                     {
-                        Assembly assembly = Assembly.GetExecutingAssembly();
                         IMultipleWindow e =
-                            assembly.CreateInstance(data.config_editor_setting.OutLinkEditor) as IMultipleWindow;
+                            CurrentAssembly.CreateInstance(data.config_editor_setting.OutLinkEditor) as IMultipleWindow;
                         if (e == null)
                             ShowNotification(new GUIContent(Language.OutLinkIsNull));
                         else
@@ -691,6 +733,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
             }
         }
 
+        /// <summary>
+        /// 保存配置（逻辑）
+        /// </summary>
         protected virtual void SaveConfig()
         {
             for (int i = 0; i < deleteList.Count; i++)
@@ -706,13 +751,16 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             config_current.SaveToDisk(outPutPath);
             AssetDatabase.Refresh();
-            
+
             ShowNotification(new GUIContent(Language.Success));
         }
 
+        /// <summary>
+        /// 保存按钮 gui
+        /// </summary>
         protected virtual void SaveButton()
         {
-            if (GUILayout.Button("Save", GUI.skin.GetStyle("ButtonRight")))
+            if (GUILayout.Button(Language.Save, GUI.skin.GetStyle("ButtonRight")))
                 SaveConfig();
         }
 
