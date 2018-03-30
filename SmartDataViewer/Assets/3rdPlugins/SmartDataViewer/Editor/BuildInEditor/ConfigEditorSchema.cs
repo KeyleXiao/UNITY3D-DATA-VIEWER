@@ -36,6 +36,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public ControlProperty config_editor_setting { get; set; }
     }
 
+    /// <summary>
+    /// 存储反射的行数据
+    /// </summary>
     public class ConfigEditorLineChache
     {
         public int HashCode { get; set; }
@@ -44,6 +47,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public MethodInfo RemoveAt { get; set; }
         public PropertyInfo Count { get; set; }
         public PropertyInfo Item { get; set; }
+        public Type AttributeType { get; set; }
     }
 
     /// <summary>
@@ -273,9 +277,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public Assembly CurrentAssembly { get; set; }
         public int TempHashCode { get; set; }
         public ConfigEditorLineChache TempLineChache { get; set; }
-        
+
         /// <summary>
-        /// 反射原始数据 TODO: 加入缓存来优化反射
+        /// 反射原始数据 TODO: 加入缓存来优化反射  --Complete
         /// </summary>
         /// <param name="data"></param>
         /// <param name="value"></param>
@@ -285,7 +289,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             if (value == null) return;
 
             TempHashCode = value.GetHashCode();
-            
+
             if (LineChache.ContainsKey(TempHashCode))
             {
                 TempLineChache = LineChache[TempHashCode];
@@ -296,20 +300,26 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 currentLineChache.HashCode = value.GetHashCode();
                 currentLineChache.IsGenericType = value.GetType().IsGenericType;
                 currentLineChache.Add = value.GetType().GetMethod("Add");
-                currentLineChache.RemoveAt= value.GetType().GetMethod("RemoveAt");
+                currentLineChache.RemoveAt = value.GetType().GetMethod("RemoveAt");
                 currentLineChache.Count = value.GetType().GetProperty("Count");
                 currentLineChache.Item = value.GetType().GetProperty("Item");
-                
-                LineChache.Add(TempHashCode,currentLineChache);
+
+                if (currentLineChache.IsGenericType && string.IsNullOrEmpty(data.config_editor_setting.OutLinkEditor))
+                    currentLineChache.AttributeType = value.GetType().GetGenericArguments()[0];
+
+                LineChache.Add(TempHashCode, currentLineChache);
                 TempLineChache = currentLineChache;
             }
-            
-            
+
 
             if (TempLineChache.IsGenericType)
             {
                 GUILayout.BeginVertical(GUIStyle.none,
-                    new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width))});
+                    new GUILayoutOption[]
+                    {
+                        GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width,
+                            data.config_editor_setting.MaxWidth))
+                    });
 
                 int deleteIndex = -1;
 
@@ -318,11 +328,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 {
                     if (GUILayout.Button(Language.Add))
                     {
-                        Assembly assembly = Assembly.GetExecutingAssembly();
                         IMultipleWindow e =
-                            assembly.CreateInstance(data.config_editor_setting.OutLinkEditor) as IMultipleWindow;
+                            CurrentAssembly.CreateInstance(data.config_editor_setting.OutLinkEditor) as IMultipleWindow;
                         if (e == null)
+                        {
                             ShowNotification(new GUIContent(Language.OutLinkIsNull));
+                        }
                         else
                         {
                             e.UpdateSelectModel(value, SetListItemValue);
@@ -335,11 +346,16 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     for (int i = 0; i < temp.Count; i++)
                     {
                         GUILayout.BeginHorizontal();
+
+                        //显示外联数据
                         GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutLinkClass,
                                 data.config_editor_setting.OutLinkDisplay),
-                            GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width) -
-                                            currentEditorSetting.KitButtonWidth -
-                                            currentEditorSetting.ColumnSpan));
+                            GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width,
+                                data.config_editor_setting.MaxWidth,
+                                currentEditorSetting.KitButtonWidth + currentEditorSetting.ColumnSpan))
+                        );
+
+                        //删除子类型数据
                         if (GUILayout.Button(Language.Delete, GUILayout.Width(currentEditorSetting.KitButtonWidth)))
                             deleteIndex = i;
 
@@ -353,12 +369,15 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 }
                 else
                 {
-                    Type t = value.GetType().GetGenericArguments()[0];
-
                     if (GUILayout.Button(Language.Add))
                     {
                         TempLineChache.Add.Invoke(value,
-                            new object[] {t == typeof(string) ? string.Empty : Activator.CreateInstance(t)});
+                            new object[]
+                            {
+                                TempLineChache.AttributeType == typeof(string)
+                                    ? string.Empty
+                                    : Activator.CreateInstance(TempLineChache.AttributeType)
+                            });
                     }
 
                     int count = Convert.ToInt32(TempLineChache.Count.GetValue(value, null));
@@ -373,8 +392,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
                         GUILayout.BeginHorizontal();
                         //alignment
                         RenderBaseControl(
-                            GetResizeWidth(data.config_editor_setting.Width) - currentEditorSetting.KitButtonWidth -
-                            currentEditorSetting.ColumnSpan, data.config_editor_setting.CanEditor,
+                            GetResizeWidth(data.config_editor_setting.Width, data.config_editor_setting.MaxWidth,
+                                currentEditorSetting.KitButtonWidth + currentEditorSetting.ColumnSpan),
+                            data.config_editor_setting.CanEditor,
                             listItem,
                             v => { TempLineChache.Item.SetValue(value, v, new object[] {i}); });
 
@@ -406,7 +426,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
                         data.config_editor_setting.OutLinkDisplay);
 
                     if (GUILayout.Button(buttonName,
-                        new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width))}))
+                        new GUILayoutOption[]
+                        {
+                            GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width,
+                                data.config_editor_setting.MaxWidth))
+                        }))
                     {
                         IMultipleWindow e =
                             CurrentAssembly.CreateInstance(data.config_editor_setting.OutLinkEditor) as IMultipleWindow;
@@ -422,7 +446,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 }
                 else
                 {
-                    RenderBaseControl(GetResizeWidth(data.config_editor_setting.Width),
+                    RenderBaseControl(
+                        GetResizeWidth(data.config_editor_setting.Width, data.config_editor_setting.MaxWidth),
                         data.config_editor_setting.CanEditor, value,
                         v => { data.field_info.SetValue(raw, v); });
                 }
@@ -764,6 +789,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 SaveConfig();
         }
 
+        /// <summary>
+        /// 搜索 gui
+        /// </summary>
         protected virtual void SearchField()
         {
             GUILayout.BeginHorizontal();
@@ -827,7 +855,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     string.IsNullOrEmpty(item.config_editor_setting.Display)
                         ? item.field_info.Name
                         : item.config_editor_setting.Display, EditorGUIStyle.GetTagButtonStyle(),
-                    new GUILayoutOption[] {GUILayout.Width(GetResizeWidth(item.config_editor_setting.Width))}))
+                    new GUILayoutOption[]
+                    {
+                        GUILayout.Width(GetResizeWidth(item.config_editor_setting.Width,
+                            item.config_editor_setting.MaxWidth))
+                    }))
                     HeadButton_Click(item.field_info.Name);
 
                 GUILayout.Space(currentEditorSetting.ColumnSpan);
@@ -953,6 +985,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             if (!currentEditorSetting.DisableSearch)
                 SearchField();
         }
+
 
         /// <summary>
         /// 主逻辑
@@ -1123,20 +1156,27 @@ namespace SmartDataViewer.Editor.BuildInEditor
             //处理缩放
             if (!currentEditorSetting.HideResizeSlider)
                 currentEditorSetting.Resize =
-                    (int) GUILayout.HorizontalSlider(currentEditorSetting.Resize, 1, 10, GUILayout.Width(70));
+                    (int) GUILayout.HorizontalSlider(currentEditorSetting.Resize, 1, 5, GUILayout.Width(70));
 
             GUILayout.EndHorizontal();
         }
 
 
         /// <summary>
-        /// 计算缩放尺寸
+        /// 计算缩放尺寸 目前只有两处调用  如果后面再有其他地方调用  需要重写
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        protected virtual int GetResizeWidth(int value)
+        protected virtual int GetResizeWidth(int value, int max, int offset = 0)
         {
-            return currentEditorSetting.HideResizeSlider ? value : value * currentEditorSetting.Resize;
+            if (currentEditorSetting.HideResizeSlider)
+            {
+                return value;
+            }
+            else
+            {
+                return Mathf.Clamp(value * currentEditorSetting.Resize - offset, 0, max - offset);
+            }
         }
 
         /// <summary>

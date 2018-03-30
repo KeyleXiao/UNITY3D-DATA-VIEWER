@@ -95,5 +95,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// 当前页
         /// </summary>
         public int PageIndex ;
+
+        public int MaxResize = 5;
     }
 }

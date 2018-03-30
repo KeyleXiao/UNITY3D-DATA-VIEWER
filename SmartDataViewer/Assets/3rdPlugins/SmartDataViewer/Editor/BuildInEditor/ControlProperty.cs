@@ -46,6 +46,7 @@ namespace SmartDataViewer
             CanEditor = true;
             Visibility = true;
             Width = 180;
+            MaxWidth = 200;
         }
 
         public int Order;
@@ -55,6 +56,8 @@ namespace SmartDataViewer
         public bool CanEditor;
 
         public int Width;
+
+        public int MaxWidth;
 
         public string OutLinkEditor;
 
