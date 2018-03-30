@@ -40,5 +40,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
             SetConfigType(new CustomEditorPropertyConfig());
         }
 
+        protected override void SaveConfig()
+        {
+            base.SaveConfig();
+            //刷新编辑器配置
+            EditorConfig.GetCustomEditorPropertyConfig(true);
+
+        }
     }
 }

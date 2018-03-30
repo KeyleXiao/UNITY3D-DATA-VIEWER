@@ -21,12 +21,12 @@ using UnityEditor;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
-    public class CustomControlConfigEditor : ConfigEditorSchema<ControlProperty>
+    public class ControlPropertyConfigEditor : ConfigEditorSchema<ControlProperty>
     {
         [MenuItem("SmartDataViewer/Control Setting/Custom")]
         static public void OpenView()
         {
-            var w = CreateInstance<CustomControlConfigEditor>();
+            var w = CreateInstance<ControlPropertyConfigEditor>();
             w.ShowUtility();
         }
 
@@ -40,6 +40,15 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             base.Initialize();
             SetConfigType(new CustomControlPropertyConfig());
+        }
+
+        protected override void SaveConfig()
+        {
+            base.SaveConfig();
+            
+            //刷新编辑器配置
+            EditorConfig.GetCustomControlPropertyConfig(true);
+            
         }
     }
 }

@@ -36,7 +36,7 @@ namespace SmartDataViewer.Editor
 		public static CustomEditorPropertyConfig CustomEditorPropertyConfig { private get; set; }
 		
 
-		public static CustomControlPropertyConfig GetCustomControlConfig(bool reload = false)
+		public static CustomControlPropertyConfig GetCustomControlPropertyConfig(bool reload = false)
 		{
 			if (CustomControlPropertyConfig == null || reload)
 			{
@@ -45,7 +45,7 @@ namespace SmartDataViewer.Editor
 			return CustomControlPropertyConfig;
 		}
 		
-		public static CustomEditorPropertyConfig GetCustomEditorConfig(bool reload = false)
+		public static CustomEditorPropertyConfig GetCustomEditorPropertyConfig(bool reload = false)
 		{
 			if (CustomEditorPropertyConfig == null || reload)
 			{
@@ -54,7 +54,7 @@ namespace SmartDataViewer.Editor
 			return CustomEditorPropertyConfig;
 		}
 		
-		public static DefaultControlPropertyConfig GetDefaultControlConfig(bool reload = false)
+		public static DefaultControlPropertyConfig GetDefaultControlPropertyConfig(bool reload = false)
 		{
 			if (ControlPropertyConfig == null || reload)
 			{
@@ -63,7 +63,7 @@ namespace SmartDataViewer.Editor
 			return ControlPropertyConfig;
 		}
 		
-		public static DefaultEditorPropertyConfig GetDefaultEditorConfig(bool reload = false)
+		public static DefaultEditorPropertyConfig GetDefaultEditorPropertyConfig(bool reload = false)
 		{
 			if (EditorPropertyConfig == null || reload)
 			{

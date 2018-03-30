@@ -150,8 +150,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
                             new ConfigEditorAttribute();
 
             //先读取用户定义的 如果没有配置直接读取默认的
-            currentEditorSetting = EditorConfig.GetCustomEditorConfig().SearchByID(configSetting.EditorConfigID) ??
-                                   EditorConfig.GetDefaultEditorConfig().SearchByID(configSetting.EditorConfigID);
+            currentEditorSetting = EditorConfig.GetCustomEditorPropertyConfig().SearchByID(configSetting.EditorConfigID) ??
+                                   EditorConfig.GetDefaultEditorPropertyConfig().SearchByID(configSetting.EditorConfigID);
 
 
             titleContent = new GUIContent(string.IsNullOrEmpty(currentEditorSetting.EditorTitle)
@@ -171,7 +171,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 if (infos.Length == 0)
                 {
                     int id = (int) ReflectionHelper.GetFieldTypeMapping(item.FieldType);
-                    f.config_editor_setting = EditorConfig.GetDefaultControlConfig().SearchByID(id);
+                    f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByID(id);
 
 
                     if (f.config_editor_setting == null)
@@ -189,19 +189,19 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     ConfigEditorFieldAttribute cefa = (ConfigEditorFieldAttribute) infos[0];
                     
                     //先查Custom配置
-                    f.config_editor_setting = EditorConfig.GetCustomControlConfig().SearchByID(cefa.ControlPropertyID);
+                    f.config_editor_setting = EditorConfig.GetCustomControlPropertyConfig().SearchByID(cefa.ControlPropertyID);
                     
                     //走属性默认配置
                     if (f.config_editor_setting == null && cefa.ControlPropertyID == 0)
                     {
                         int id = (int) ReflectionHelper.GetFieldTypeMapping(item.FieldType);
-                        f.config_editor_setting = EditorConfig.GetDefaultControlConfig().SearchByID(id);
+                        f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByID(id);
                     }
                     
                     //走默认配置
                     if (f.config_editor_setting == null && cefa.ControlPropertyID != 0)
                     {
-                        f.config_editor_setting = EditorConfig.GetDefaultControlConfig().SearchByID(cefa.ControlPropertyID);
+                        f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByID(cefa.ControlPropertyID);
                     }
 
                     //如果默认配置被删除 为了防止报错 
@@ -706,12 +706,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             config_current.SaveToDisk(outPutPath);
             AssetDatabase.Refresh();
-            
-            //刷新编辑器配置
-            EditorConfig.GetCustomControlConfig(true);
-            EditorConfig.GetCustomEditorConfig(true);
-            EditorConfig.GetDefaultControlConfig(true);
-            EditorConfig.GetDefaultEditorConfig(true);
             
             ShowNotification(new GUIContent(Language.Success));
         }
