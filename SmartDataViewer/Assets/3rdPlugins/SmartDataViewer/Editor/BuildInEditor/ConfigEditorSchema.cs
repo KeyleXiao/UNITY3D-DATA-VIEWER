@@ -778,7 +778,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     }
 
                     var modelRaw =
-                        ConfigBase<IModel>.LoadRawConfig(classType, Chache[i].config_editor_setting.OutLinkFilePath);
+                        ConfigBase<IModel>.LoadConfig(classType, Chache[i].config_editor_setting.OutLinkFilePath);
                     if (modelRaw != null)
                     {
                         if (!outLinkRawData.ContainsKey(Chache[i].config_editor_setting.OutLinkClass))
@@ -877,6 +877,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 outPutPath = currentEditorSetting.LoadPath;
             //处理路径关系
 
+
+            if (string.IsNullOrEmpty(outPutPath))
+            {
+                ShowNotification(new GUIContent(Language.CantReadOutputPath));
+                return;
+            }
             
             config_current.SaveToDisk(outPutPath);
             AssetDatabase.Refresh();
@@ -890,7 +896,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
         protected virtual void SaveButton()
         {
             if (GUILayout.Button(Language.Save, GUI.skin.GetStyle("ButtonRight")))
+            {
                 SaveConfig();
+            }
         }
 
         /// <summary>
@@ -1143,11 +1151,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
             Page();
             //--- 分页 ---
 
+            //-- 版权信息 --
             GUILayout.BeginHorizontal();
             GUILayout.Label(Language.Contract);
             GUILayout.EndHorizontal();
-            
-            
             
         }
 

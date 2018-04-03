@@ -33,20 +33,29 @@ namespace SmartDataViewer.Editor.BuildInEditor
             SearchResourceName = string.Empty;
         }
         
+        
+        [ConfigEditorField(11006)]
         public string LoadPath;
 
+        [ConfigEditorField(11007)]
         public string OutputPath;
 
+        [ConfigEditorField(11008)]
         public string EditorTitle;
 
+        [ConfigEditorField(11009)]
         public string SearchResourceName ;
 
+        [ConfigEditorField(11002)]
         public bool DisableSearch;
 
+        [ConfigEditorField(11003)]
         public bool DisableSave;
 
+        [ConfigEditorField(11004)]
         public bool DisableCreate;
         
+        [ConfigEditorField(11005)]
         public bool HideResizeSlider ;
         
         /// <summary>

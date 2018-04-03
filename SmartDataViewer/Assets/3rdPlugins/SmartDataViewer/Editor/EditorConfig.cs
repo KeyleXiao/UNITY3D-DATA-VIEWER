@@ -102,6 +102,7 @@ namespace SmartDataViewer.Editor
         //public static readonly string OnePageMaxNumber = "单页最大数量";
         //public static readonly string PageInfoFormate = @"|{0}|页-共|{1}|页";
 
+        public static readonly string CantReadOutputPath = "读取不到输出路径，请检查类文件[ConfigEditor]特性是否配置";
         public static readonly string PleaseCheckConsole = "当前编辑器下有错误的逻辑数据 请您查看控制台错误信息 ";
         public static readonly string TableErrorInfoFormat = "编辑器:{0} 详细错误信息如下\n{1}";
         public static readonly string Close = "Close";

@@ -29,7 +29,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public static T LoadEditorResource<T>(string file_name_with_extension) where T: UnityEngine.Object
         {
 //            string path = string.Format("{0}/EditorResources/", PathMapping.GetSmartDataViewEditorPath());
-            string path = PathMapping.GetInstance().DecodeURL("{EDITOR}/EditorResources/");
+            string path = PathMapping.GetInstance().DecodePath("{EDITOR}/EditorResources/");
             path = PathMapping.PathCombine(path, file_name_with_extension);
             
             var splitIndex = path.IndexOf("Assets/");

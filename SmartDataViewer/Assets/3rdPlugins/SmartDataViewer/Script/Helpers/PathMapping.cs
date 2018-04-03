@@ -41,9 +41,6 @@ namespace SmartDataViewer.Helpers
             
             
             
-            
-            
-            
             //---- 添加用户自定义的路径映射 ---- 
         }
 
@@ -54,7 +51,7 @@ namespace SmartDataViewer.Helpers
             return instance ?? (instance = new PathMapping());
         }
 
-        public string DecodeURL(string url)
+        public string DecodePath(string url)
         {
             foreach (var mapping in PathChache)
             {
@@ -72,7 +69,7 @@ namespace SmartDataViewer.Helpers
         /// </summary>
         /// <param name="url"></param>
         /// <returns>如果返回false 则走默认路径</returns>
-        public bool DecodeURL(ref string url)
+        public bool DecodePath(ref string url)
         {
             bool isAbs = false;
             
@@ -89,6 +86,10 @@ namespace SmartDataViewer.Helpers
         
 
 #if UNITY_EDITOR
+        /// <summary>
+        /// 仅在编辑器状态下使用
+        /// </summary>
+        /// <returns></returns>
         private string GetSmartDataViewEditorPath()
         {
             string[] res =

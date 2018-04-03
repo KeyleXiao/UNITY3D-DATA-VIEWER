@@ -32,9 +32,14 @@ namespace SmartDataViewer.Editor.BuildInEditor
             SubType = string.Empty;
             EditorPath = "CustomEditor";
         }
+        
+        [ConfigEditorField(11010)]
         public string EditorPath;
+        [ConfigEditorField(11011)]
         public string EditorName;
+        [ConfigEditorField(11012)]
         public string ClassType;
+        [ConfigEditorField(11013)]
         public string SubType;
     }
 }

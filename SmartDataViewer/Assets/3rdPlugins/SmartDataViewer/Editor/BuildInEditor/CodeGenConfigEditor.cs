@@ -23,6 +23,9 @@ using SmartDataViewer.Helpers;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
+    /// <summary>
+    /// TODO: 待解决 代码生成器优化，model design之后顺便插入一条数据到model的 editor 上。进行定制
+    /// </summary>
     public class CodeGenConfigEditor : ConfigEditorSchema<CodeGen>
     {
         [MenuItem("SmartDataViewer/Code Generator")]
@@ -72,7 +75,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                 if (GUILayout.Button(disPlay,
                     new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith)}))
+                {
                     WriteFile(item, path);
+                }
+
                 GUI.color = Color.white;
             }
             else
@@ -94,7 +100,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             SetConfigType(new CodeGenConfig());
 
-            string path = PathMapping.GetInstance().DecodeURL("{EDITOR}/CTS/EditorClassTemplate.unityjson");
+            string path = PathMapping.GetInstance().DecodePath("{EDITOR}/CTS/EditorClassTemplate.unityjson");
             if (File.Exists(path))
                 templateFile = File.ReadAllText(path);
         }

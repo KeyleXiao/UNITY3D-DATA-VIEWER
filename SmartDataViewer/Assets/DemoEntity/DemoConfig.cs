@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using SmartDataViewer;
 
-[Serializable]
+[Serializable][ConfigEditor(2)]
 public class DemoConfig : ConfigBase<Demo> { }
 
 [Serializable]
