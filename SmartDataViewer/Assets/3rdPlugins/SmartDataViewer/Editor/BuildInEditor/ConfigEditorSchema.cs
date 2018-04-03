@@ -25,6 +25,7 @@ using System.Reflection;
 using System.Linq;
 using System.Text;
 using SmartDataViewer.Helpers;
+using UnityEngine.Profiling;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
@@ -347,23 +348,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 //Open Editor
                 if (!string.IsNullOrEmpty(data.config_editor_setting.OutLinkEditor))
                 {
-                    if (GUILayout.Button(Language.Add))
-                    {
-                        IMultipleWindow e =
-                            CurrentAssembly.CreateInstance(data.config_editor_setting.OutLinkEditor) as IMultipleWindow;
-                        if (e == null)
-                        {
-                            ShowNotification(new GUIContent(Language.OutLinkIsNull));
-                        }
-                        else
-                        {
-                            e.UpdateSelectModel(value, SetListItemValue);
-                            e.ShowUtility();
-                        }
-                    }
-
+                    
+                    //处理外联添加逻辑
                     var temp = value as List<int>;
-
+                    
                     for (int i = 0; i < temp.Count; i++)
                     {
                         GUILayout.BeginHorizontal();
@@ -382,6 +370,24 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                         GUILayout.EndHorizontal();
                     }
+                    //处理外联添加逻辑
+                    
+                    //打开面板
+                    if (GUILayout.Button(Language.Add))
+                    {
+                        IMultipleWindow e =
+                            CurrentAssembly.CreateInstance(data.config_editor_setting.OutLinkEditor) as IMultipleWindow;
+                        if (e == null)
+                        {
+                            ShowNotification(new GUIContent(Language.OutLinkIsNull));
+                        }
+                        else
+                        {
+                            e.UpdateSelectModel(value, SetListItemValue);
+                            e.ShowUtility();
+                        }
+                    }
+                    //打开面板
 
                     if (deleteIndex != -1)
                     {
@@ -390,17 +396,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 }
                 else
                 {
-                    if (GUILayout.Button(Language.Add))
-                    {
-                        TempLineChache.Add.Invoke(value,
-                            new object[]
-                            {
-                                TempLineChache.AttributeType == typeof(string)
-                                    ? string.Empty
-                                    : Activator.CreateInstance(TempLineChache.AttributeType)
-                            });
-                    }
-
+                    
+                    //处理数组逻辑
                     int count = Convert.ToInt32(TempLineChache.Count.GetValue(value, null));
 
                     int removeIndex = -1;
@@ -432,6 +429,21 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     {
                         TempLineChache.RemoveAt.Invoke(value, new object[] {removeIndex});
                     }
+                    //处理数组逻辑
+                    
+                    
+                    //添加数据
+                    if (GUILayout.Button(Language.Add))
+                    {
+                        TempLineChache.Add.Invoke(value,
+                            new object[]
+                            {
+                                TempLineChache.AttributeType == typeof(string)
+                                    ? string.Empty
+                                    : Activator.CreateInstance(TempLineChache.AttributeType)
+                            });
+                    }
+                    //添加数据
                 }
 
                 GUILayout.EndVertical();
@@ -1134,6 +1146,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
             GUILayout.BeginHorizontal();
             GUILayout.Label(Language.Contract);
             GUILayout.EndHorizontal();
+            
+            
+            
         }
 
 
