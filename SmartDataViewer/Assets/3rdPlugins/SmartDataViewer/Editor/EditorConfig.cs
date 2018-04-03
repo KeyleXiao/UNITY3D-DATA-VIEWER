@@ -19,103 +19,115 @@ using SmartDataViewer.Editor.BuildInEditor;
 
 namespace SmartDataViewer.Editor
 {
-	public enum WindowType
-	{
-		INPUT,
-		CALLBACK
-	}
-	
+    public enum WindowType
+    {
+        INPUT,
+        CALLBACK
+    }
 
-	
-	public class EditorConfig
-	{
-		public static DefaultControlPropertyConfig ControlPropertyConfig { private get; set; }
-		public static DefaultEditorPropertyConfig EditorPropertyConfig { private get; set; }
-		
-		public static CustomControlPropertyConfig CustomControlPropertyConfig { private get; set; }
-		public static CustomEditorPropertyConfig CustomEditorPropertyConfig { private get; set; }
-		
 
-		public static CustomControlPropertyConfig GetCustomControlPropertyConfig(bool reload = false)
-		{
-			if (CustomControlPropertyConfig == null || reload)
-			{
-				CustomControlPropertyConfig = CustomControlPropertyConfig.LoadConfig<CustomControlPropertyConfig>("{EDITOR}/Config/CustomControlProperty");
-			}
-			return CustomControlPropertyConfig;
-		}
-		
-		public static CustomEditorPropertyConfig GetCustomEditorPropertyConfig(bool reload = false)
-		{
-			if (CustomEditorPropertyConfig == null || reload)
-			{
-				CustomEditorPropertyConfig = DefaultEditorPropertyConfig.LoadConfig<CustomEditorPropertyConfig>("{EDITOR}/Config/CustomEditorPropertyConfig");
-			}
-			return CustomEditorPropertyConfig;
-		}
-		
-		public static DefaultControlPropertyConfig GetDefaultControlPropertyConfig(bool reload = false)
-		{
-			if (ControlPropertyConfig == null || reload)
-			{
-				ControlPropertyConfig = DefaultControlPropertyConfig.LoadConfig<DefaultControlPropertyConfig>("{EDITOR}/Config/DefaultControlProperty");
-			}
-			return ControlPropertyConfig;
-		}
-		
-		public static DefaultEditorPropertyConfig GetDefaultEditorPropertyConfig(bool reload = false)
-		{
-			if (EditorPropertyConfig == null || reload)
-			{
-				EditorPropertyConfig = DefaultEditorPropertyConfig.LoadConfig<DefaultEditorPropertyConfig>("{EDITOR}/Config/DefaultEditorPropertyConfig");
-			}
-			return EditorPropertyConfig;
-		}
-		
-	}		
+    public class EditorConfig
+    {
+        public static DefaultControlPropertyConfig ControlPropertyConfig { private get; set; }
+        public static DefaultEditorPropertyConfig EditorPropertyConfig { private get; set; }
+        public static CustomControlPropertyConfig CustomControlPropertyConfig { private get; set; }
+        public static CustomEditorPropertyConfig CustomEditorPropertyConfig { private get; set; }
 
-	public class Language
-	{
-		//public static readonly string Build = "生成";
-		//public static readonly string Select = "选择";
-		//public static readonly string Previous = "前页";
-		//public static readonly string Next = "后页";
-		//public static readonly string Add = "添加";
-		//public static readonly string OutLinkIsNull = "请设置外链编辑器";
-		//public static readonly string Success = "成功..";
-		//public static readonly string SuccessAdd = "成功添加 {0}";
-		//public static readonly string NickName = @"别名";
-		//public static readonly string Delete = @"X";
-		//public static readonly string Copy = @"C";
-		//public static readonly string Paste = @"P";
-		//public static readonly string Operation = @"操作";
-		//public static readonly string Contract = @"Version 1.2 Beta   --Keyle";
-		//public static readonly string OnePageMaxNumber = "单页最大数量";
-		//public static readonly string PageInfoFormate = @"|{0}|页-共|{1}|页";
 
-		public static readonly string Save = "Save";
-		public static readonly string Jump = "Jump:";
-		public static readonly string NewLine = "NewLine";
-		public static readonly string DiscardChange = "Discard";
-		public static readonly string Menu = "Menu";
-		public static readonly string Build = "Build";
-		public static readonly string ReBuild = "Rebuild";
-		public static readonly string Select = "Select";
-		public static readonly string Previous = "Previous";
-		public static readonly string Next = "Next";
-		public static readonly string Add = "Add";
-		public static readonly string OutLinkIsNull = "Out link editor field is null";
-		public static readonly string Success = "Success ..";
-		public static readonly string SuccessAdd = "Success add {0}";
-		public static readonly string NickName = @"NickName";
-		public static readonly string Delete = @"X";
-		public static readonly string Copy = @"C";
-		public static readonly string Paste = @"P";
-		public static readonly string Verfiy = @"V";
-		public static readonly string VerfiyMessageSuccess = @"ID: {0} 当前数据有效！";
-		public static readonly string Operation = @"Operation";
-		public static readonly string Contract = @"Version 1.2 Beta   --Keyle";
-		public static readonly string OnePageMaxNumber = "Max In Page";
-		public static readonly string PageInfoFormate = @"Page |{0}|-|{1}|";
-	}
+        public static CustomControlPropertyConfig GetCustomControlPropertyConfig(bool reload = false)
+        {
+            if (CustomControlPropertyConfig == null || reload)
+            {
+                CustomControlPropertyConfig =
+                    CustomControlPropertyConfig.LoadConfig<CustomControlPropertyConfig>(
+                        "{EDITOR}/Config/CustomControlProperty.unityjson");
+            }
+
+            return CustomControlPropertyConfig;
+        }
+
+        public static CustomEditorPropertyConfig GetCustomEditorPropertyConfig(bool reload = false)
+        {
+            if (CustomEditorPropertyConfig == null || reload)
+            {
+                CustomEditorPropertyConfig =
+                    DefaultEditorPropertyConfig.LoadConfig<CustomEditorPropertyConfig>(
+                        "{EDITOR}/Config/CustomEditorPropertyConfig.unityjson");
+            }
+
+            return CustomEditorPropertyConfig;
+        }
+
+        public static DefaultControlPropertyConfig GetDefaultControlPropertyConfig(bool reload = false)
+        {
+            if (ControlPropertyConfig == null || reload)
+            {
+                ControlPropertyConfig =
+                    DefaultControlPropertyConfig.LoadConfig<DefaultControlPropertyConfig>(
+                        "{EDITOR}/Config/DefaultControlProperty.unityjson");
+            }
+
+            return ControlPropertyConfig;
+        }
+
+        public static DefaultEditorPropertyConfig GetDefaultEditorPropertyConfig(bool reload = false)
+        {
+            if (EditorPropertyConfig == null || reload)
+            {
+                EditorPropertyConfig =
+                    DefaultEditorPropertyConfig.LoadConfig<DefaultEditorPropertyConfig>(
+                        "{EDITOR}/Config/DefaultEditorPropertyConfig.unityjson");
+            }
+
+            return EditorPropertyConfig;
+        }
+    }
+
+    public class Language
+    {
+        //public static readonly string Build = "生成";
+        //public static readonly string Select = "选择";
+        //public static readonly string Previous = "前页";
+        //public static readonly string Next = "后页";
+        //public static readonly string Add = "添加";
+        //public static readonly string OutLinkIsNull = "请设置外链编辑器";
+        //public static readonly string Success = "成功..";
+        //public static readonly string SuccessAdd = "成功添加 {0}";
+        //public static readonly string NickName = @"别名";
+        //public static readonly string Delete = @"X";
+        //public static readonly string Copy = @"C";
+        //public static readonly string Paste = @"P";
+        //public static readonly string Operation = @"操作";
+        //public static readonly string Contract = @"Version 1.2 Beta   --Keyle";
+        //public static readonly string OnePageMaxNumber = "单页最大数量";
+        //public static readonly string PageInfoFormate = @"|{0}|页-共|{1}|页";
+
+        public static readonly string PleaseCheckConsole = "当前编辑器下有错误的逻辑数据 请您查看控制台错误信息 ";
+        public static readonly string TableErrorInfoFormat = "编辑器:{0} 详细错误信息如下\n{1}";
+        public static readonly string Close = "Close";
+        public static readonly string Save = "Save";
+        public static readonly string Jump = "Jump:";
+        public static readonly string NewLine = "NewLine";
+        public static readonly string DiscardChange = "Discard";
+        public static readonly string Menu = "Menu";
+        public static readonly string Build = "Build";
+        public static readonly string ReBuild = "Rebuild";
+        public static readonly string Select = "Select";
+        public static readonly string Previous = "Previous";
+        public static readonly string Next = "Next";
+        public static readonly string Add = "Add";
+        public static readonly string OutLinkIsNull = "Out link editor field is null";
+        public static readonly string Success = "Success ..";
+        public static readonly string SuccessAdd = "Success add {0}";
+        public static readonly string NickName = @"NickName";
+        public static readonly string Delete = @"X";
+        public static readonly string Copy = @"C";
+        public static readonly string Paste = @"P";
+        public static readonly string Verfiy = @"V";
+        public static readonly string VerfiyMessageSuccess = @"ID: {0} 当前数据有效！";
+        public static readonly string Operation = @"Operation";
+        public static readonly string Contract = @"Version 1.2 Beta   --Keyle";
+        public static readonly string OnePageMaxNumber = "Max In Page";
+        public static readonly string PageInfoFormate = @"Page |{0}|-|{1}|";
+    }
 }

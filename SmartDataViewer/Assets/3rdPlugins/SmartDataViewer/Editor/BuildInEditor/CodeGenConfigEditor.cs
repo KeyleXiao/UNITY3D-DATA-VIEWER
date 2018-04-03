@@ -14,6 +14,7 @@
 //     		See the License for the specific language governing permissions and
 //     		limitations under the License.
 //
+
 using System;
 using UnityEngine;
 using UnityEditor;
@@ -22,93 +23,97 @@ using SmartDataViewer.Helpers;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
-	public class CodeGenConfigEditor : ConfigEditorSchema<CodeGen>
-	{
-		[MenuItem("SmartDataViewer/Code Generator")]
-		static public void OpenView()
-		{
-			CodeGenConfigEditor w = CreateInstance<CodeGenConfigEditor>();
-			w.ShowUtility();
-		}
+    public class CodeGenConfigEditor : ConfigEditorSchema<CodeGen>
+    {
+        [MenuItem("SmartDataViewer/Code Generator")]
+        static public void OpenView()
+        {
+            CodeGenConfigEditor w = CreateInstance<CodeGenConfigEditor>();
+            w.ShowUtility();
+        }
 
 
-		protected override void RenderExtensionHead()
-		{
-			GUILayout.Label("GenCode",EditorGUIStyle.GetTagButtonStyle(),new GUILayoutOption[] { GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith) });
-		}
+        protected override void RenderExtensionHead()
+        {
+            GUILayout.Label("GenCode", EditorGUIStyle.GetTagButtonStyle(),
+                new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith)});
+        }
 
 
-		protected override void RenderExtensionButton(CodeGen item)
-		{
-			string errorInfo = string.Empty;
+        protected override void RenderExtensionButton(CodeGen item)
+        {
+            string errorInfo = string.Empty;
 
-			if (string.IsNullOrEmpty(item.EditorName))
-			{
-				errorInfo = "Editor Name Is Empty";
-			}
-			else if (string.IsNullOrEmpty(item.SubType))
-			{
-				errorInfo = "SubType Is Empty";
-			}
+            if (string.IsNullOrEmpty(item.EditorName))
+            {
+                errorInfo = "Editor Name Is Empty";
+            }
+            else if (string.IsNullOrEmpty(item.SubType))
+            {
+                errorInfo = "SubType Is Empty";
+            }
 
-			if (string.IsNullOrEmpty(errorInfo))
-			{
-				//检测代码是否已存在
-				string path = string.Format("{0}/{1}.cs", PathHelper.GetEditorExportPath(), item.EditorName);
-				string disPlay = Language.Build;
-				if (File.Exists(path))
-				{
-					GUI.color = Color.green;
-					disPlay = Language.ReBuild;
-				}
-				if (GUILayout.Button(disPlay, new GUILayoutOption[] { GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith)}))
-					WriteFile(item,path);
-				GUI.color = Color.white;
-			}
-			else
-			{
-				if (GUILayout.Button(EditorGUIStyle.LoadEditorResource<Texture2D>("warning.png"), new GUILayoutOption[] { GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith),GUILayout.Height(18) } ))
-				{
-					ShowNotification(new GUIContent(errorInfo));
-				}
-			}
-		}
+            if (string.IsNullOrEmpty(errorInfo))
+            {
+                //设置导出路径   
+                string export_folder = string.Format(@"{0}/Editor/Export/", Application.dataPath);
 
-		string templateFile { get; set; }
+                if (!Directory.Exists(export_folder))
+                    Directory.CreateDirectory(export_folder);
 
-		public override void Initialize()
-		{
-			base.Initialize();
-			
-			SetConfigType(new CodeGenConfig());
+                //检测代码是否已存在
+                string path = string.Format("{0}/{1}.cs", export_folder, item.EditorName);
+                string disPlay = Language.Build;
+                if (File.Exists(path))
+                {
+                    GUI.color = Color.green;
+                    disPlay = Language.ReBuild;
+                }
 
+                if (GUILayout.Button(disPlay,
+                    new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith)}))
+                    WriteFile(item, path);
+                GUI.color = Color.white;
+            }
+            else
+            {
+                if (GUILayout.Button(EditorGUIStyle.LoadEditorResource<Texture2D>("warning.png"),
+                    new GUILayoutOption[]
+                        {GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith), GUILayout.Height(18)}))
+                {
+                    ShowNotification(new GUIContent(errorInfo));
+                }
+            }
+        }
 
-			string path = PathHelper.GetTemplatetEditorClassPath();
-			
-			if (File.Exists(path))
-				templateFile = File.ReadAllText(path);
-			
-		}
+        string templateFile { get; set; }
 
-		public void WriteFile(CodeGen item,string path)
-		{
-			if (string.IsNullOrEmpty(templateFile)) return;
-			string temp = templateFile;
-			temp = temp.Replace("$[EditorName]", item.EditorName);
-			temp = temp.Replace("$[ClassType]", item.ClassType);
-			temp = temp.Replace("$[SubType]", item.SubType);
-			temp = temp.Replace("$[EditorPath]", item.EditorPath);
-			
-			if (File.Exists(path)) File.Delete(path);
-			
-			File.WriteAllText(path, temp, System.Text.Encoding.UTF8);
-			Debug.LogWarning(string.Format("Success Build !\n{0}",path));
-			AssetDatabase.Refresh();
-			Close();
-		}
+        public override void Initialize()
+        {
+            base.Initialize();
 
+            SetConfigType(new CodeGenConfig());
 
-	}
+            string path = PathMapping.GetInstance().DecodeURL("{EDITOR}/CTS/EditorClassTemplate.unityjson");
+            if (File.Exists(path))
+                templateFile = File.ReadAllText(path);
+        }
 
+        public void WriteFile(CodeGen item, string path)
+        {
+            if (string.IsNullOrEmpty(templateFile)) return;
+            string temp = templateFile;
+            temp = temp.Replace("$[EditorName]", item.EditorName);
+            temp = temp.Replace("$[ClassType]", item.ClassType);
+            temp = temp.Replace("$[SubType]", item.SubType);
+            temp = temp.Replace("$[EditorPath]", item.EditorPath);
 
+            if (File.Exists(path)) File.Delete(path);
+
+            File.WriteAllText(path, temp, System.Text.Encoding.UTF8);
+            Debug.LogWarning(string.Format("Success Build !\n{0}", path));
+            AssetDatabase.Refresh();
+            Close();
+        }
+    }
 }

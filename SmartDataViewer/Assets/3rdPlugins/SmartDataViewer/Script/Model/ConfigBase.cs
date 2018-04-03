@@ -135,118 +135,88 @@ namespace SmartDataViewer
         #endregion
 
 
-
-
         #region 编辑器状态下资源读取，如果是实际项目中使用还请根据实际情况作出修改
 
-        public virtual void DeleteFromDisk(string fileWithNoExcension = "", bool absolute = false)
+        public virtual void DeleteFromDisk(string path)
         {
-            absolute = PathHelper.GetAbsolutePath<T>(ref fileWithNoExcension);
-            string configPath = fileWithNoExcension;
+            path = PathMapping.GetInstance().DecodeURL(path);
 
-            if (!absolute)
-            {
-                configPath = PathHelper.GetConfigAbsoluteFilePath(configPath);
-            }
-
-            if (File.Exists(configPath))
-                File.Delete(configPath);
+            if (File.Exists(path))
+                File.Delete(path);
         }
 
 
-        public virtual void SaveToDisk(string fileWithNoExcension = "", bool absolute = false)
+        public virtual void SaveToDisk(string path)
         {
-            absolute = PathHelper.GetAbsolutePath<T>(ref fileWithNoExcension);
-            string configPath = fileWithNoExcension;
-
             //Modified by keyle 2016.11.29 缩减配置尺寸
             string content = JsonUtility.ToJson(this, false);
 
-            DeleteFromDisk(configPath, absolute);
+            DeleteFromDisk(path);
 
-            if (!absolute)
-            {
-                configPath = PathHelper.GetConfigAbsoluteFilePath(configPath);
-            }
-
-
-            var dir = Path.GetDirectoryName(configPath);
+            var dir = Path.GetDirectoryName(path);
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
-            
-            File.WriteAllText(configPath, content);
+
+            File.WriteAllText(path, content);
         }
 
 
-        public static V LoadConfig<V>(string fileWithNoExcension = "", bool absolute = false)
-            where V : ConfigBase<T>, new()
+        public static V LoadConfig<V>(string path) where V : ConfigBase<T>, new()
         {
-            absolute = PathHelper.GetAbsolutePath<T>(ref fileWithNoExcension);
-            //Check Is Null
-
-            string str = string.Empty;
-            if (!absolute)
+            string content = string.Empty;
+            if (!PathMapping.GetInstance().DecodeURL(ref path))
             {
-                TextAsset temp = Resources.Load<TextAsset>(string.Format("Config/{0}", fileWithNoExcension));
+                TextAsset temp = Resources.Load<TextAsset>(path);
 
                 if (temp == null)
                 {
 #if UNITY_EDITOR
-                    Debug.Log(string.Format("Can't Find {0} , FileName {1}", typeof(V).Name, fileWithNoExcension));
+                    Debug.Log(string.Format("Can't Find {0} , FileName {1}", typeof(V).Name, path));
 #endif
                     return new V();
                 }
 
-                str = temp.text;
+                content = temp.text;
             }
             else
             {
-                string path = fileWithNoExcension;
-                if (!File.Exists(path))
-                    return new V();
-                else
-                    str = File.ReadAllText(path);
+                if (!File.Exists(path)) return new V();
+                content = File.ReadAllText(path);
             }
 
-            var result = JsonUtility.FromJson<V>(str);
+            var result = JsonUtility.FromJson<V>(content);
             result.InitConfigsFromChache();
             return result;
         }
 
 
-        public static object LoadRawConfig(Type t, string fileWithNoExcension, bool absolute = false)
+        public static object LoadRawConfig(Type t, string path)
         {
-            absolute = PathHelper.GetAbsolutePath(t, ref fileWithNoExcension);
-            //Check Is Null
+            string content = string.Empty;
 
-            string str = string.Empty;
-            if (!absolute)
+            if (!PathMapping.GetInstance().DecodeURL(ref path))
             {
-                TextAsset temp = Resources.Load<TextAsset>(string.Format("Config/{0}", fileWithNoExcension));
+                TextAsset temp = Resources.Load<TextAsset>(path);
 
                 if (temp == null)
                 {
 #if UNITY_EDITOR
-                    Debug.Log(string.Format("Can't Find {0} , FileName {1}", t.Name, fileWithNoExcension));
+                    Debug.Log(string.Format("Can't Find {0} , FileName {1}", t.Name, path));
 #endif
                     return null;
                 }
 
-                str = temp.text;
+                content = temp.text;
             }
             else
             {
-                string path = fileWithNoExcension;
-                if (!File.Exists(path))
-                    return null;
-                else
-                    str = File.ReadAllText(path);
+                if (!File.Exists(path)) return null;
+                content = File.ReadAllText(path);
             }
 
-            return JsonUtility.FromJson(str, t);
+            return JsonUtility.FromJson(content, t);
         }
 
         #endregion
-
     }
 }

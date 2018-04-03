@@ -28,7 +28,14 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
         public static T LoadEditorResource<T>(string file_name_with_extension) where T: UnityEngine.Object
         {
-            return AssetDatabase.LoadAssetAtPath<T>(PathHelper.GetEditorResourcePath(file_name_with_extension, PathHelper.PATH_TYPE.ASSETDATABASE));
+//            string path = string.Format("{0}/EditorResources/", PathMapping.GetSmartDataViewEditorPath());
+            string path = PathMapping.GetInstance().DecodeURL("{EDITOR}/EditorResources/");
+            path = PathMapping.PathCombine(path, file_name_with_extension);
+            
+            var splitIndex = path.IndexOf("Assets/");
+            path = path.Substring(splitIndex);
+            
+            return AssetDatabase.LoadAssetAtPath<T>(path);
         }
 
         private static GUIStyle tagButtonStyle;

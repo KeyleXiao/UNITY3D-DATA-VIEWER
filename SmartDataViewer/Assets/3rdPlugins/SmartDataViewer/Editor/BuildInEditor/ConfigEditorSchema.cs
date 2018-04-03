@@ -23,6 +23,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using System.Text;
 using SmartDataViewer.Helpers;
 
 namespace SmartDataViewer.Editor.BuildInEditor
@@ -138,6 +139,25 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// </summary>
         protected T PasteItem { get; set; }
 
+        /// <summary>
+        /// 当前编辑器程序集
+        /// </summary>
+        public Assembly CurrentAssembly { get; set; }
+        
+        /// <summary>
+        /// 临时变量
+        /// </summary>
+        public int TempHashCode { get; set; }
+        
+        /// <summary>
+        /// 临时变量
+        /// </summary>
+        public ConfigEditorLineChache TempLineChache { get; set; }
+
+        /// <summary>
+        /// 报错显示
+        /// </summary>
+        public List<int> ErrorLine { get; set; }
 
         /// <summary>
         /// 设置编辑器字段排序规则
@@ -185,6 +205,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
             LineChache = new Dictionary<int, ConfigEditorLineChache>();
             CurrentAssembly = Assembly.GetExecutingAssembly();
             //-- Chache --
+            
+            //-- Error --
+            ErrorLine = new List<int>();
+            //-- Error --
 
             foreach (var item in fieldinfos)
             {
@@ -274,9 +298,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
             return t;
         }
 
-        public Assembly CurrentAssembly { get; set; }
-        public int TempHashCode { get; set; }
-        public ConfigEditorLineChache TempLineChache { get; set; }
 
         /// <summary>
         /// 反射原始数据 TODO: 加入缓存来优化反射  --Complete
@@ -758,22 +779,93 @@ namespace SmartDataViewer.Editor.BuildInEditor
             }
         }
 
+        
+        /// <summary>
+        /// 程序预留 数据逻辑校验接口
+        /// </summary>
+        /// <param name="data"></param>
+        protected virtual string VerfiyLineData(T data,bool showNotification = true)
+        {
+            string error = "";
+//                    -- 测试数据 --          
+//            if (string.IsNullOrEmpty(data.NickName))
+//            {
+//                error = string.Format("当前ID:{0} 建议NickName字段不要为空 请您补全描述信息",data.ID);
+//                if (!ErrorLine.Contains(data.ID))ErrorLine.Add(data.ID); //添加报错提示
+//
+//                if (showNotification)
+//                    ShowNotification(new GUIContent(error));    
+//            }
+//            else
+//                    -- 测试数据 --            
+            {
+                if (showNotification)
+                    ShowNotification(new GUIContent(string.Format(Language.VerfiyMessageSuccess, data.ID)));
+                
+                if (ErrorLine.Contains(data.ID)) ErrorLine.Remove(data.ID);//校验成功解除报错信息
+            }
+            
+            return error;
+        }
+
+        
+
+        /// <summary>
+        /// 导出数据之前校验所有行的数据逻辑 如果重写此函数请一并重写 VerfiyLineData 函数
+        /// </summary>
+        /// <returns></returns>
+        protected virtual bool VerfiyExportData()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < config_current.ConfigList.Count; i++)
+            {
+                //跳过被删除的数据
+                if (deleteList.Contains(config_current.ConfigList[i].ID))
+                    continue;
+                
+                //保存错误信息
+                string errorInfo = VerfiyLineData(config_current.ConfigList[i],false);
+                
+                if (!string.IsNullOrEmpty(errorInfo))
+                    sb.Append("\n").Append(errorInfo);
+            }
+
+            if (sb.Length == 0) return true;
+
+            ShowNotification(new GUIContent(Language.PleaseCheckConsole));
+            //格式化输出
+            Debug.LogError(string.Format(Language.TableErrorInfoFormat,currentEditorSetting.EditorTitle,sb));
+            //格式化输出
+            return false;
+        }
+
         /// <summary>
         /// 保存配置（逻辑）
         /// </summary>
         protected virtual void SaveConfig()
         {
+            //批量调用校验逻辑
+            if (!VerfiyExportData())
+                return;
+            //批量调用校验逻辑
+            
+            
+            //处理删除逻辑
             for (int i = 0; i < deleteList.Count; i++)
             {
                 config_current.Delete(deleteList[i]);
             }
-
             deleteList.Clear();
-
+            //处理删除逻辑
+            
+            
+            //处理路径关系
             string outPutPath = currentEditorSetting.OutputPath;
             if (string.IsNullOrEmpty(outPutPath) && !string.IsNullOrEmpty(currentEditorSetting.LoadPath))
                 outPutPath = currentEditorSetting.LoadPath;
+            //处理路径关系
 
+            
             config_current.SaveToDisk(outPutPath);
             AssetDatabase.Refresh();
 
@@ -942,8 +1034,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 foreach (var schema in Chache)
                 {
                     var rawData = schema.field_info.GetValue(item);
-                    //一条一条加载
+
+                    if (ErrorLine.Contains(item.ID)) GUI.color = Color.red; 
                     RenderRawLine(schema, rawData, item);
+                    GUI.color = Color.white; 
+                    
                     GUILayout.Space(currentEditorSetting.ColumnSpan);
                 }
 
@@ -1050,13 +1145,18 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             if (current_windowType == WindowType.CALLBACK)
             {
-                if (GUILayout.Button(Language.Select,
-                    new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.KitButtonWidth * 4)}))
+                if (GUILayout.Button(Language.Select,GUI.skin.GetStyle("ButtonLeft"),GUILayout.Width(currentEditorSetting.KitButtonWidth * 2)))
                 {
                     SelctList.Add(item.ID);
                     select_callback(current_list, item);
                     ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, item.NickName)));
                 }
+                
+                if (GUILayout.Button(Language.Close, GUI.skin.GetStyle("ButtonRight"),GUILayout.Width(currentEditorSetting.KitButtonWidth * 2))){
+                    Close();
+                    return;
+                }
+            
             }
 
             if (current_windowType != WindowType.CALLBACK)
@@ -1077,7 +1177,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 if (GUILayout.Button(Language.Verfiy, GUI.skin.GetStyle("ButtonMid"),
                     new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.KitButtonWidth)}))
                 {
-                    VerfiyButtonClick(item);
+                    VerfiyLineData(item);
                 }
 
                 if (GUILayout.Button(Language.Paste, GUI.skin.GetStyle("ButtonRight"),
@@ -1095,14 +1195,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             }
         }
 
-        /// <summary>
-        /// 程序预留 数据逻辑校验接口
-        /// </summary>
-        /// <param name="data"></param>
-        protected virtual void VerfiyButtonClick(T data)
-        {
-            ShowNotification(new GUIContent(string.Format(Language.VerfiyMessageSuccess, data.ID)));
-        }
+
 
 
         /// <summary>

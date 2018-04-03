@@ -24,7 +24,7 @@
     {
       "ID": 10001,
       "NickName": "",
-      "LoadPath": "{EDITOR}/Config/CodeGen",
+      "LoadPath": "{EDITOR}/Config/CodeGen.unityjson",
       "OutputPath": "",
       "EditorTitle": "编辑器代码生成工具",
       "SearchResourceName": "",
@@ -45,7 +45,7 @@
     {
       "ID": 10002,
       "NickName": "",
-      "LoadPath": "{EDITOR}/Config/DefaultEditorPropertyConfig",
+      "LoadPath": "{EDITOR}/Config/DefaultEditorPropertyConfig.unityjson",
       "OutputPath": "",
       "EditorTitle": "默认编辑器属性配置(请勿轻易修改)",
       "SearchResourceName": "",
@@ -66,7 +66,7 @@
     {
       "ID": 10003,
       "NickName": "",
-      "LoadPath": "{EDITOR}/Config/CustomEditorPropertyConfig",
+      "LoadPath": "{EDITOR}/Config/CustomEditorPropertyConfig.unityjson",
       "OutputPath": "",
       "EditorTitle": "自定义编辑器属性配置",
       "SearchResourceName": "",
@@ -87,7 +87,7 @@
     {
       "ID": 10004,
       "NickName": "",
-      "LoadPath": "{EDITOR}/Config/CustomControlProperty",
+      "LoadPath": "{EDITOR}/Config/CustomControlProperty.unityjson",
       "OutputPath": "",
       "EditorTitle": "自定义控件属性配置",
       "SearchResourceName": "",
@@ -108,7 +108,7 @@
     {
       "ID": 10005,
       "NickName": "",
-      "LoadPath": "{EDITOR}/Config/DefaultControlProperty",
+      "LoadPath": "{EDITOR}/Config/DefaultControlProperty.unityjson",
       "OutputPath": "",
       "EditorTitle": "默认控件属性配置(请勿轻易修改)",
       "SearchResourceName": "",
