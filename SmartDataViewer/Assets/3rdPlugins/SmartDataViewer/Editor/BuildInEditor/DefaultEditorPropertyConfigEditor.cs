@@ -29,6 +29,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
             var w = CreateInstance<DefaultEditorPropertyConfigEditor>();
             w.ShowUtility();
         }
+        
+        public override CodeGen GetCodeGenInfo()
+        {
+            return new CodeGen{ InOutPath = EditorConfig.DefaultEditorPropertyConfigPath };
+        }
 
         public override EditorProperty CreateValue()
         {

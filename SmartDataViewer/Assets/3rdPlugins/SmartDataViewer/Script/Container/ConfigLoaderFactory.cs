@@ -24,7 +24,7 @@ namespace SmartDataViewer
 
         private static ConfigLoaderFactory instance { get; set; }
 
-        public static ConfigLoaderFactory GetInstance(DataLoaderType loaderType)
+        public static ConfigLoaderFactory GetInstance(DataLoaderType loaderType = DataLoaderType.UNITY_JSON)
         {
             return (instance ?? (instance = new ConfigLoaderFactory())).SetLoader(loaderType);
         }

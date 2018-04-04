@@ -16,11 +16,25 @@
 //
 
 using System;
+using SmartDataViewer.Editor;
+using SmartDataViewer;
+
 namespace SmartDataViewer.Editor.BuildInEditor
 {
     [Serializable]
     [ConfigEditor(10001)]
-    public class CodeGenConfig : ConfigBase<CodeGen> { }
+    public class CodeGenConfig : ConfigBase<CodeGen>
+    {
+        public override CodeGen SearchByID(int id)
+        {
+            if (id == -1)
+            {
+                return new CodeGen{ID = -1,InOutPath = EditorConfig.CodeGenFilePath,ClassType = "SmartDataViewer.Editor.BuildInEditor.CodeGenConfig",SubType = "CodeGen"};
+            }
+            
+            return base.SearchByID(id);
+        }
+    }
 
     [Serializable]
     public class CodeGen : IModel
@@ -31,8 +45,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
             ClassType = string.Empty;
             SubType = string.Empty;
             EditorPath = "CustomEditor";
+            InOutPath = string.Empty;
         }
-        
+
+        public string InOutPath;
         [ConfigEditorField(11010)]
         public string EditorPath;
         [ConfigEditorField(11011)]

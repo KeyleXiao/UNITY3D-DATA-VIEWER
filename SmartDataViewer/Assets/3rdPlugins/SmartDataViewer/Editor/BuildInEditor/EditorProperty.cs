@@ -27,18 +27,18 @@ namespace SmartDataViewer.Editor.BuildInEditor
     {
         public EditorProperty()
         {
-            LoadPath = string.Empty;
-            OutputPath = string.Empty;
+//            LoadPath = string.Empty;
+//            OutputPath = string.Empty;
             EditorTitle = string.Empty;
             SearchResourceName = string.Empty;
         }
         
         
-        [ConfigEditorField(11006)]
-        public string LoadPath;
-
-        [ConfigEditorField(11007)]
-        public string OutputPath;
+//        [ConfigEditorField(11006)]
+//        public string LoadPath;
+//
+//        [ConfigEditorField(11007)]
+//        public string OutputPath;
 
         [ConfigEditorField(11008)]
         public string EditorTitle;

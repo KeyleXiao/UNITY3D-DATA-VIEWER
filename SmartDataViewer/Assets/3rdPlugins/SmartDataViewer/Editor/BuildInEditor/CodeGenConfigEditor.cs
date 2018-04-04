@@ -20,6 +20,9 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using SmartDataViewer.Helpers;
+using SmartDataViewer;
+using SmartDataViewer.Editor;
+using SmartDataViewer.Editor.BuildInEditor;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
@@ -35,6 +38,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
             w.ShowUtility();
         }
 
+        public override CodeGen GetCodeGenInfo()
+        {
+            return new CodeGen{ InOutPath = EditorConfig.CodeGenFilePath };
+        }
 
         protected override void RenderExtensionHead()
         {
@@ -65,7 +72,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     Directory.CreateDirectory(export_folder);
 
                 //检测代码是否已存在
-                string path = string.Format("{0}/{1}.cs", export_folder, item.EditorName);
+                string path = string.Format("{0}{1}.cs", export_folder, item.EditorName);
                 string disPlay = Language.Build;
                 if (File.Exists(path))
                 {
@@ -100,7 +107,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             SetConfigType(new CodeGenConfig());
 
-            string path = PathMapping.GetInstance().DecodePath("{EDITOR}/CTS/EditorClassTemplate.unityjson");
+            string path = PathMapping.GetInstance().DecodePath("{EDITOR}/CTS/EditorClassTemplate.unityjson"); // Build In 编辑器路径一律写死
             if (File.Exists(path))
                 templateFile = File.ReadAllText(path);
         }
@@ -109,10 +116,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             if (string.IsNullOrEmpty(templateFile)) return;
             string temp = templateFile;
-            temp = temp.Replace("$[EditorName]", item.EditorName);
-            temp = temp.Replace("$[ClassType]", item.ClassType);
-            temp = temp.Replace("$[SubType]", item.SubType);
-            temp = temp.Replace("$[EditorPath]", item.EditorPath);
+            temp = temp.Replace("$[EDITOR_NAME]", item.EditorName);
+            temp = temp.Replace("$[CLASS_TYPE]", item.ClassType);
+            temp = temp.Replace("$[SUB_TYPE]", item.SubType);
+            temp = temp.Replace("$[EDITOR_PATH]", item.EditorPath);
+            temp = temp.Replace("$[CODE_GEN_ID]", item.ID.ToString());
+            
 
             if (File.Exists(path)) File.Delete(path);
 

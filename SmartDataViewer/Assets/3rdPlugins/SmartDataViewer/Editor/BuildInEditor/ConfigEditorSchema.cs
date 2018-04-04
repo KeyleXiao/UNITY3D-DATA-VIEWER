@@ -122,11 +122,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
         protected Dictionary<string, bool> FieldsOrder { get; set; }
 
 
-        //TODO 2.0 外联表原始数据
+        //TODO 3.0 外联表原始数据
         /// <summary>
         /// 外链表数据
         /// </summary>
-        protected Dictionary<string, object> outLinkRawData { get; set; }
+        protected Dictionary<int, object> outLinkRawData { get; set; }
 
 
         /// <summary>
@@ -144,12 +144,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// 当前编辑器程序集
         /// </summary>
         public Assembly CurrentAssembly { get; set; }
-        
+
         /// <summary>
         /// 临时变量
         /// </summary>
         public int TempHashCode { get; set; }
-        
+
         /// <summary>
         /// 临时变量
         /// </summary>
@@ -175,6 +175,15 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             FieldsOrder[key] = !FieldsOrder[key];
             return FieldsOrder[key];
+        }
+
+        /// <summary>
+        /// 获取代码生成器关联信息
+        /// </summary>
+        /// <returns></returns>
+        public virtual CodeGen GetCodeGenInfo()
+        {
+            return null;
         }
 
 
@@ -206,7 +215,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             LineChache = new Dictionary<int, ConfigEditorLineChache>();
             CurrentAssembly = Assembly.GetExecutingAssembly();
             //-- Chache --
-            
+
             //-- Error --
             ErrorLine = new List<int>();
             //-- Error --
@@ -301,6 +310,20 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
 
         /// <summary>
+        /// 根据CodeGenID找到关联信息打开编辑器，如果是内建编辑器会找不到CodeGen信息 这时候再重写一下GetCodeGen函数即可
+        /// </summary>
+        /// <param name="codeGenID"></param>
+        /// <returns></returns>
+        public virtual IMultipleWindow OpenOutlinkWindow(int codeGenID)
+        {
+            //TODO: 这里先暂时这样处理
+            var editorName = EditorConfig.GetCodeGenConfig().SearchByID(codeGenID).ClassType + "Editor";
+            
+            IMultipleWindow e = CurrentAssembly.CreateInstance(editorName) as IMultipleWindow;
+            return e;
+        }
+
+        /// <summary>
         /// 反射原始数据 TODO: 加入缓存来优化反射  --Complete
         /// </summary>
         /// <param name="data"></param>
@@ -326,7 +349,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 currentLineChache.Count = value.GetType().GetProperty("Count");
                 currentLineChache.Item = value.GetType().GetProperty("Item");
 
-                if (currentLineChache.IsGenericType && string.IsNullOrEmpty(data.config_editor_setting.OutLinkEditor))
+                if (currentLineChache.IsGenericType && data.config_editor_setting.OutCodeGenEditorID == 0)
                     currentLineChache.AttributeType = value.GetType().GetGenericArguments()[0];
 
                 LineChache.Add(TempHashCode, currentLineChache);
@@ -346,18 +369,17 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 int deleteIndex = -1;
 
                 //Open Editor
-                if (!string.IsNullOrEmpty(data.config_editor_setting.OutLinkEditor))
+                if (data.config_editor_setting.OutCodeGenEditorID != 0)
                 {
-                    
                     //处理外联添加逻辑
                     var temp = value as List<int>;
-                    
+
                     for (int i = 0; i < temp.Count; i++)
                     {
                         GUILayout.BeginHorizontal();
 
                         //显示外联数据
-                        GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutLinkClass,
+                        GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutCodeGenEditorID,
                                 data.config_editor_setting.OutLinkDisplay),
                             GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width,
                                 data.config_editor_setting.MaxWidth,
@@ -371,12 +393,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
                         GUILayout.EndHorizontal();
                     }
                     //处理外联添加逻辑
-                    
-                    //打开面板
+
+                    // -- 打开面板 --
                     if (GUILayout.Button(Language.Add))
                     {
-                        IMultipleWindow e =
-                            CurrentAssembly.CreateInstance(data.config_editor_setting.OutLinkEditor) as IMultipleWindow;
+                        var e = OpenOutlinkWindow(data.config_editor_setting.OutCodeGenEditorID);
                         if (e == null)
                         {
                             ShowNotification(new GUIContent(Language.OutLinkIsNull));
@@ -387,7 +408,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                             e.ShowUtility();
                         }
                     }
-                    //打开面板
+                    // -- 打开面板 --
 
                     if (deleteIndex != -1)
                     {
@@ -396,7 +417,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 }
                 else
                 {
-                    
                     //处理数组逻辑
                     int count = Convert.ToInt32(TempLineChache.Count.GetValue(value, null));
 
@@ -430,8 +450,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
                         TempLineChache.RemoveAt.Invoke(value, new object[] {removeIndex});
                     }
                     //处理数组逻辑
-                    
-                    
+
+
                     //添加数据
                     if (GUILayout.Button(Language.Add))
                     {
@@ -443,6 +463,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                                     : Activator.CreateInstance(TempLineChache.AttributeType)
                             });
                     }
+
                     //添加数据
                 }
 
@@ -451,11 +472,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
             else
             {
                 //Open Editor
-                if (!string.IsNullOrEmpty(data.config_editor_setting.OutLinkEditor))
+                if (data.config_editor_setting.OutCodeGenEditorID != 0)
                 {
                     data.field_info.SetValue(raw,
                         GetSingleSelectValueByFlag(raw.ID, data.field_info.Name, (int) value));
-                    string buttonName = GetOutLinkDisplayField((int) value, data.config_editor_setting.OutLinkClass,
+                    string buttonName = GetOutLinkDisplayField((int) value,
+                        data.config_editor_setting.OutCodeGenEditorID,
                         data.config_editor_setting.OutLinkDisplay);
 
                     if (GUILayout.Button(buttonName,
@@ -465,8 +487,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
                                 data.config_editor_setting.MaxWidth))
                         }))
                     {
-                        IMultipleWindow e =
-                            CurrentAssembly.CreateInstance(data.config_editor_setting.OutLinkEditor) as IMultipleWindow;
+                        var e = OpenOutlinkWindow(data.config_editor_setting.OutCodeGenEditorID);
+
                         if (e == null)
                             ShowNotification(new GUIContent(Language.OutLinkIsNull));
                         else
@@ -498,14 +520,15 @@ namespace SmartDataViewer.Editor.BuildInEditor
         }
 
 
+        //TODO: 增加Chache深度
         /// <summary>
-        /// 获取外链编辑器的按钮上显示的字符，未指定则显示ID
+        /// 获取外链编辑器的按钮上显示的字符，未指定则显示ID 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="outLinkChacheKey"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        public string GetOutLinkDisplayField(int id, string outLinkChacheKey, string field)
+        public string GetOutLinkDisplayField(int id, int outLinkChacheKey, string field)
         {
             if (!outLinkRawData.ContainsKey(outLinkChacheKey))
                 return string.Empty;
@@ -696,7 +719,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             AssetDatabase.Refresh();
             FieldsOrder = new Dictionary<string, bool>();
-            config_current = ConfigBase<T>.LoadConfig<ConfigBase<T>>(currentEditorSetting.LoadPath);
+
+            config_current = ConfigLoaderFactory.GetInstance().LoadConfig<ConfigBase<T>> (GetCodeGenInfo().InOutPath);
 
             if (config_current == null)
                 config_current = new ConfigBase<T>();
@@ -711,7 +735,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         protected virtual void ReloadOutLinkChache()
         {
             if (outLinkRawData == null)
-                outLinkRawData = new Dictionary<string, object>();
+                outLinkRawData = new Dictionary<int, object>();
             else
                 outLinkRawData.Clear();
 
@@ -719,84 +743,131 @@ namespace SmartDataViewer.Editor.BuildInEditor
             {
                 //Bug fix: 自动做默认参数初始化 
                 if (Chache[i].config_editor_setting == null)
+                {
                     Chache[i].config_editor_setting = new ControlProperty();
-
-                if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor))
-                {
-                    if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
-                    {
-                        Chache[i].config_editor_setting.OutLinkEditor =
-                            Chache[i].config_editor_setting.OutLinkClass + "Editor";
-                    }
-                    else if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
-                    {
-                        Chache[i].config_editor_setting.OutLinkEditor =
-                            Chache[i].config_editor_setting.OutLinkSubClass + "ConfigEditor";
-                    }
-                    else
-                    {
-                        Log("Out link info is null ...");
-                        continue;
-                    }
+                    continue;
                 }
 
-                if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
+                if (outLinkRawData.ContainsKey(Chache[i].config_editor_setting.OutCodeGenEditorID))
+                    continue;
+                
+                if (Chache[i].config_editor_setting.OutCodeGenEditorID == 0)
+                    continue;
+
+                
+                //重写外联编辑器逻辑
+
+
+                var codeGenInfo = EditorConfig.GetCodeGenConfig().SearchByID(Chache[i].config_editor_setting.OutCodeGenEditorID);
+                
+                if (codeGenInfo == null)
                 {
-                    if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
-                        Chache[i].config_editor_setting.OutLinkClass =
-                            Chache[i].config_editor_setting.OutLinkSubClass + "Config";
-                    else
-                        Chache[i].config_editor_setting.OutLinkClass =
-                            Chache[i].config_editor_setting.OutLinkEditor.Replace("Editor", "");
+                    Log("Can't find id In CodeGen Table" + Chache[i].config_editor_setting.OutCodeGenEditorID);
+                    continue;
                 }
 
-                if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkFilePath))
+                //查找非编辑器命名控件下
+                Type classType = ReflectionHelper.GetCurrnetAssemblyType(codeGenInfo.ClassType);
+                
+                //查找编辑器命名控件下
+                if (classType == null) classType = GetType(codeGenInfo.ClassType);
+                
+                
+                if (classType == null)
                 {
-                    if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
-                        Chache[i].config_editor_setting.OutLinkFilePath =
-                            Chache[i].config_editor_setting.OutLinkSubClass;
-                    else
-                        Chache[i].config_editor_setting.OutLinkFilePath = Chache[i].config_editor_setting.OutLinkClass
-                            .Replace("ConfigEditor", "");
+                    Log("Can't find calss " + codeGenInfo.ClassType);
+                    continue;
                 }
 
+                string path = PathMapping.GetInstance().DecodePath(codeGenInfo.InOutPath);
+                var modelRaw = ConfigLoaderFactory.GetInstance().LoadConfig(classType, codeGenInfo.InOutPath);
 
-                //TODO VERSION 2.0 Load Raw Data
-                if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) &&
-                    !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass) &&
-                    !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkFilePath)
-                )
+                if (modelRaw == null)
                 {
-                    string rawClass = Chache[i].config_editor_setting.OutLinkClass;
-                    if (string.IsNullOrEmpty(rawClass))
-                        rawClass = Chache[i].config_editor_setting.OutLinkSubClass + "Config";
-                    Type classType = ReflectionHelper.GetCurrnetAssemblyType(rawClass);
-                    if (classType == null)
-                    {
-                        Log("Can't find calss " + rawClass);
-                        continue;
-                    }
-
-                    var modelRaw =
-                        ConfigBase<IModel>.LoadConfig(classType, Chache[i].config_editor_setting.OutLinkFilePath);
-                    if (modelRaw != null)
-                    {
-                        if (!outLinkRawData.ContainsKey(Chache[i].config_editor_setting.OutLinkClass))
-                            outLinkRawData.Add(Chache[i].config_editor_setting.OutLinkClass, modelRaw);
-
-                        Log(string.Format("Loading OutLink Class [{0}] Data",
-                            Chache[i].config_editor_setting.OutLinkClass));
-                    }
+                    Log(string.Format("Loading OutLink Class [{0}] Data failed !",codeGenInfo.ClassType));
+                    return;
                 }
+                
+                outLinkRawData.Add(Chache[i].config_editor_setting.OutCodeGenEditorID, modelRaw);
+
+                Log(string.Format("Loading OutLink Class [{0}] Data Success !",codeGenInfo.ClassType));
+                
+//                if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor))
+//                {
+//                    if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
+//                    {
+//                        Chache[i].config_editor_setting.OutLinkEditor =
+//                            Chache[i].config_editor_setting.OutLinkClass + "Editor";
+//                    }
+//                    else if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
+//                    {
+//                        Chache[i].config_editor_setting.OutLinkEditor =
+//                            Chache[i].config_editor_setting.OutLinkSubClass + "ConfigEditor";
+//                    }
+//                    else
+//                    {
+//                        Log("Out link info is null ...");
+//                        continue;
+//                    }
+//                }
+//
+//                if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
+//                {
+//                    if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
+//                        Chache[i].config_editor_setting.OutLinkClass =
+//                            Chache[i].config_editor_setting.OutLinkSubClass + "Config";
+//                    else
+//                        Chache[i].config_editor_setting.OutLinkClass =
+//                            Chache[i].config_editor_setting.OutLinkEditor.Replace("Editor", "");
+//                }
+//
+//                if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkFilePath))
+//                {
+//                    if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
+//                        Chache[i].config_editor_setting.OutLinkFilePath =
+//                            Chache[i].config_editor_setting.OutLinkSubClass;
+//                    else
+//                        Chache[i].config_editor_setting.OutLinkFilePath = Chache[i].config_editor_setting.OutLinkClass
+//                            .Replace("ConfigEditor", "");
+//                }
+//
+//
+//                //TODO VERSION 2.0 Load Raw Data
+//                if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) &&
+//                    !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass) &&
+//                    !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkFilePath)
+//                )
+//                {
+//                    string rawClass = Chache[i].config_editor_setting.OutLinkClass;
+//                    if (string.IsNullOrEmpty(rawClass))
+//                        rawClass = Chache[i].config_editor_setting.OutLinkSubClass + "Config";
+//                    Type classType = ReflectionHelper.GetCurrnetAssemblyType(rawClass);
+//                    if (classType == null)
+//                    {
+//                        Log("Can't find calss " + rawClass);
+//                        continue;
+//                    }
+//
+//                    var modelRaw =
+//                        ConfigBase<IModel>.LoadConfig(classType, Chache[i].config_editor_setting.OutLinkFilePath);
+//                    if (modelRaw != null)
+//                    {
+//                        if (!outLinkRawData.ContainsKey(Chache[i].config_editor_setting.OutLinkClass))
+//                            outLinkRawData.Add(Chache[i].config_editor_setting.OutLinkClass, modelRaw);
+//
+//                        Log(string.Format("Loading OutLink Class [{0}] Data",
+//                            Chache[i].config_editor_setting.OutLinkClass));
+//                    }
+//                }
             }
         }
 
-        
+
         /// <summary>
         /// 程序预留 数据逻辑校验接口
         /// </summary>
         /// <param name="data"></param>
-        protected virtual string VerfiyLineData(T data,bool showNotification = true)
+        protected virtual string VerfiyLineData(T data, bool showNotification = true)
         {
             string error = "";
 //                    -- 测试数据 --          
@@ -813,14 +884,13 @@ namespace SmartDataViewer.Editor.BuildInEditor
             {
                 if (showNotification)
                     ShowNotification(new GUIContent(string.Format(Language.VerfiyMessageSuccess, data.ID)));
-                
-                if (ErrorLine.Contains(data.ID)) ErrorLine.Remove(data.ID);//校验成功解除报错信息
+
+                if (ErrorLine.Contains(data.ID)) ErrorLine.Remove(data.ID); //校验成功解除报错信息
             }
-            
+
             return error;
         }
 
-        
 
         /// <summary>
         /// 导出数据之前校验所有行的数据逻辑 如果重写此函数请一并重写 VerfiyLineData 函数
@@ -834,10 +904,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 //跳过被删除的数据
                 if (deleteList.Contains(config_current.ConfigList[i].ID))
                     continue;
-                
+
                 //保存错误信息
-                string errorInfo = VerfiyLineData(config_current.ConfigList[i],false);
-                
+                string errorInfo = VerfiyLineData(config_current.ConfigList[i], false);
+
                 if (!string.IsNullOrEmpty(errorInfo))
                     sb.Append("\n").Append(errorInfo);
             }
@@ -846,7 +916,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             ShowNotification(new GUIContent(Language.PleaseCheckConsole));
             //格式化输出
-            Debug.LogError(string.Format(Language.TableErrorInfoFormat,currentEditorSetting.EditorTitle,sb));
+            Debug.LogError(string.Format(Language.TableErrorInfoFormat, currentEditorSetting.EditorTitle, sb));
             //格式化输出
             return false;
         }
@@ -860,31 +930,27 @@ namespace SmartDataViewer.Editor.BuildInEditor
             if (!VerfiyExportData())
                 return;
             //批量调用校验逻辑
-            
-            
+
+
             //处理删除逻辑
             for (int i = 0; i < deleteList.Count; i++)
             {
                 config_current.Delete(deleteList[i]);
             }
+
             deleteList.Clear();
             //处理删除逻辑
-            
-            
-            //处理路径关系
-            string outPutPath = currentEditorSetting.OutputPath;
-            if (string.IsNullOrEmpty(outPutPath) && !string.IsNullOrEmpty(currentEditorSetting.LoadPath))
-                outPutPath = currentEditorSetting.LoadPath;
-            //处理路径关系
 
 
-            if (string.IsNullOrEmpty(outPutPath))
+            //处理路径关系
+
+            if (GetCodeGenInfo() == null)
             {
                 ShowNotification(new GUIContent(Language.CantReadOutputPath));
                 return;
             }
-            
-            config_current.SaveToDisk(outPutPath);
+
+            config_current.SaveToDisk(GetCodeGenInfo().InOutPath);
             AssetDatabase.Refresh();
 
             ShowNotification(new GUIContent(Language.Success));
@@ -1055,10 +1121,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 {
                     var rawData = schema.field_info.GetValue(item);
 
-                    if (ErrorLine.Contains(item.ID)) GUI.color = Color.red; 
+                    if (ErrorLine.Contains(item.ID)) GUI.color = Color.red;
                     RenderRawLine(schema, rawData, item);
-                    GUI.color = Color.white; 
-                    
+                    GUI.color = Color.white;
+
                     GUILayout.Space(currentEditorSetting.ColumnSpan);
                 }
 
@@ -1155,7 +1221,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
             GUILayout.BeginHorizontal();
             GUILayout.Label(Language.Contract);
             GUILayout.EndHorizontal();
-            
         }
 
 
@@ -1167,18 +1232,20 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             if (current_windowType == WindowType.CALLBACK)
             {
-                if (GUILayout.Button(Language.Select,GUI.skin.GetStyle("ButtonLeft"),GUILayout.Width(currentEditorSetting.KitButtonWidth * 2)))
+                if (GUILayout.Button(Language.Select, GUI.skin.GetStyle("ButtonLeft"),
+                    GUILayout.Width(currentEditorSetting.KitButtonWidth * 2)))
                 {
                     SelctList.Add(item.ID);
                     select_callback(current_list, item);
                     ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, item.NickName)));
                 }
-                
-                if (GUILayout.Button(Language.Close, GUI.skin.GetStyle("ButtonRight"),GUILayout.Width(currentEditorSetting.KitButtonWidth * 2))){
+
+                if (GUILayout.Button(Language.Close, GUI.skin.GetStyle("ButtonRight"),
+                    GUILayout.Width(currentEditorSetting.KitButtonWidth * 2)))
+                {
                     Close();
                     return;
                 }
-            
             }
 
             if (current_windowType != WindowType.CALLBACK)
@@ -1216,8 +1283,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 }
             }
         }
-
-
 
 
         /// <summary>
@@ -1324,9 +1389,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
 //        /// </summary>
 //        /// <param name="type_name"></param>
 //        /// <returns></returns>
-//        protected virtual Type GetType(string type_name)
-//        {
-//            return Assembly.GetExecutingAssembly().GetType(type_name);
-//        }
+        protected virtual Type GetType(string type_name)
+        {
+            return Assembly.GetExecutingAssembly().GetType(type_name);
+        }
     }
 }

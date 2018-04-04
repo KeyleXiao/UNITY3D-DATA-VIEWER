@@ -38,15 +38,17 @@ namespace SmartDataViewer
         public ControlProperty()
         {
             Display = string.Empty;
-            OutLinkEditor = string.Empty;
-            OutLinkSubClass = string.Empty;
-            OutLinkClass = string.Empty;
             OutLinkDisplay = string.Empty;
-            OutLinkFilePath = string.Empty;
             CanEditor = true;
             Visibility = true;
             Width = 180;
             MaxWidth = 200;
+            
+//            OutLinkEditor = string.Empty;
+//            OutLinkSubClass = string.Empty;
+//            OutLinkClass = string.Empty;
+//            OutLinkFilePath = string.Empty;
+            
         }
 
         public int Order;
@@ -59,16 +61,21 @@ namespace SmartDataViewer
 
         public int MaxWidth;
 
-        public string OutLinkEditor;
-
-        public string OutLinkSubClass;
-
-        public string OutLinkClass;
-
         public bool Visibility;
 
         public string OutLinkDisplay;
+        
+        /// <summary>
+        /// 直接关联到代码生成器
+        /// </summary>
+        [ConfigEditorField(11014)]
+        public int OutCodeGenEditorID;
 
-        public string OutLinkFilePath;
+//        public string OutLinkEditor;
+//        public string OutLinkSubClass;
+//        public string OutLinkClass;
+//        public string OutLinkFilePath;
+
+
     }
 }

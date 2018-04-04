@@ -30,6 +30,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
             w.ShowUtility();
         }
 
+        public override CodeGen GetCodeGenInfo()
+        {
+            return new CodeGen{ InOutPath = EditorConfig.CustomControlPropertyConfigPath };
+        }
+        
         public override ControlProperty CreateValue()
         {
             var r = base.CreateValue();

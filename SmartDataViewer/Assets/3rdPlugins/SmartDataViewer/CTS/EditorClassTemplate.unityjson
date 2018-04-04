@@ -16,25 +16,31 @@
 //
 using System;
 using UnityEditor;
+using SmartDataViewer.Editor;
 using SmartDataViewer.Editor.BuildInEditor;
 
-public class $[EditorName] : ConfigEditorSchema<$[SubType]>
+public class $[EDITOR_NAME] : ConfigEditorSchema<$[SUB_TYPE]>
 {
-	[MenuItem("$[EditorPath]/$[EditorName]")]
+	[MenuItem("$[EDITOR_PATH]/$[EDITOR_NAME]")]
 	static public void OpenView()
 	{
-		$[EditorName] w = UnityEngine.ScriptableObject.CreateInstance<$[EditorName]>();
+		$[EDITOR_NAME] w = UnityEngine.ScriptableObject.CreateInstance<$[EDITOR_NAME]>();
 		w.ShowUtility();
 	}
+	
+    public override CodeGen GetCodeGenInfo()
+    {
+        return EditorConfig.GetCodeGenConfig().SearchByID($[CODE_GEN_ID]);
+    }
 
-	public override $[SubType] CreateValue()
+	public override $[SUB_TYPE] CreateValue()
 	{
-		$[SubType] r = base.CreateValue();
+		$[SUB_TYPE] r = base.CreateValue();
 		return r;
 	}
 
 	public override void Initialize()
 	{
-		SetConfigType(new $[ClassType]());
+		SetConfigType(new $[CLASS_TYPE]());
 	}
 }

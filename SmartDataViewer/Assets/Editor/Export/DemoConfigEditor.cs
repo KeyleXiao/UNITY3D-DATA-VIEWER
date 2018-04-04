@@ -16,6 +16,7 @@
 //
 using System;
 using UnityEditor;
+using SmartDataViewer.Editor;
 using SmartDataViewer.Editor.BuildInEditor;
 
 public class DemoConfigEditor : ConfigEditorSchema<Demo>
@@ -23,9 +24,14 @@ public class DemoConfigEditor : ConfigEditorSchema<Demo>
 	[MenuItem("CustomEditor/DemoConfigEditor")]
 	static public void OpenView()
 	{
-		DemoConfigEditor w = CreateInstance<DemoConfigEditor>();
+		DemoConfigEditor w = UnityEngine.ScriptableObject.CreateInstance<DemoConfigEditor>();
 		w.ShowUtility();
 	}
+	
+    public override CodeGen GetCodeGenInfo()
+    {
+        return EditorConfig.GetCodeGenConfig().SearchByID(2);
+    }
 
 	public override Demo CreateValue()
 	{

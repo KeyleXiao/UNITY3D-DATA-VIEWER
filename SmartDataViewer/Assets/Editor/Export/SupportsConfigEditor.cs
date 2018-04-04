@@ -14,7 +14,9 @@
 //     		See the License for the specific language governing permissions and
 //     		limitations under the License.
 //
+using System;
 using UnityEditor;
+using SmartDataViewer.Editor;
 using SmartDataViewer.Editor.BuildInEditor;
 
 public class SupportsConfigEditor : ConfigEditorSchema<Supports>
@@ -22,9 +24,14 @@ public class SupportsConfigEditor : ConfigEditorSchema<Supports>
 	[MenuItem("CustomEditor/SupportsConfigEditor")]
 	static public void OpenView()
 	{
-		SupportsConfigEditor w =  UnityEngine.ScriptableObject.CreateInstance<SupportsConfigEditor>();
+		SupportsConfigEditor w = UnityEngine.ScriptableObject.CreateInstance<SupportsConfigEditor>();
 		w.ShowUtility();
 	}
+	
+    public override CodeGen GetCodeGenInfo()
+    {
+        return EditorConfig.GetCodeGenConfig().SearchByID(1);
+    }
 
 	public override Supports CreateValue()
 	{

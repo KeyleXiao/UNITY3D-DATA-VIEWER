@@ -28,80 +28,74 @@ namespace SmartDataViewer.Editor
 
     public class EditorConfig
     {
-        public static DefaultControlPropertyConfig ControlPropertyConfig { private get; set; }
-        public static DefaultEditorPropertyConfig EditorPropertyConfig { private get; set; }
-        public static CustomControlPropertyConfig CustomControlPropertyConfig { private get; set; }
-        public static CustomEditorPropertyConfig CustomEditorPropertyConfig { private get; set; }
+        public static readonly string CodeGenFilePath = "{EDITOR}/Config/CodeGen.unityjson";
+        public static readonly string DefaultControlPropertyConfigPath = "{EDITOR}/Config/DefaultControlProperty.unityjson";
+        public static readonly string DefaultEditorPropertyConfigPath = "{EDITOR}/Config/DefaultEditorPropertyConfig.unityjson";
+        public static readonly string CustomControlPropertyConfigPath = "{EDITOR}/Config/CustomControlProperty.unityjson";
+        public static readonly string CustomEditorPropertyConfigPath = "{EDITOR}/Config/CustomEditorPropertyConfig.unityjson";
+        
+        
+        private static DefaultControlPropertyConfig ConfigControlProperty {  get; set; }
+        private static DefaultEditorPropertyConfig ConfigEditorProperty {  get; set; }
+        private static CustomControlPropertyConfig ConfigCustomControlProperty {  get; set; }
+        private static CustomEditorPropertyConfig ConfigCustomEditorProperty {  get; set; }
+        private static CodeGenConfig ConfigCodeGen {  get; set; }
 
+
+
+        public static CodeGenConfig GetCodeGenConfig(bool reload = false)
+        {
+            if (ConfigCodeGen == null || reload)
+            {
+                ConfigCodeGen = ConfigLoaderFactory.GetInstance().LoadConfig<CodeGenConfig>(CodeGenFilePath);
+            }
+
+            return ConfigCodeGen;
+        }
 
         public static CustomControlPropertyConfig GetCustomControlPropertyConfig(bool reload = false)
         {
-            if (CustomControlPropertyConfig == null || reload)
+            if (ConfigCustomControlProperty == null || reload)
             {
-                CustomControlPropertyConfig =
-                    CustomControlPropertyConfig.LoadConfig<CustomControlPropertyConfig>(
-                        "{EDITOR}/Config/CustomControlProperty.unityjson");
+                ConfigCustomControlProperty = ConfigLoaderFactory.GetInstance().LoadConfig<CustomControlPropertyConfig>(CustomControlPropertyConfigPath);
             }
 
-            return CustomControlPropertyConfig;
+            return ConfigCustomControlProperty;
         }
 
         public static CustomEditorPropertyConfig GetCustomEditorPropertyConfig(bool reload = false)
         {
-            if (CustomEditorPropertyConfig == null || reload)
+            if (ConfigCustomEditorProperty == null || reload)
             {
-                CustomEditorPropertyConfig =
-                    DefaultEditorPropertyConfig.LoadConfig<CustomEditorPropertyConfig>(
-                        "{EDITOR}/Config/CustomEditorPropertyConfig.unityjson");
+                ConfigCustomEditorProperty = ConfigLoaderFactory.GetInstance().LoadConfig<CustomEditorPropertyConfig>(CustomEditorPropertyConfigPath);
             }
 
-            return CustomEditorPropertyConfig;
+            return ConfigCustomEditorProperty;
         }
 
         public static DefaultControlPropertyConfig GetDefaultControlPropertyConfig(bool reload = false)
         {
-            if (ControlPropertyConfig == null || reload)
+            if (ConfigControlProperty == null || reload)
             {
-                ControlPropertyConfig =
-                    DefaultControlPropertyConfig.LoadConfig<DefaultControlPropertyConfig>(
-                        "{EDITOR}/Config/DefaultControlProperty.unityjson");
+                ConfigControlProperty = ConfigLoaderFactory.GetInstance().LoadConfig<DefaultControlPropertyConfig>(DefaultControlPropertyConfigPath);
             }
 
-            return ControlPropertyConfig;
+            return ConfigControlProperty;
         }
 
         public static DefaultEditorPropertyConfig GetDefaultEditorPropertyConfig(bool reload = false)
         {
-            if (EditorPropertyConfig == null || reload)
+            if (ConfigEditorProperty == null || reload)
             {
-                EditorPropertyConfig =
-                    DefaultEditorPropertyConfig.LoadConfig<DefaultEditorPropertyConfig>(
-                        "{EDITOR}/Config/DefaultEditorPropertyConfig.unityjson");
+                ConfigEditorProperty = ConfigLoaderFactory.GetInstance().LoadConfig<DefaultEditorPropertyConfig>(DefaultEditorPropertyConfigPath);
             }
 
-            return EditorPropertyConfig;
+            return ConfigEditorProperty;
         }
     }
 
     public class Language
     {
-        //public static readonly string Build = "生成";
-        //public static readonly string Select = "选择";
-        //public static readonly string Previous = "前页";
-        //public static readonly string Next = "后页";
-        //public static readonly string Add = "添加";
-        //public static readonly string OutLinkIsNull = "请设置外链编辑器";
-        //public static readonly string Success = "成功..";
-        //public static readonly string SuccessAdd = "成功添加 {0}";
-        //public static readonly string NickName = @"别名";
-        //public static readonly string Delete = @"X";
-        //public static readonly string Copy = @"C";
-        //public static readonly string Paste = @"P";
-        //public static readonly string Operation = @"操作";
-        //public static readonly string Contract = @"Version 1.2 Beta   --Keyle";
-        //public static readonly string OnePageMaxNumber = "单页最大数量";
-        //public static readonly string PageInfoFormate = @"|{0}|页-共|{1}|页";
-
         public static readonly string CantReadOutputPath = "读取不到输出路径，请检查类文件[ConfigEditor]特性是否配置";
         public static readonly string PleaseCheckConsole = "当前编辑器下有错误的逻辑数据 请您查看控制台错误信息 ";
         public static readonly string TableErrorInfoFormat = "编辑器:{0} 详细错误信息如下\n{1}";

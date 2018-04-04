@@ -1,1 +1,48 @@
-{"ConfigList":[{"ID":1,"NickName":"","LoadPath":"{ROOT}/Resources/Config/SupportsConfig.unityjson","OutputPath":"","EditorTitle":"用户自定义Supports面板配置","SearchResourceName":"","DisableSearch":false,"DisableSave":false,"DisableCreate":false,"HideResizeSlider":false,"ExtensionHeadTagWith":88,"KitButtonWidth":19,"isLog":false,"ColumnSpan":4,"TableHeadHeight":26,"Resize":1,"ItemMaxCount":0,"PageAmount":50,"PageIndex":0,"MaxResize":5},{"ID":2,"NickName":"","LoadPath":"{ROOT}/Resources/Config/DemoConfig.unityjson","OutputPath":"","EditorTitle":"Demo测试用","SearchResourceName":"","DisableSearch":false,"DisableSave":false,"DisableCreate":false,"HideResizeSlider":false,"ExtensionHeadTagWith":88,"KitButtonWidth":19,"isLog":false,"ColumnSpan":4,"TableHeadHeight":26,"Resize":1,"ItemMaxCount":0,"PageAmount":50,"PageIndex":0,"MaxResize":5}]}
+{
+  "ConfigList": [
+    {
+      "ID": 1,
+      "NickName": "",
+      "LoadPath": "{ROOT}/Resources/Config/SupportsConfig.unityjson",
+      "OutputPath": "",
+      "EditorTitle": "用户自定义Supports面板配置",
+      "SearchResourceName": "",
+      "DisableSearch": false,
+      "DisableSave": false,
+      "DisableCreate": false,
+      "HideResizeSlider": false,
+      "ExtensionHeadTagWith": 88,
+      "KitButtonWidth": 19,
+      "isLog": false,
+      "ColumnSpan": 4,
+      "TableHeadHeight": 26,
+      "Resize": 1,
+      "ItemMaxCount": 0,
+      "PageAmount": 50,
+      "PageIndex": 0,
+      "MaxResize": 5
+    },
+    {
+      "ID": 2,
+      "NickName": "",
+      "LoadPath": "{ROOT}/Resources/Config/DemoConfig.unityjson",
+      "OutputPath": "",
+      "EditorTitle": "Demo测试用",
+      "SearchResourceName": "",
+      "DisableSearch": false,
+      "DisableSave": false,
+      "DisableCreate": false,
+      "HideResizeSlider": false,
+      "ExtensionHeadTagWith": 88,
+      "KitButtonWidth": 19,
+      "isLog": false,
+      "ColumnSpan": 4,
+      "TableHeadHeight": 26,
+      "Resize": 1,
+      "ItemMaxCount": 0,
+      "PageAmount": 50,
+      "PageIndex": 0,
+      "MaxResize": 5
+    }
+  ]
+}

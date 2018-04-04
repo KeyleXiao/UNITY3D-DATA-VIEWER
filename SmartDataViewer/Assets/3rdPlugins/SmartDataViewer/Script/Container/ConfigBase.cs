@@ -115,30 +115,5 @@ namespace SmartDataViewer
         #endif
         // ----- 只在编辑器状态下使用 -----
 
-
-        
-        
-        
-        
-        #region 编辑器状态下资源读取，如果是实际项目中使用还请根据实际情况作出修改
-
-        /// <summary>
-        /// 加载配置(静态)
-        /// </summary>
-        /// <param name="path"></param>
-        /// <typeparam name="V"></typeparam>
-        /// <returns></returns>
-        public static V LoadConfig<V>(string path) where V : new()
-        {
-            return ConfigLoaderFactory.GetInstance(DataLoaderType.UNITY_JSON).LoadConfig<V>(path);
-        }
-
-
-        public static object LoadConfig(Type t, string path)
-        {
-            return ConfigLoaderFactory.GetInstance(DataLoaderType.UNITY_JSON).LoadConfig(t,path);
-        }
-
-        #endregion
     }
 }
