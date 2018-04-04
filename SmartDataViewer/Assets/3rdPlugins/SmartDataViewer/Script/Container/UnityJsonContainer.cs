@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SmartDataViewer
 {
-    public class UnityJsonLoader:IConfigLoader
+    public class UnityJsonContainer : IConfigContainer
     {
         /// <summary>
         /// 加载配置(静态)
@@ -13,10 +13,10 @@ namespace SmartDataViewer
         /// <param name="path"></param>
         /// <typeparam name="V"></typeparam>
         /// <returns></returns>
-        public  V LoadConfig<V>(string path) where V : new()
-        {            
+        public V LoadConfig<V>(string path) where V : new()
+        {
             string content = string.Empty;
-            
+
             if (!PathMapping.GetInstance().DecodePath(ref path))
             {
                 var temp = Resources.Load<TextAsset>(path);
@@ -42,7 +42,7 @@ namespace SmartDataViewer
         }
 
 
-        public  object LoadConfig(Type t, string path)
+        public object LoadConfig(Type t, string path)
         {
             var content = string.Empty;
 
@@ -67,6 +67,44 @@ namespace SmartDataViewer
             }
 
             return JsonUtility.FromJson(content, t);
+        }
+
+
+        /// <summary>
+        /// 从本地删除配置
+        /// </summary>
+        /// <param name="path"></param>
+        public bool DeleteFromDisk(string path)
+        {
+            path = PathMapping.GetInstance().DecodePath(path);
+
+            if (File.Exists(path))
+                File.Delete(path);
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// 保存配置到本地
+        /// </summary>
+        /// <param name="path"></param>
+        public bool SaveToDisk(string path,object target)
+        {
+            //Modified by keyle 2016.11.29 缩减配置尺寸
+            string content = JsonUtility.ToJson(target, false);
+
+            DeleteFromDisk(path);
+
+            path = PathMapping.GetInstance().DecodePath(path);
+
+            var dir = Path.GetDirectoryName(path);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            File.WriteAllText(path, content);
+
+            return true;
         }
     }
 }

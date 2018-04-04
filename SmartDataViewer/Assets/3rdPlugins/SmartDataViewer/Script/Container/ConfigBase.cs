@@ -74,46 +74,6 @@ namespace SmartDataViewer
         }
         
         
-        
-        
-        // ----- 只在编辑器状态下使用 ----- 
-        #if UNITY_EDITOR
-        
-        /// <summary>
-        /// 从本地删除配置
-        /// </summary>
-        /// <param name="path"></param>
-        public virtual void DeleteFromDisk(string path)
-        {
-            path = PathMapping.GetInstance().DecodePath(path);
-
-            if (File.Exists(path))
-                File.Delete(path);
-        }
-
-
-        /// <summary>
-        /// 保存配置到本地
-        /// </summary>
-        /// <param name="path"></param>
-        public virtual void SaveToDisk(string path)
-        {
-            //Modified by keyle 2016.11.29 缩减配置尺寸
-            string content = JsonUtility.ToJson(this, false);
-
-            DeleteFromDisk(path);
-
-            path = PathMapping.GetInstance().DecodePath(path);
-            
-            var dir = Path.GetDirectoryName(path);
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-
-            File.WriteAllText(path, content);
-        }
-
-        #endif
-        // ----- 只在编辑器状态下使用 -----
 
     }
 }

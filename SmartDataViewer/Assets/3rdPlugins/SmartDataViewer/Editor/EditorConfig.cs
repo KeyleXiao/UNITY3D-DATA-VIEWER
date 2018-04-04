@@ -47,7 +47,7 @@ namespace SmartDataViewer.Editor
         {
             if (ConfigCodeGen == null || reload)
             {
-                ConfigCodeGen = ConfigLoaderFactory.GetInstance().LoadConfig<CodeGenConfig>(CodeGenFilePath);
+                ConfigCodeGen = ConfigContainerFactory.GetInstance().LoadConfig<CodeGenConfig>(CodeGenFilePath);
             }
 
             return ConfigCodeGen;
@@ -57,7 +57,7 @@ namespace SmartDataViewer.Editor
         {
             if (ConfigCustomControlProperty == null || reload)
             {
-                ConfigCustomControlProperty = ConfigLoaderFactory.GetInstance().LoadConfig<CustomControlPropertyConfig>(CustomControlPropertyConfigPath);
+                ConfigCustomControlProperty = ConfigContainerFactory.GetInstance().LoadConfig<CustomControlPropertyConfig>(CustomControlPropertyConfigPath);
             }
 
             return ConfigCustomControlProperty;
@@ -67,7 +67,7 @@ namespace SmartDataViewer.Editor
         {
             if (ConfigCustomEditorProperty == null || reload)
             {
-                ConfigCustomEditorProperty = ConfigLoaderFactory.GetInstance().LoadConfig<CustomEditorPropertyConfig>(CustomEditorPropertyConfigPath);
+                ConfigCustomEditorProperty = ConfigContainerFactory.GetInstance().LoadConfig<CustomEditorPropertyConfig>(CustomEditorPropertyConfigPath);
             }
 
             return ConfigCustomEditorProperty;
@@ -77,7 +77,7 @@ namespace SmartDataViewer.Editor
         {
             if (ConfigControlProperty == null || reload)
             {
-                ConfigControlProperty = ConfigLoaderFactory.GetInstance().LoadConfig<DefaultControlPropertyConfig>(DefaultControlPropertyConfigPath);
+                ConfigControlProperty = ConfigContainerFactory.GetInstance().LoadConfig<DefaultControlPropertyConfig>(DefaultControlPropertyConfigPath);
             }
 
             return ConfigControlProperty;
@@ -87,7 +87,7 @@ namespace SmartDataViewer.Editor
         {
             if (ConfigEditorProperty == null || reload)
             {
-                ConfigEditorProperty = ConfigLoaderFactory.GetInstance().LoadConfig<DefaultEditorPropertyConfig>(DefaultEditorPropertyConfigPath);
+                ConfigEditorProperty = ConfigContainerFactory.GetInstance().LoadConfig<DefaultEditorPropertyConfig>(DefaultEditorPropertyConfigPath);
             }
 
             return ConfigEditorProperty;
@@ -96,6 +96,7 @@ namespace SmartDataViewer.Editor
 
     public class Language
     {
+        public static readonly string SaveFailed = "保存失败！";
         public static readonly string CantReadOutputPath = "读取不到输出路径，请检查类文件[ConfigEditor]特性是否配置";
         public static readonly string PleaseCheckConsole = "当前编辑器下有错误的逻辑数据 请您查看控制台错误信息 ";
         public static readonly string TableErrorInfoFormat = "编辑器:{0} 详细错误信息如下\n{1}";
