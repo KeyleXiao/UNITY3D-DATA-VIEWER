@@ -720,7 +720,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             AssetDatabase.Refresh();
             FieldsOrder = new Dictionary<string, bool>();
 
-            config_current = ConfigContainerFactory.GetInstance().LoadConfig<ConfigBase<T>> (GetCodeGenInfo().InOutPath);
+            config_current = ConfigContainerFactory.GetInstance(GetCodeGenInfo().ContainerType).LoadConfig<ConfigBase<T>> (GetCodeGenInfo().InOutPath);
 
             if (config_current == null)
                 config_current = new ConfigBase<T>();
@@ -780,7 +780,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 }
 
                 string path = PathMapping.GetInstance().DecodePath(codeGenInfo.InOutPath);
-                var modelRaw = ConfigContainerFactory.GetInstance().LoadConfig(classType, codeGenInfo.InOutPath);
+                var modelRaw = ConfigContainerFactory.GetInstance(codeGenInfo.ContainerType).LoadConfig(classType, codeGenInfo.InOutPath);
 
                 if (modelRaw == null)
                 {
@@ -950,7 +950,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 return;
             }
 
-            if (ConfigContainerFactory.GetInstance().SaveToDisk(GetCodeGenInfo().InOutPath, config_current))
+            if (ConfigContainerFactory.GetInstance(GetCodeGenInfo().ContainerType).SaveToDisk(GetCodeGenInfo().InOutPath, config_current))
             {
                 AssetDatabase.Refresh();
                 ShowNotification(new GUIContent(Language.Success));

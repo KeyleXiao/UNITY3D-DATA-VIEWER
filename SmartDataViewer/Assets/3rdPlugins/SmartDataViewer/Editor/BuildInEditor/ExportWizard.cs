@@ -74,18 +74,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
         void OnGUI()
         {
-            GenericMenu menu = new GenericMenu();
-
-            menu.AddItem(new GUIContent("MenuItem1"), false, Callback, "item 1");
-            menu.AddItem(new GUIContent("MenuItem2"), false, Callback, "item 2");
-            menu.AddSeparator("");
-            menu.AddItem(new GUIContent("SubMenu/MenuItem3"), false, Callback, "item 3");
-            menu.AddItem(new GUIContent("SubMenu/MenuItem4"), false, Callback, "item 4");
-            menu.AddItem(new GUIContent("SubMenu/MenuItem5"), false, Callback, "item 5");
-            menu.AddSeparator("SubMenu/");
-            menu.AddItem(new GUIContent("SubMenu/MenuItem6"), false, Callback, "item 6");
-
-            menu.ShowAsContext();
+             
 
         }
 

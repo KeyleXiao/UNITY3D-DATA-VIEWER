@@ -20,10 +20,12 @@ using System.Collections.Generic;
 using SmartDataViewer.Helpers;
 using UnityEngine;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace SmartDataViewer
 {
     [Serializable]
+    [DataContract]
     public class ConfigBase<T> where T : IModel
     {
         public ConfigBase()
@@ -31,6 +33,8 @@ namespace SmartDataViewer
             ConfigList = new List<T>();
         }
 
+        
+        [ProtoBuf.ProtoMember(1000)]
         public List<T> ConfigList;
 
         public virtual T SearchByID(int id)

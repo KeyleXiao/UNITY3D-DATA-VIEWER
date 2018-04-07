@@ -16,17 +16,23 @@
 //
 
 using System;
+using ProtoBuf;
 
 namespace SmartDataViewer
 {
 	[Serializable]
 	public class IModel
 	{
-		public IModel() { }
+		public IModel()
+		{
+			NickName = string.Empty;
+		}
 
+		[ProtoBuf.ProtoMember(1001)]
 		[ConfigEditorField(11000)]
 		public int ID;
 
+		[ProtoBuf.ProtoMember(999)]
 		[ConfigEditorField(11001)]
 		public string NickName;
 	}

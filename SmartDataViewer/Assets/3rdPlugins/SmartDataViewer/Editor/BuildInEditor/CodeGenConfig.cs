@@ -46,8 +46,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
             SubType = string.Empty;
             EditorPath = "CustomEditor";
             InOutPath = string.Empty;
+            ContainerType = DataContainerType.UNITY_JSON;
         }
 
+        [ConfigEditorField(11015)]
+        public DataContainerType ContainerType;
+        [ConfigEditorField(11006)]
         public string InOutPath;
         [ConfigEditorField(11010)]
         public string EditorPath;

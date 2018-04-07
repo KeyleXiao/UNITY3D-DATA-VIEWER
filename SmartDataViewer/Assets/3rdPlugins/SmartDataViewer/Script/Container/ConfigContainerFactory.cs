@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 namespace SmartDataViewer
 {
-    public enum DataLoaderType
+    public enum DataContainerType
     {
-        UNITY_JSON
+        UNITY_JSON,
+        PROTOBUF
     }
     
 
@@ -14,34 +15,35 @@ namespace SmartDataViewer
         /// <summary>
         /// 缓存加载
         /// </summary>
-        private Dictionary<DataLoaderType, IConfigContainer> loader { get; set; }
-        private DataLoaderType default_loader { get; set; }
+        private Dictionary<DataContainerType, IConfigContainer> loader { get; set; }
+        private DataContainerType DefaultContainer { get; set; }
 
         private ConfigContainerFactory()
         {
-            loader = new Dictionary<DataLoaderType, IConfigContainer>();
+            loader = new Dictionary<DataContainerType, IConfigContainer>();
         }
 
         private static ConfigContainerFactory instance { get; set; }
 
-        public static ConfigContainerFactory GetInstance(DataLoaderType loaderType = DataLoaderType.UNITY_JSON)
+        public static ConfigContainerFactory GetInstance(DataContainerType containerType = DataContainerType.UNITY_JSON)
         {
-            return (instance ?? (instance = new ConfigContainerFactory())).SetLoader(loaderType);
+            return (instance ?? (instance = new ConfigContainerFactory())).SetLoader(containerType);
         }
 
 
 
-        public ConfigContainerFactory SetLoader(DataLoaderType loaderType)
+        public ConfigContainerFactory SetLoader(DataContainerType containerType)
         {
-            if (loader.ContainsKey(loaderType))
+            if (loader.ContainsKey(containerType))
             {
-                default_loader = loaderType;
+                DefaultContainer = containerType;
                 return this;
             }
 
             //---- 处理不同的配置加载逻辑 ----
-            if (loaderType == DataLoaderType.UNITY_JSON) loader.Add(loaderType,new UnityJsonContainer());
-
+            if (containerType == DataContainerType.UNITY_JSON) loader.Add(containerType,new UnityJsonContainer());
+            if (containerType == DataContainerType.PROTOBUF) loader.Add(containerType,new ProtobufContainer());
+            
             
             
 
@@ -52,22 +54,22 @@ namespace SmartDataViewer
 
         public V LoadConfig<V>(string path) where V : new()
         {
-            return loader[default_loader].LoadConfig<V>(path);
+            return loader[DefaultContainer].LoadConfig<V>(path);
         }
 
         public object LoadConfig(Type t, string path)
         {
-            return loader[default_loader].LoadConfig(t,path);
+            return loader[DefaultContainer].LoadConfig(t,path);
         }
         
         public  bool DeleteFromDisk(string path)
         {
-            return loader[default_loader].DeleteFromDisk(path);
+            return loader[DefaultContainer].DeleteFromDisk(path);
         }
 
         public  bool SaveToDisk(string path,object target)
         {
-            return loader[default_loader].SaveToDisk(path,target);
+            return loader[DefaultContainer].SaveToDisk(path,target);
         }
     }
 }
