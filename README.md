@@ -6,59 +6,89 @@ UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 ![GitHub license](https://img.shields.io/github/license/KeyleXiao/UNITY3D-DATA-VIEWER.svg)
 
 ```
-├── 3rdPlugins
-│   └── SmartDataViewer  --主程序
-│       ├── CTS          
-│       ├── Config
-│       ├── Editor
-│       └── Script
-├── DemoEntity           --测试用的实体类
-└── Resources
-    └── Config           --序列化文件导出路径 可修改
+└── SmartDataViewer
+    ├── Assets
+    │   ├── 3rdPlugins
+    │   │   ├── SmartDataViewer  编辑器源代码目录
+    │   │   │   ├── CTS                模版
+    │   │   │   ├── Config             内建配置
+    │   │   │   ├── Editor             内建编辑器目录
+    │   │   │   │   ├── BuildInEditor  
+    │   │   │   │   └── ModelDesign
+    │   │   │   ├── EditorResources    内建编辑器资源目录
+    │   │   │   └── Script             用户需要使用到的代码
+    │   │   │       ├── Container
+    │   │   │       └── Helpers
+    │   │   └── proto-net              使用protobuf需要用到到此库
+    │   │       ├── Compiler
+    │   │       ├── Meta
+    │   │       ├── Properties
+    │   │       ├── Serializers
+    │   │       ├── ServiceModel
+    │   │       ├── Web
+    │   │       └── obj
+    │   │           ├── Debug
+    │   │           └── Profile
+    │   ├── DemoEntity                 测试用的实体类
+    │   ├── Editor                     代码生成器导出目录
+    │   │   └── Export                 导出的编辑器代码会在这儿
+    │   └── Resources                  资源目录(可在生成器中修改)   
+    │       └── Config
 
 ```
 
 
 
-# Current Version 1.2.2 BETA
+# Current Version 1.3.0 BETA
 
-初次尝试请直接在UNITY菜单中选择 <code>SmartDataViewer/CodeGen -> build</code> 即可在工程中创建编辑器导出路径 <code>Editor/Export/</code> 。其中有已经成功生成的编辑器脚本。
+初次尝试请直接在UNITY菜单中选择 <code>SmartDataViewer/Code Generator -> GenCode列中的 Build按钮 </code> 即可在工程中创建编辑器导出路径 <code>Editor/Export/</code> 。其中有已经成功生成的编辑器脚本。
 
+![点击Build后在Editor/Export目录中生成编辑器代码](Tutorial01.png)
+
+您在Unity最上的菜单栏 <code>CustomEditor</code> 中看到对应的编辑器。
 
 # Next Version 
 
 下个版本核心：
-1. 优化编辑器编辑体验
-2. 增加多总类的数据序列化，暂定 lua ,json(支持更多序列化插件),protobuf,YamlDotNet,Excel
+1. 增加 Model Design 面板用来给策划设计实体类并且支持实体类代码生成，实现流程自动化。
+2. 补全更多的数据序列化格式。
 
 敬请期待。
 
 ## Video on YouTube
 
-
-[![Demo alpha](http://img.youtube.com/vi/cjk8dZT1TTU/0.jpg)](https://www.youtube.com/embed/cjk8dZT1TTU)
+视频暂时不录
 
 
 # 为什么要使用 SmartDataViewer ？
-SmartDataViewer 节约程序大量编辑器开发时间，在定义完成基础类型的时候，即可同步生成可视化编辑器。
-
-# 特性
-1. 秒速生成编辑器
-2. 支持外联多个类
-3. 支持针对特定字段进行排序与查询
-4. 支持数据导出导入(内建Unity3d Json支持)
-5. 支持开放式编辑器事件,几乎所有的事件与组件渲染 用户可自定义
-6. 通过标签定制编辑器字段显示方式,包括宽度，显示别名，显示排序，导出导入位置等
+* 1. SmartDataViewer 节约程序大量编辑器开发时间。
+* 2. 在定义完成基础类型的时候，即可同步生成可视化编辑器。
+* 3. 所见即所得不需要重复从excel导数据到Unity。
+* 4. 自动化流程不易出错，如外联Check，基础类型检查等。
+* 5. 强扩展性，自定义行数据逻辑检查，扩展按钮，扩展编辑器事件等。
+* 6. 多种存储格式选择
+* ...
 
 
 # 正确的打开姿势 / Tutorial
 ## 1.创建容器 / Create Container
+在下面这个例子中由于使用了protobuf序列化，在 DemoConfig 中您可以看到 <code>ProtoMember ProtoContract ProtoInclude</code>标签。
+我们主要关注如下标签 <code>ConfigEditor 与 ConfigEditorField</code> 
+
+```
+ConfigEditor       属性配置您可以在 SmartDataViewer/Editor Setting 中的 Custom 配置。
+ConfigEditorField  属性配置您可以在 SmartDataViewer/Control Setting 中的 Custom 配置。
+```
+
 
 Type 1
 ``` cs
-[Serializable]
+[ProtoContract]  
+[Serializable][ConfigEditor(2)]
 public class DemoConfig : ConfigBase<Demo> { }
 
+[ProtoInclude(29,typeof(IModel))]
+[ProtoContract]  
 [Serializable]
 public class Demo : IModel
 {
@@ -70,22 +100,30 @@ public class Demo : IModel
 		description = string.Empty;
 	}
 
+	[ProtoMember(3)]
 	public List<string> strList;
 
+	[ProtoMember(4)]
 	public List<int> list;
 
-	[ConfigEditorField(outLinkSubClass: "Supports")]
+	[ProtoMember(5)]
+	[ConfigEditorField(19)]
 	public List<int> supports;
 
+	[ProtoMember(6)]
 	public string description;
 
-	[ConfigEditorField(outLinkSubClass: "Supports")]
+	[ProtoMember(7)]
+	[ConfigEditorField(19)]
 	public int support;
 }
 ```
+
+
 Type 2
 ``` cs
-[Serializable]
+
+[Serializable][ConfigEditor(1)]
 public class SupportsConfig : ConfigBase<Supports> { }
 
 [Serializable]
@@ -93,6 +131,7 @@ public class Supports : IModel
 {
 	public Supports()
 	{
+		testFloat = 0;
 		boolList = new List<bool>();
 		description = string.Empty;
 		colorList = new List<Color>();
@@ -100,63 +139,74 @@ public class Supports : IModel
 		curve = new AnimationCurve();
 		bounds = new Bounds();
 		boundsList = new List<Bounds>();
+		descriptionList = new List<string>();
+		testPointlist = new List<Vector2>();
+		testPointlist3 = new List<Vector3>();
+		testPointlist4 = new List<Vector4>();
+		floatList = new List<float>();
 	}
+	
+	
+	[ConfigEditorField(1)]
+	public string description;
+	
+    [ConfigEditorField(2)]
 	public Vector2 testPoint;
+	
+	[ConfigEditorField(3)]
+	public Vector3 testPoint3;
+	
+	[ConfigEditorField(4)]
+	public Vector4 testPoint4;
+	
 
+	[ConfigEditorField(5)]
 	public List<bool> boolList;
 
+	[ConfigEditorField(6)]
 	public int testID;
 
+	[ConfigEditorField(7)]
+	public float testFloat;
+	
+	[ConfigEditorField(8)]
 	public Bounds bounds;
 
+	[ConfigEditorField(9)]
 	public Color PointColor;
 
+	[ConfigEditorField(10)]
 	public AnimationCurve curve;
 
+	
+	[ConfigEditorField(11)]
+	public List<string> descriptionList;
+	
+	
+	[ConfigEditorField(12)]
+	public List<Vector2> testPointlist;
+	
+	[ConfigEditorField(13)]
+	public List<Vector3> testPointlist3;
+	
+	[ConfigEditorField(14)]
+	public List<Vector4> testPointlist4;
+	
+	[ConfigEditorField(15)]
 	public List<Color> colorList;
 
+	[ConfigEditorField(16)]
 	public List<AnimationCurve> curveList;
 
+	[ConfigEditorField(17)]
 	public List<Bounds> boundsList;
 
-	public string description;
+	[ConfigEditorField(18)]
+	public List<float> floatList;
 }
 
 ```
 
-## 2.添加标签 / Add Attribute
-
-### ConfigEditorAttribute
-容器标签 / Container Attribute
-``` cs
-/// <summary>
-/// Initializes a new instance of the <see cref="T:SmartDataViewer.ConfigEditorAttribute"/> class.
-/// </summary>
-/// <param name="editor_title">当前编辑器显示的名词</param>
-/// <param name="load_path">当前编辑器数据文件的位置</param>
-/// <param name="output_path">编辑文件导出路径</param>
-/// <param name="disableSearch">是否禁用搜索栏</param>
-/// <param name="disableSave">是否禁用保存按钮</param>
-/// <param name="disableCreate">是否禁用添加按钮</param>
-```
-
-### ConfigEditorFieldAttribute 
-字段标签 / Fields Attribute
-``` cs
-/// <summary>
-/// Initializes a new instance of the <see cref="T:SmartDataViewer.ConfigEditorFieldAttribute"/> class.
-/// </summary>
-/// <param name="order">编辑器字段显示顺序</param>
-/// <param name="can_editor">If set to <c>true</c> can editor.</param>
-/// <param name="display">编辑器中显示别名 不填为字段名</param>
-/// <param name="width">编辑器中显示的字段宽度</param>
-/// <param name="outLinkEditor">外联到新的编辑器</param>
-/// <param name="outLinkSubClass">外联到新的子类型,如果遵循编辑器默认命名规则 只需要填写此项即可</param>
-/// <param name="outLinkClass">外联到新的类型</param>
-/// <param name="visibility">是否在编辑器中隐藏此字段</param>
-/// <param name="outLinkDisplay">将显示外联数据的别名 默认显示外联数据的NickName如果没有则显示ID</param>
-/// <param name="outLinkFilePath">外联数据的文件位置</param>
-```
 
 ## 3.生成代码 / Click Build Button
 点击build按钮 则会在指定路径生成数据编辑器
@@ -177,11 +227,11 @@ c.DeleteFromDisk();
 ////c.DeleteFromDisk("Special path");
 
 c.SaveToDisk();
-//c.SaveToDisk("Special path");
+ConfigContainerFactory.GetInstance({存储格式}).SaveToDisk({输出路径}, {序列化的实例})
 
-var subType = c.SearchByID(1);
+var subType = c.SearchByID({ID});
 
-var subType2 = c.SearchByNickName("CommonNickName");
+var subType2 = c.SearchByNickName({NickName});
 ```
 
 #### QQ群 'Game' ／QQ Group 'Game' : 137728654  

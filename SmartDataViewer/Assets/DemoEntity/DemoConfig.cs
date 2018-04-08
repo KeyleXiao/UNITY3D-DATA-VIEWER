@@ -36,20 +36,20 @@ public class Demo : IModel
 		description = string.Empty;
 	}
 
-	[ProtoBuf.ProtoMember(3)]
+	[ProtoMember(3)]
 	public List<string> strList;
 
-	[ProtoBuf.ProtoMember(4)]
+	[ProtoMember(4)]
 	public List<int> list;
 
-	[ProtoBuf.ProtoMember(5)]
+	[ProtoMember(5)]
 	[ConfigEditorField(19)]
 	public List<int> supports;
 
-	[ProtoBuf.ProtoMember(6)]
+	[ProtoMember(6)]
 	public string description;
 
-	[ProtoBuf.ProtoMember(7)]
+	[ProtoMember(7)]
 	[ConfigEditorField(19)]
 	public int support;
 }
