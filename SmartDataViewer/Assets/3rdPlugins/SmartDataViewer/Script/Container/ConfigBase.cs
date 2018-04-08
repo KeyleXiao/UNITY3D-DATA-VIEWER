@@ -34,7 +34,7 @@ namespace SmartDataViewer
         }
 
         
-        [ProtoBuf.ProtoMember(1000)]
+        [ProtoBuf.ProtoMember(10000)]
         public List<T> ConfigList;
 
         public virtual T SearchByID(int id)

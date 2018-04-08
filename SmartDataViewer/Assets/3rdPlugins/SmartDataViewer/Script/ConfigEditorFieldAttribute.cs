@@ -22,8 +22,14 @@ namespace SmartDataViewer
     public sealed class ConfigEditorFieldAttribute : BaseConfigFiedEditorAttribute
     {
         public int ControlPropertyID { get; set; }
+        
 
         public ConfigEditorFieldAttribute(int controlPropertyID = 0)
+        {
+            ControlPropertyID = controlPropertyID;
+        }
+        
+        public ConfigEditorFieldAttribute(ConfigEditorFieldType fieldType = ConfigEditorFieldType.DEFAULT,int controlPropertyID = 0)
         {
             ControlPropertyID = controlPropertyID;
         }
