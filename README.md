@@ -43,7 +43,6 @@ UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
 初次尝试请直接在UNITY菜单中选择 <code>SmartDataViewer/Code Generator -> GenCode列中的 Build按钮 </code> 即可在工程中创建编辑器导出路径 <code>Editor/Export/</code> 。其中有已经成功生成的编辑器脚本。
 
-![点击Build后在Editor/Export目录中生成编辑器代码](Tutorial01.png)
 
 您在Unity最上的菜单栏 <code>CustomEditor</code> 中看到对应的编辑器。
 
@@ -66,7 +65,8 @@ UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 * 3. 所见即所得不需要重复从excel导数据到Unity。
 * 4. 自动化流程不易出错，如外联Check，基础类型检查等。
 * 5. 强扩展性，自定义行数据逻辑检查，扩展按钮，扩展编辑器事件等。
-* 6. 多种存储格式选择
+* 6. 无缝支持Unity内建类型，vector2/vector3/vector4/color/bounds/curves 与数据基础类型等。
+* 7. 多种存储格式选择
 * ...
 
 
@@ -146,7 +146,6 @@ public class Supports : IModel
 		floatList = new List<float>();
 	}
 	
-	
 	[ConfigEditorField(1)]
 	public string description;
 	
@@ -158,7 +157,6 @@ public class Supports : IModel
 	
 	[ConfigEditorField(4)]
 	public Vector4 testPoint4;
-	
 
 	[ConfigEditorField(5)]
 	public List<bool> boolList;
@@ -177,11 +175,9 @@ public class Supports : IModel
 
 	[ConfigEditorField(10)]
 	public AnimationCurve curve;
-
 	
 	[ConfigEditorField(11)]
 	public List<string> descriptionList;
-	
 	
 	[ConfigEditorField(12)]
 	public List<Vector2> testPointlist;
@@ -210,27 +206,27 @@ public class Supports : IModel
 
 ## 3.生成代码 / Click Build Button
 点击build按钮 则会在指定路径生成数据编辑器
-![通过SmartDataViewer生成的编辑器](/A6153579-9537-404D-9007-CE9B85F69BBF.png)
+![点击Build后在Editor/Export目录中生成编辑器代码](Tutorial01.png)
 
 
 ## 完成 / Complete
-![通过SmartDataViewer生成的编辑器](/F1CC3692-35AB-4E74-B030-5E8006171256.png)
+![通过SmartDataViewer生成的编辑器](/Tutorial02.png)
 
 
 # 如何加载数据？ ／ How to Load Data ?
 
 ``` cs
-var c = SupportsConfig.LoadConfig<SupportsConfig>();
-//var c = SupportsConfig.LoadConfig<SupportsConfig>("Special path");
+//读取
+ConfigContainerFactory.GetInstance().LoadConfig<{实体类型}>({读取路径});
 
-c.DeleteFromDisk();
-////c.DeleteFromDisk("Special path");
+//删除
+ConfigContainerFactory.GetInstance().DeleteFromDisk({删除路径})
 
-c.SaveToDisk();
+//保存
 ConfigContainerFactory.GetInstance({存储格式}).SaveToDisk({输出路径}, {序列化的实例})
 
+//查询
 var subType = c.SearchByID({ID});
-
 var subType2 = c.SearchByNickName({NickName});
 ```
 

@@ -949,7 +949,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 ShowNotification(new GUIContent(Language.CantReadOutputPath));
                 return;
             }
-
+            
             if (ConfigContainerFactory.GetInstance(GetCodeGenInfo().ContainerType).SaveToDisk(GetCodeGenInfo().InOutPath, config_current))
             {
                 AssetDatabase.Refresh();
