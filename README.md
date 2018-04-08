@@ -5,6 +5,20 @@ UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 ![GitHub stars](https://img.shields.io/github/stars/KeyleXiao/UNITY3D-DATA-VIEWER.svg)
 ![GitHub license](https://img.shields.io/github/license/KeyleXiao/UNITY3D-DATA-VIEWER.svg)
 
+UNITY3D-DATA-VIEWER项目是客户端配置文件解决方案。它的初衷是加速工作流程，程序写好类策划就能配，运行就能跑起来。
+
+
+# 特性
+* 1. 节约程序大量编辑器开发时间。
+* 2. 在定义完成基础类型的时候，即可同步生成可视化编辑器。
+* 3. 所见即所得不需要重复从excel导数据到Unity。
+* 4. 自动化流程不易出错，如外联Check，基础类型检查等。
+* 5. 强扩展性，自定义行数据逻辑检查，扩展按钮，扩展编辑器事件等。
+* 6. 无缝支持Unity内建类型，vector2/vector3/vector4/color/bounds/curves 与数据基础类型等。
+* 7. 多种存储格式选择
+* ...
+
+
 ```
 └── SmartDataViewer
     ├── Assets
@@ -46,28 +60,11 @@ UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
 您在Unity最上的菜单栏 <code>CustomEditor</code> 中看到对应的编辑器。
 
-# Next Version 
-
-下个版本核心：
-1. 增加 Model Design 面板用来给策划设计实体类并且支持实体类代码生成，实现流程自动化。
-2. 补全更多的数据序列化格式。
-
-敬请期待。
 
 ## Video on YouTube
 
 视频暂时不录
 
-
-# 为什么要使用 SmartDataViewer ？
-* 1. SmartDataViewer 节约程序大量编辑器开发时间。
-* 2. 在定义完成基础类型的时候，即可同步生成可视化编辑器。
-* 3. 所见即所得不需要重复从excel导数据到Unity。
-* 4. 自动化流程不易出错，如外联Check，基础类型检查等。
-* 5. 强扩展性，自定义行数据逻辑检查，扩展按钮，扩展编辑器事件等。
-* 6. 无缝支持Unity内建类型，vector2/vector3/vector4/color/bounds/curves 与数据基础类型等。
-* 7. 多种存储格式选择
-* ...
 
 
 # 正确的打开姿势 / Tutorial
@@ -229,5 +226,15 @@ ConfigContainerFactory.GetInstance({存储格式}).SaveToDisk({输出路径}, {�
 var subType = c.SearchByID({ID});
 var subType2 = c.SearchByNickName({NickName});
 ```
+
+
+# Next Version 
+
+下个版本核心：
+1. 增加 Model Design 面板用来给策划设计实体类并且支持实体类代码生成，实现流程自动化。
+2. 补全更多的数据序列化格式。
+
+敬请期待。
+
 
 #### QQ群 'Game' ／QQ Group 'Game' : 137728654  
