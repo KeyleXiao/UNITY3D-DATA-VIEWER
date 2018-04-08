@@ -5,7 +5,7 @@ UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 ![GitHub stars](https://img.shields.io/github/stars/KeyleXiao/UNITY3D-DATA-VIEWER.svg)
 ![GitHub license](https://img.shields.io/github/license/KeyleXiao/UNITY3D-DATA-VIEWER.svg)
 
-UNITY3D-DATA-VIEWER项目是客户端配置文件解决方案。它的初衷是加速工作流程，程序写好类策划就能配，运行就能跑起来。
+UNITY3D-DATA-VIEWER项目是客户端配置文件解决方案。它的初衷是加速工作流程，<code>程序写好类策划就能配，运行就能跑!</code>
 
 
 # 特性
