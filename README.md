@@ -236,5 +236,3 @@ var subType2 = c.SearchByNickName({NickName});
 
 敬请期待。
 
-
-#### QQ群 'Game' ／QQ Group 'Game' : 137728654  
