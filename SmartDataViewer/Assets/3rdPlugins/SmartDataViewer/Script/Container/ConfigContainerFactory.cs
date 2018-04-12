@@ -52,9 +52,15 @@ namespace SmartDataViewer
         }
 
 
-        public V LoadConfig<V>(string path) where V : new()
+        /// <summary>
+        /// 建议使用 LoadConfig(Type t, string path) 函数
+        /// </summary>
+        /// <param name="path"></param>
+        /// <typeparam name="V"></typeparam>
+        /// <returns></returns>
+        public V LoadConfig<V>(string path) 
         {
-            return loader[DefaultContainer].LoadConfig<V>(path);
+            return (V)loader[DefaultContainer].LoadConfig(typeof(V),path);
         }
 
         public object LoadConfig(Type t, string path)

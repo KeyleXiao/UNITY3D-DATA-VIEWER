@@ -141,7 +141,7 @@ namespace SmartDataViewer.Editor
         public static readonly string Verfiy = @"V";
         public static readonly string VerfiyMessageSuccess = @"ID: {0} 当前数据有效！";
         public static readonly string Operation = @"Operation";
-        public static readonly string Contract = @"Version 1.3 Beta  ";
+        public static readonly string Contract = @"Version 1.3.1 Beta  ";
         public static readonly string OnePageMaxNumber = "Max In Page";
         public static readonly string PageInfoFormate = @"Page |{0}|-|{1}|";
     }

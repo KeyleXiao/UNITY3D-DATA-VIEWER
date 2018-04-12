@@ -9,25 +9,25 @@ namespace SmartDataViewer
 {
     public class ProtobufContainer : ConfigContainerBase, IConfigContainer
     {
-        /// <summary>
-        /// 加载配置(静态)
-        /// </summary>
-        /// <param name="path"></param>
-        /// <typeparam name="V"></typeparam>
-        /// <returns></returns>
-        public V LoadConfig<V>(string path) where V : new()
-        {
-            path = PathMapping.GetInstance().DecodePath(path);
-            byte[] byteArray =File.ReadAllBytes(path);
-
-            if (byteArray.Length == 0)  return new V();
-
-            using (var ms = new MemoryStream(byteArray))
-            {
-                return Serializer.Deserialize<V>(ms);
-            }
-        }
-
+//        /// <summary>
+//        /// 加载配置(静态)
+//        /// </summary>
+//        /// <param name="path"></param>
+//        /// <typeparam name="V"></typeparam>
+//        /// <returns></returns>
+//        public V LoadConfig<V>(string path) where V : new()
+//        {
+//            path = PathMapping.GetInstance().DecodePath(path);
+//            byte[] byteArray =File.ReadAllBytes(path);
+//
+//            if (byteArray.Length == 0)  return new V();
+//
+//            using (var ms = new MemoryStream(byteArray))
+//            {
+//                return Serializer.Deserialize<V>(ms);
+//            }
+//        }
+//
 
         public object LoadConfig(Type t, string path)
         {
