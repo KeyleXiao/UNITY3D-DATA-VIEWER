@@ -20,7 +20,7 @@ using System;
 namespace SmartDataViewer
 {
     [AttributeUsage(AttributeTargets.Class,  AllowMultiple = true)]
-    public sealed class ConfigEditorAttribute : BaseConfigFiedEditorAttribute
+    public sealed class ConfigEditorAttribute : BaseAttribute
     {
         /// <summary>
         /// 编辑器配置ID

@@ -28,19 +28,19 @@ namespace SmartDataViewer.Editor
 
     public class EditorConfig
     {
-        public static readonly string CodeGenFilePath = "{EDITOR}/Config/CodeGen.unityjson";
+        public static readonly string CodeGenFilePath = "{EDITOR}/Editor/Config/CodeGen.unityjson";
 
         public static readonly string DefaultControlPropertyConfigPath =
-            "{EDITOR}/Config/DefaultControlProperty.unityjson";
+            "{EDITOR}/Editor/Config/DefaultControlProperty.unityjson";
 
         public static readonly string DefaultEditorPropertyConfigPath =
-            "{EDITOR}/Config/DefaultEditorPropertyConfig.unityjson";
+            "{EDITOR}/Editor/Config/DefaultEditorPropertyConfig.unityjson";
 
         public static readonly string CustomControlPropertyConfigPath =
-            "{EDITOR}/Config/CustomControlProperty.unityjson";
+            "{EDITOR}/Editor/Config/CustomControlProperty.unityjson";
 
         public static readonly string CustomEditorPropertyConfigPath =
-            "{EDITOR}/Config/CustomEditorPropertyConfig.unityjson";
+            "{EDITOR}/Editor/Config/CustomEditorPropertyConfig.unityjson";
 
 //        这里不要chache了 实时读取        
 //        private static DefaultControlPropertyConfig ConfigControlProperty {  get; set; }

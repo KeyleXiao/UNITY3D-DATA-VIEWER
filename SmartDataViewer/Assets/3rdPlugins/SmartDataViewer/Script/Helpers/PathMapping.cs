@@ -33,7 +33,7 @@ namespace SmartDataViewer.Helpers
             PathChache = new Dictionary<string, string>();
 
 #if UNITY_EDITOR
-            PathChache.Add("{EDITOR}", GetSmartDataViewEditorPath());
+            PathChache.Add("{EDITOR}", GetDirectorieRootInUnity("SmartDataViewer"));
 #endif
             PathChache.Add("{ROOT}", Application.dataPath);
             
@@ -87,13 +87,14 @@ namespace SmartDataViewer.Helpers
 
 #if UNITY_EDITOR
         /// <summary>
-        /// 仅在编辑器状态下使用
+        /// 获取根目录方法(不要用在会有重名的地方)
         /// </summary>
+        /// <param name="folderName"></param>
         /// <returns></returns>
-        private string GetSmartDataViewEditorPath()
+        public string GetDirectorieRootInUnity(string folderName)
         {
             string[] res =
-                Directory.GetDirectories(Application.dataPath, "SmartDataViewer", SearchOption.AllDirectories);
+                Directory.GetDirectories(Application.dataPath, folderName , SearchOption.AllDirectories);
             return res[0];
         }
 #endif

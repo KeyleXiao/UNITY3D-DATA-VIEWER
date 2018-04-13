@@ -107,7 +107,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             SetConfigType(new CodeGenConfig());
 
-            string path = PathMapping.GetInstance().DecodePath("{EDITOR}/CTS/EditorClassTemplate.unityjson"); // Build In 编辑器路径一律写死
+            string path = PathMapping.GetInstance().DecodePath("{EDITOR}/Editor/CTS/EditorClassTemplate.unityjson"); // Build In 编辑器路径一律写死
             if (File.Exists(path))
                 templateFile = File.ReadAllText(path);
         }

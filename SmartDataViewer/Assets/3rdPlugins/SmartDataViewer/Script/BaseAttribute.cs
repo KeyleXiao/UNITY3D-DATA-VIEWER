@@ -19,7 +19,7 @@ using System;
 
 namespace SmartDataViewer
 {
-    public class BaseConfigFiedEditorAttribute : Attribute
+    public class BaseAttribute : Attribute
     {
         public static T GetCurrentAttribute<T>(object obj, bool inherited = true)
         {

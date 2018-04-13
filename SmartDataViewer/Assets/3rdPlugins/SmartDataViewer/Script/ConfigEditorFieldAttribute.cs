@@ -19,7 +19,7 @@ using System;
 namespace SmartDataViewer
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-    public sealed class ConfigEditorFieldAttribute : BaseConfigFiedEditorAttribute
+    public sealed class ConfigEditorFieldAttribute : BaseAttribute
     {
         public int ControlPropertyID { get; set; }
         
