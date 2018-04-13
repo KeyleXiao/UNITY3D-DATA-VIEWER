@@ -16,8 +16,7 @@
 //
 
 using System;
-using SmartDataViewer.Editor;
-using SmartDataViewer;
+using UnityEngine;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
@@ -46,6 +45,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             SubType = string.Empty;
             EditorPath = "CustomEditor";
             InOutPath = string.Empty;
+            CodeExportPath ="{ROOT}/Editor/Export/";
             ContainerType = DataContainerType.UNITY_JSON;
         }
 
@@ -61,5 +61,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public string ClassType;
         [ConfigEditorField(11013)]
         public string SubType;
+        [ConfigEditorField(11016)]
+        public string CodeExportPath;
     }
 }

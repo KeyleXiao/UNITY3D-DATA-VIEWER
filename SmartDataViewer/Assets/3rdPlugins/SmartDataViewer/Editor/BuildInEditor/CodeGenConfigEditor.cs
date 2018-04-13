@@ -65,14 +65,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             if (string.IsNullOrEmpty(errorInfo))
             {
-                //设置导出路径   
-                string export_folder = string.Format(@"{0}/Editor/Export/", Application.dataPath);
-
-                if (!Directory.Exists(export_folder))
-                    Directory.CreateDirectory(export_folder);
+                string export_path = PathMapping.GetInstance().DecodePath(item.CodeExportPath);
+                if (!Directory.Exists(export_path))
+                    Directory.CreateDirectory(export_path);
 
                 //检测代码是否已存在
-                string path = string.Format("{0}{1}.cs", export_folder, item.EditorName);
+                string path = Path.Combine(export_path,string.Format("{0}Export.cs",item.ClassType));
                 string disPlay = Language.Build;
                 if (File.Exists(path))
                 {
