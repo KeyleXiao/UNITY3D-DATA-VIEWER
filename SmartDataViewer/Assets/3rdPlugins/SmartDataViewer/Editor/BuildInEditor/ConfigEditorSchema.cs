@@ -36,7 +36,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
     {
         public FieldInfo field_info { get; set; }
         public ControlProperty config_editor_setting { get; set; }
-        public bool IsLinkage { get; set; }
     }
 
     /// <summary>
@@ -281,21 +280,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 Chache.Add(f); 
             }
              
-            //TODO 标示出已经被其他列联动的列 这种类型的列不能自己删除自己与自己添加自己 .一切都需要联动列指挥
-            for (int i = 0; i < Chache.Count; i++)
-            {
-                if (null!=Chache[i].config_editor_setting && !string.IsNullOrEmpty(Chache[i].config_editor_setting.Linkage))
-                {
-                    foreach (var VARIABLE in Chache)
-                    {
-                        if (VARIABLE.field_info.Name.ToUpper() == Chache[i].config_editor_setting.Linkage.ToUpper())
-                        {
-                            Chache[i].IsLinkage = true;
-                        }
-                    }
-                    
-                }
-            }
 
             if (Chache.Count > 0)
             {
