@@ -19,6 +19,7 @@ using System;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using NUnit.Framework;
 using SmartDataViewer.Helpers;
 using SmartDataViewer;
 using SmartDataViewer.Editor;
@@ -40,7 +41,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
         public override CodeGen GetCodeGenInfo()
         {
-            return new CodeGen{ InOutPath = EditorConfig.CodeGenFilePath };
+            return new CodeGen {InOutPath = EditorConfig.CodeGenFilePath};
         }
 
         protected override void RenderExtensionHead()
@@ -50,27 +51,89 @@ namespace SmartDataViewer.Editor.BuildInEditor
         }
 
 
+        protected override string VerfiyLineData(CodeGen data, bool showNotification = true)
+        {
+            string error = "";
+            
+            
+            if (string.IsNullOrEmpty(data.NickName))
+            {
+                error = string.Format("当前ID:{0} 建议NickName字段不要为空 请您补全描述信息便于查错", data.ID);
+                if (!ErrorLine.Contains(data.ID)) ErrorLine.Add(data.ID); //添加报错提示
+
+                if (showNotification)
+                    ShowNotification(new GUIContent(error));
+            }
+            else if (GetType(data.ClassType) == null && ReflectionHelper.GetCurrentAssemblyType(data.ClassType) == null)
+            {
+                error = string.Format("当前ID:{0} {1} 找不到 请您确认代码中有这个类", data.ID, GetFieldDisplayFromChache("ClassType"));
+                if (!ErrorLine.Contains(data.ID)) ErrorLine.Add(data.ID); //添加报错提示
+
+                if (showNotification)
+                    ShowNotification(new GUIContent(error));
+            }
+            else if (GetType(data.SubType) == null && ReflectionHelper.GetCurrentAssemblyType(data.SubType) == null)
+            {
+                error = string.Format("当前ID:{0} {1} 找不到 请您确认代码中有这个类", data.ID,GetFieldDisplayFromChache("SubType"));
+                if (!ErrorLine.Contains(data.ID)) ErrorLine.Add(data.ID); //添加报错提示
+
+                if (showNotification)
+                    ShowNotification(new GUIContent(error));
+            }
+            else if (string.IsNullOrEmpty(data.CodeExportPath))
+            {
+                error = string.Format("当前ID:{0} {1}没写 麻烦你写下", data.ID,GetFieldDisplayFromChache("CodeExportPath"));
+                if (!ErrorLine.Contains(data.ID)) ErrorLine.Add(data.ID); //添加报错提示
+
+                if (showNotification)
+                    ShowNotification(new GUIContent(error));
+            }
+            else if (string.IsNullOrEmpty(data.InOutPath))
+            {
+                error = string.Format("当前ID:{0} {1}没写 麻烦你写下", data.ID, GetFieldDisplayFromChache("InOutPath"));
+                if (!ErrorLine.Contains(data.ID)) ErrorLine.Add(data.ID ); //添加报错提示
+
+                if (showNotification)
+                    ShowNotification(new GUIContent(error));
+            }
+            else if (string.IsNullOrEmpty(data.EditorPath))
+            {
+                error = string.Format("当前ID:{0} {1}没写 麻烦你写下", data.ID, GetFieldDisplayFromChache("EditorPath"));
+                if (!ErrorLine.Contains(data.ID)) ErrorLine.Add(data.ID); //添加报错提示
+
+                if (showNotification)
+                    ShowNotification(new GUIContent(error));
+            }
+            else if (string.IsNullOrEmpty(data.EditorName))
+            {
+                error = string.Format("当前ID:{0} {1}没写 麻烦你写下", data.ID,GetFieldDisplayFromChache("EditorName"));
+                if (!ErrorLine.Contains(data.ID)) ErrorLine.Add(data.ID); //添加报错提示
+
+                if (showNotification)
+                    ShowNotification(new GUIContent(error));
+            }
+            else
+            {
+                if (showNotification)
+                    ShowNotification(new GUIContent(string.Format(Language.VerfiyMessageSuccess, data.ID)));
+
+                if (ErrorLine.Contains(data.ID)) ErrorLine.Remove(data.ID); //校验成功解除报错信息
+            }
+
+            return error;
+        }
+
         protected override void RenderExtensionButton(CodeGen item)
         {
-            string errorInfo = string.Empty;
-
-            if (string.IsNullOrEmpty(item.EditorName))
-            {
-                errorInfo = "Editor Name Is Empty";
-            }
-            else if (string.IsNullOrEmpty(item.SubType))
-            {
-                errorInfo = "SubType Is Empty";
-            }
-
-            if (string.IsNullOrEmpty(errorInfo))
+            string error = VerfiyLineData(item,false);
+            if (string.IsNullOrEmpty(error))
             {
                 string export_path = PathMapping.GetInstance().DecodePath(item.CodeExportPath);
                 if (!Directory.Exists(export_path))
                     Directory.CreateDirectory(export_path);
 
                 //检测代码是否已存在
-                string path = Path.Combine(export_path,string.Format("{0}Export.cs",item.ClassType));
+                string path = Path.Combine(export_path, string.Format("{0}Export.cs", item.ClassType));
                 string disPlay = Language.Build;
                 if (File.Exists(path))
                 {
@@ -92,7 +155,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     new GUILayoutOption[]
                         {GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith), GUILayout.Height(18)}))
                 {
-                    ShowNotification(new GUIContent(errorInfo));
+                    ShowNotification(new GUIContent(error));
                 }
             }
         }
@@ -105,7 +168,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             SetConfigType(new CodeGenConfig());
 
-            string path = PathMapping.GetInstance().DecodePath("{EDITOR}/Editor/CTS/EditorClassTemplate.unityjson"); // Build In 编辑器路径一律写死
+            string path = PathMapping.GetInstance()
+                .DecodePath("{EDITOR}/Editor/CTS/EditorClassTemplate.unityjson"); // Build In 编辑器路径一律写死
             if (File.Exists(path))
                 templateFile = File.ReadAllText(path);
         }
@@ -119,7 +183,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             temp = temp.Replace("$[SUB_TYPE]", item.SubType);
             temp = temp.Replace("$[EDITOR_PATH]", item.EditorPath);
             temp = temp.Replace("$[CODE_GEN_ID]", item.ID.ToString());
-            
+
 
             if (File.Exists(path)) File.Delete(path);
 

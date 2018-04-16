@@ -306,6 +306,23 @@ namespace SmartDataViewer.Editor.BuildInEditor
         }
 
 
+        public string GetFieldDisplayFromChache(string name)
+        {
+            if (Chache == null)
+            {
+                return name;
+            }
+            for (int i = 0; i < Chache.Count; i++)
+            {
+                if (Chache[i].field_info.Name == name)
+                {
+                    return string.IsNullOrEmpty(Chache[i].config_editor_setting.Display) ? name : Chache[i].config_editor_setting.Display;
+                }                
+            }
+            return name;
+        }
+
+
         /// <summary>
         /// 初始化构造
         /// </summary>
@@ -819,7 +836,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 }
 
                 //查找非编辑器命名控件下
-                Type classType = ReflectionHelper.GetCurrnetAssemblyType(codeGenInfo.ClassType);
+                Type classType = ReflectionHelper.GetCurrentAssemblyType(codeGenInfo.ClassType);
 
                 //查找编辑器命名控件下
                 if (classType == null) classType = GetType(codeGenInfo.ClassType);
@@ -893,7 +910,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 //                    string rawClass = Chache[i].config_editor_setting.OutLinkClass;
 //                    if (string.IsNullOrEmpty(rawClass))
 //                        rawClass = Chache[i].config_editor_setting.OutLinkSubClass + "Config";
-//                    Type classType = ReflectionHelper.GetCurrnetAssemblyType(rawClass);
+//                    Type classType = ReflectionHelper.GetCurrentAssemblyType(rawClass);
 //                    if (classType == null)
 //                    {
 //                        Log("Can't find calss " + rawClass);
@@ -1465,6 +1482,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
 //        /// <returns></returns>
         protected virtual Type GetType(string type_name)
         {
+            if (string.IsNullOrEmpty(type_name))
+            {
+                return null;
+            }
             return Assembly.GetExecutingAssembly().GetType(type_name);
         }
     }

@@ -380,8 +380,12 @@ namespace SmartDataViewer.Helpers
         /// </summary>
         /// <param name="type_name"></param>
         /// <returns></returns>
-        public static Type GetCurrnetAssemblyType(string type_name)
+        public static Type GetCurrentAssemblyType(string type_name)
         {
+            if (string.IsNullOrEmpty(type_name))
+            {
+                return null;
+            }
             return Assembly.GetExecutingAssembly().GetType(type_name);
         }
 
