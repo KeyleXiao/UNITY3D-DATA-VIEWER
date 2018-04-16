@@ -40,6 +40,7 @@ public class Demo : IModel
 	public List<string> strList;
 
 	[ProtoMember(4)]
+	[ConfigEditorField(20)]
 	public List<int> list;
 
 	[ProtoMember(5)]

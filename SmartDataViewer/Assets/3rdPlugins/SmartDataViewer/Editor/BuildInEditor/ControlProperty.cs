@@ -43,13 +43,16 @@ namespace SmartDataViewer
             Visibility = true;
             Width = 180;
             MaxWidth = 200;
-            
+            Linkage = string.Empty;
+
 //            OutLinkEditor = string.Empty;
 //            OutLinkSubClass = string.Empty;
 //            OutLinkClass = string.Empty;
 //            OutLinkFilePath = string.Empty;
-            
+
         }
+
+        public string Linkage;
 
         public int Order;
 

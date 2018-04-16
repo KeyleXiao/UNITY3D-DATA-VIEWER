@@ -36,6 +36,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
     {
         public FieldInfo field_info { get; set; }
         public ControlProperty config_editor_setting { get; set; }
+        public bool IsLinkage { get; set; }
     }
 
     /// <summary>
@@ -130,9 +131,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
 
         /// <summary>
-        /// 选择模式下 选中的列ID
+        /// 选择模式下 选中的列ID 只做为一种表现 没有数据意义
         /// </summary>
-        public List<int> SelctList { get; set; }
+        public List<int> SelectDisplayEffectList { get; set; }
 
 
         /// <summary>
@@ -223,8 +224,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             foreach (var item in fieldinfos)
             {
                 var infos = item.GetCustomAttributes(typeof(ConfigEditorFieldAttribute), true);
-                ConfigEditorSchemaChache f = new ConfigEditorSchemaChache();
-                f.field_info = item;
+                ConfigEditorSchemaChache f = new ConfigEditorSchemaChache { field_info = item };
 
                 if (infos.Length == 0)
                 {
@@ -255,7 +255,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     {
                         int id = (int) ReflectionHelper.GetFieldTypeMapping(item.FieldType);
                         f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByID(id);
+                        f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByID(id);
                     }
+                    
 
                     //走默认配置
                     if (f.config_editor_setting == null && cefa.ControlPropertyID != 0)
@@ -273,9 +275,26 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                     if (!f.config_editor_setting.Visibility)
                         continue;
+                    
                 }
 
-                Chache.Add(f);
+                Chache.Add(f); 
+            }
+             
+            //TODO 标示出已经被其他列联动的列 这种类型的列不能自己删除自己与自己添加自己 .一切都需要联动列指挥
+            for (int i = 0; i < Chache.Count; i++)
+            {
+                if (null!=Chache[i].config_editor_setting && !string.IsNullOrEmpty(Chache[i].config_editor_setting.Linkage))
+                {
+                    foreach (var VARIABLE in Chache)
+                    {
+                        if (VARIABLE.field_info.Name.ToUpper() == Chache[i].config_editor_setting.Linkage.ToUpper())
+                        {
+                            Chache[i].IsLinkage = true;
+                        }
+                    }
+                    
+                }
             }
 
             if (Chache.Count > 0)
@@ -318,7 +337,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             //TODO: 这里先暂时这样处理
             var editorName = EditorConfig.GetCodeGenConfig().SearchByID(codeGenID).ClassType + "Editor";
-            
+
             IMultipleWindow e = CurrentAssembly.CreateInstance(editorName) as IMultipleWindow;
             return e;
         }
@@ -333,6 +352,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         {
             if (value == null) return;
 
+            // ---- Chache ----
             TempHashCode = value.GetHashCode();
 
             if (LineChache.ContainsKey(TempHashCode))
@@ -355,6 +375,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 LineChache.Add(TempHashCode, currentLineChache);
                 TempLineChache = currentLineChache;
             }
+            // -----------------
 
 
             if (TempLineChache.IsGenericType)
@@ -379,11 +400,17 @@ namespace SmartDataViewer.Editor.BuildInEditor
                         GUILayout.BeginHorizontal();
 
                         //显示外联数据
-                        GUILayout.Label(GetOutLinkDisplayField(temp[i], data.config_editor_setting.OutCodeGenEditorID,
+                        GUILayout.Label(GetOutLinkDisplayField(
+                                temp[i],
+                                data.config_editor_setting.OutCodeGenEditorID,
                                 data.config_editor_setting.OutLinkDisplay),
-                            GUILayout.Width(GetResizeWidth(data.config_editor_setting.Width,
-                                data.config_editor_setting.MaxWidth,
-                                currentEditorSetting.KitButtonWidth + currentEditorSetting.ColumnSpan))
+                            GUILayout.Width(
+                                GetResizeWidth(
+                                    data.config_editor_setting.Width,
+                                    data.config_editor_setting.MaxWidth,
+                                    currentEditorSetting.KitButtonWidth + currentEditorSetting.ColumnSpan
+                                )
+                            )
                         );
 
                         //删除子类型数据
@@ -404,15 +431,19 @@ namespace SmartDataViewer.Editor.BuildInEditor
                         }
                         else
                         {
-                            e.UpdateSelectModel(value, SetListItemValue);
+                            e.UpdateSelectModel(value as List<int>, SetListItemValue);
                             e.ShowUtility();
                         }
                     }
                     // -- 打开面板 --
+                    
+                    
 
                     if (deleteIndex != -1)
                     {
                         temp.RemoveAt(deleteIndex);
+                        //TODO 此处应该处理联动列需求
+                        
                     }
                 }
                 else
@@ -474,8 +505,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 //Open Editor
                 if (data.config_editor_setting.OutCodeGenEditorID != 0)
                 {
-                    data.field_info.SetValue(raw,
-                        GetSingleSelectValueByFlag(raw.ID, data.field_info.Name, (int) value));
+//                    data.field_info.SetValue(raw,GetSelectValueByFlag(raw.ID, data.field_info.Name, (int) value));
+                    
                     string buttonName = GetOutLinkDisplayField((int) value,
                         data.config_editor_setting.OutCodeGenEditorID,
                         data.config_editor_setting.OutLinkDisplay);
@@ -493,8 +524,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                             ShowNotification(new GUIContent(Language.OutLinkIsNull));
                         else
                         {
-                            AddSingleSelectFlag(raw.ID, data.field_info.Name);
-                            e.UpdateSelectModel(SingleTempSelect, SetListItemValue);
+                            e.UpdateSelectModel(raw,data.field_info, SetListItemValue);
                             e.ShowUtility();
                         }
                     }
@@ -509,6 +539,26 @@ namespace SmartDataViewer.Editor.BuildInEditor
             }
         }
 
+        
+        /// <summary>
+        /// 这个函数应该是当前界面内的，当打开的界面有信息修改会调用此界面的回调函数
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="addValue"></param>
+        public virtual void SetListItemValue(List<int> item, IModel addValue)
+        {
+//            var temp = item as List<int>;
+//            var model = addValue as IModel;
+//            temp.Add(model.ID);
+            item.Add(addValue.ID);
+        }
+
+
+        public virtual void SetListItemValue(object item,IModel addValue,FieldInfo field)
+        {
+            field.SetValue(item,addValue.ID);
+            ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, addValue.NickName)));//弹出消息提示  
+        }
 
         /// <summary>
         /// 使用currentEditorSetting.isLog控制输出
@@ -720,7 +770,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
             AssetDatabase.Refresh();
             FieldsOrder = new Dictionary<string, bool>();
 
-            config_current = ConfigContainerFactory.GetInstance(GetCodeGenInfo().ContainerType).LoadConfig<ConfigBase<T>> (GetCodeGenInfo().InOutPath);
+            config_current = ConfigContainerFactory.GetInstance(GetCodeGenInfo().ContainerType)
+                .LoadConfig<ConfigBase<T>>(GetCodeGenInfo().InOutPath);
 
             if (config_current == null)
                 config_current = new ConfigBase<T>();
@@ -750,16 +801,17 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                 if (outLinkRawData.ContainsKey(Chache[i].config_editor_setting.OutCodeGenEditorID))
                     continue;
-                
+
                 if (Chache[i].config_editor_setting.OutCodeGenEditorID == 0)
                     continue;
 
-                
+
                 //重写外联编辑器逻辑
 
 
-                var codeGenInfo = EditorConfig.GetCodeGenConfig().SearchByID(Chache[i].config_editor_setting.OutCodeGenEditorID);
-                
+                var codeGenInfo = EditorConfig.GetCodeGenConfig()
+                    .SearchByID(Chache[i].config_editor_setting.OutCodeGenEditorID);
+
                 if (codeGenInfo == null)
                 {
                     Log("Can't find id In CodeGen Table" + Chache[i].config_editor_setting.OutCodeGenEditorID);
@@ -768,30 +820,30 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                 //查找非编辑器命名控件下
                 Type classType = ReflectionHelper.GetCurrnetAssemblyType(codeGenInfo.ClassType);
-                
+
                 //查找编辑器命名控件下
                 if (classType == null) classType = GetType(codeGenInfo.ClassType);
-                
-                
+
+
                 if (classType == null)
                 {
                     Log("Can't find calss " + codeGenInfo.ClassType);
                     continue;
                 }
 
-                string path = PathMapping.GetInstance().DecodePath(codeGenInfo.InOutPath);
-                var modelRaw = ConfigContainerFactory.GetInstance(codeGenInfo.ContainerType).LoadConfig(classType, codeGenInfo.InOutPath);
+                var modelRaw = ConfigContainerFactory.GetInstance(codeGenInfo.ContainerType)
+                    .LoadConfig(classType, codeGenInfo.InOutPath);
 
                 if (modelRaw == null)
                 {
-                    Log(string.Format("Loading OutLink Class [{0}] Data failed !",codeGenInfo.ClassType));
+                    Log(string.Format("Loading OutLink Class [{0}] Data failed !", codeGenInfo.ClassType));
                     return;
                 }
-                
+
                 outLinkRawData.Add(Chache[i].config_editor_setting.OutCodeGenEditorID, modelRaw);
 
-                Log(string.Format("Loading OutLink Class [{0}] Data Success !",codeGenInfo.ClassType));
-                
+                Log(string.Format("Loading OutLink Class [{0}] Data Success !", codeGenInfo.ClassType));
+
 //                if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor))
 //                {
 //                    if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
@@ -949,8 +1001,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 ShowNotification(new GUIContent(Language.CantReadOutputPath));
                 return;
             }
-            
-            if (ConfigContainerFactory.GetInstance(GetCodeGenInfo().ContainerType).SaveToDisk(GetCodeGenInfo().InOutPath, config_current))
+
+            if (ConfigContainerFactory.GetInstance(GetCodeGenInfo().ContainerType)
+                .SaveToDisk(GetCodeGenInfo().InOutPath, config_current))
             {
                 AssetDatabase.Refresh();
                 ShowNotification(new GUIContent(Language.Success));
@@ -1115,7 +1168,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     continue;
 
                 //Select effect diaplay
-                if (current_windowType == WindowType.CALLBACK && SelctList.Contains(item.ID))
+                if (current_windowType == WindowType.CALLBACK && SelectDisplayEffectList.Contains(item.ID))
                     GUI.backgroundColor = Color.green;
                 else GUI.backgroundColor = Color.white;
 
@@ -1187,7 +1240,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             if (!initialized)
             {
                 Initialize();
-                if (current_windowType == WindowType.CALLBACK) SelctList = new List<int>(); //init select display
+                if (current_windowType == WindowType.CALLBACK) SelectDisplayEffectList = new List<int>(); //init select display
             }
 
 
@@ -1230,7 +1283,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
 
         /// <summary>
-        /// 扩展按钮
+        /// 扩展功能按钮栏
         /// </summary>
         /// <param name="item"></param>
         protected virtual void RenderFunctionButton(T item)
@@ -1240,9 +1293,18 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 if (GUILayout.Button(Language.Select, GUI.skin.GetStyle("ButtonLeft"),
                     GUILayout.Width(currentEditorSetting.KitButtonWidth * 2)))
                 {
-                    SelctList.Add(item.ID);
-                    select_callback(current_list, item);
-                    ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, item.NickName)));
+                    //要确认当前是何种模式
+                    if (select_model == SelectModel.MUTI)
+                    {
+                        SelectDisplayEffectList.Add(item.ID);
+                        select_callback(selector_raw_list, item);
+                        ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, item.NickName)));
+                    }
+                    else
+                    {
+                        single_select_callback(selector_raw_single, item , selector_raw_field_single);
+                        Close();
+                    }
                 }
 
                 if (GUILayout.Button(Language.Close, GUI.skin.GetStyle("ButtonRight"),
@@ -1364,17 +1426,24 @@ namespace SmartDataViewer.Editor.BuildInEditor
             }
         }
 
-        /// <summary>
-        /// 当前界面设置 Select 回调
-        /// </summary>
-        /// <param name="current_list"></param>
-        /// <param name="callback"></param>
-        public override void UpdateSelectModel(object current_list, Action<object, object> callback)
-        {
-            current_windowType = WindowType.CALLBACK;
-            select_callback = callback;
-            this.current_list = current_list;
-        }
+//        /// <summary>
+//        /// 当前界面设置 Select 回调
+//        /// </summary>
+//        /// <param name="current_list"></param>
+//        /// <param name="callback"></param>
+//        public override void UpdateSelectModel(List<int> current_list, Action<List<int>, IModel> callback)
+//        {
+//            base.UpdateSelectModel(current_list,callback);
+//            current_windowType = WindowType.CALLBACK;
+//            this.selector_raw_list = current_list;
+//        }
+//
+//        public override void UpdateSelectModel(IModel model, Action<IModel, IModel> callback)
+//        {
+//            base.UpdateSelectModel(model,callback);
+//            current_windowType = WindowType.CALLBACK;
+//            this.selector_raw_single = model;
+//        }
 
 
         /// <summary>
