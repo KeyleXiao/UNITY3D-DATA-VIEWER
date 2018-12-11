@@ -337,7 +337,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public virtual IMultipleWindow OpenOutlinkWindow(int codeGenID)
         {
             //TODO: 这里先暂时这样处理
-            var editorName = EditorConfig.GetCodeGenConfig().SearchByID(codeGenID).ClassType + "Editor";
+            var editorName = EditorConfig.GetCodeGenConfig().SearchByID(codeGenID).EditorName;
 
             IMultipleWindow e = CurrentAssembly.CreateInstance(editorName) as IMultipleWindow;
             return e;
