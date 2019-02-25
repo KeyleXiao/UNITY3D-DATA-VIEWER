@@ -1,11 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartDataViewer", "Assembly-CSharp.csproj", "{51AEB4A3-B79C-7D3F-3E56-014EF89AC143}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{51AEB4A3-B79C-7D3F-3E56-014EF89AC143}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartDataViewer", "Assembly-CSharp-Editor.csproj", "{32E5814B-FA50-A33C-AE8D-EE9154D351C1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartDataViewer", "Assembly-CSharp-Editor-firstpass.csproj", "{C2C22975-311B-7236-AEAC-90BC6C27ED40}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{32E5814B-FA50-A33C-AE8D-EE9154D351C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		{32E5814B-FA50-A33C-AE8D-EE9154D351C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32E5814B-FA50-A33C-AE8D-EE9154D351C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32E5814B-FA50-A33C-AE8D-EE9154D351C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2C22975-311B-7236-AEAC-90BC6C27ED40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2C22975-311B-7236-AEAC-90BC6C27ED40}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2C22975-311B-7236-AEAC-90BC6C27ED40}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2C22975-311B-7236-AEAC-90BC6C27ED40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
