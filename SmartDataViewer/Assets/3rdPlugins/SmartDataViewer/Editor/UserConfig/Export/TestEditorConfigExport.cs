@@ -30,7 +30,7 @@ public class TestConfigEditor : ConfigEditorSchema<TestEditor>
 	
     public override CodeGen GetCodeGenInfo()
     {
-        return EditorConfig.GetCodeGenConfig().SearchByID(40);
+        return EditorConfig.GetCodeGenConfig().SearchByOrderKey(40);
     }
 
 	public override TestEditor CreateValue()

@@ -30,7 +30,7 @@ public class SupportsConfigEditor : ConfigEditorSchema<Supports>
 	
     public override CodeGen GetCodeGenInfo()
     {
-        return EditorConfig.GetCodeGenConfig().SearchByID(1);
+        return EditorConfig.GetCodeGenConfig().SearchByOrderKey(1);
     }
 
 	public override Supports CreateValue()

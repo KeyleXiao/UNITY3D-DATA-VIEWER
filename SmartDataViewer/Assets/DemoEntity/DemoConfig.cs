@@ -53,4 +53,24 @@ public class Demo : IModel
 	[ProtoMember(7)]
 	[ConfigEditorField(19)]
 	public int support;
+
+	public int GetOrderKey()
+	{
+		return ID;
+	}
+
+	public string GetComments()
+	{
+		return NickName;
+	}
+        
+	public void SetOrderKey(int value)
+	{
+		ID = value;
+	}
+	[ConfigEditorField(11000)]
+	public int ID;
+
+	[ConfigEditorField(11001)] 
+	public string NickName;
 }

@@ -23,22 +23,36 @@ namespace SmartDataViewer.Editor.BuildInEditor
     
     
     [Serializable]
-    public class EditorProperty:IModel
+    public class EditorProperty : IModel
     {
         public EditorProperty()
         {
-//            LoadPath = string.Empty;
-//            OutputPath = string.Empty;
             EditorTitle = string.Empty;
             SearchResourceName = string.Empty;
+            NickName = "";
         }
         
+        public void SetOrderKey(int value)
+        {
+            ID = value;
+        }
         
-//        [ConfigEditorField(11006)]
-//        public string LoadPath;
-//
-//        [ConfigEditorField(11007)]
-//        public string OutputPath;
+        public int GetOrderKey()
+        {
+            return ID;
+        }
+
+        public string GetComments()
+        {
+            return NickName;
+        }
+        
+        [ConfigEditorField(11000)]
+        public int ID;
+
+        [ConfigEditorField(11001)] 
+        public string NickName;
+
 
         [ConfigEditorField(11008)]
         public string EditorTitle;
@@ -106,5 +120,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public int PageIndex ;
 
         public int MaxResize = 5;
+
     }
 }

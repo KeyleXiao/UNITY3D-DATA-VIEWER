@@ -20,20 +20,12 @@ using ProtoBuf;
 
 namespace SmartDataViewer
 {
-	[Serializable]
-	[ProtoContract]
-	public class IModel
+	public interface IModel
 	{
-		public IModel()
-		{
-			NickName = string.Empty;
-		}
+		int GetOrderKey();
 
-		[ProtoBuf.ProtoMember(99)] [ConfigEditorField(11000)]
-		public int ID;
+		void SetOrderKey(int value);
 
-		[ProtoBuf.ProtoMember(100)]
-		[ConfigEditorField(11001)]
-		public string NickName;
+		string GetComments();
 	}
 }

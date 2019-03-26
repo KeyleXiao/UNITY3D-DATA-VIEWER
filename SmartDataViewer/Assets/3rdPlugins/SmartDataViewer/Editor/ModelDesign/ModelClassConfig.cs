@@ -46,6 +46,24 @@ namespace SmartDataViewer.Editor.ModelDesign
     [System.Serializable]
     public class NodeFieldInfo:IModel
     {
+        public int GetOrderKey()
+        {
+            return ID;
+        }
+        public void SetOrderKey(int value)
+        {
+            ID = value;
+        }
+        public string GetComments()
+        {
+            return NickName;
+        }
+        
+        [ConfigEditorField(11000)]
+        public int ID;
+
+        [ConfigEditorField(11001)] 
+        public string NickName;
         /// <summary>
         /// 默认配置
         /// </summary>

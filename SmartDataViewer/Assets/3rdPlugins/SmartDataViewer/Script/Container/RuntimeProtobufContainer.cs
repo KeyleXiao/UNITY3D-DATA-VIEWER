@@ -36,12 +36,12 @@ namespace SmartDataViewer
 		}
 
 
-		public bool SaveToDisk(string path, object target)
+		public virtual bool SaveToDisk(string path, object target)
 		{
 			return false;
 		}
 
-		public bool DeleteFromDisk(string path)
+		public override bool DeleteFromDisk(string path)
 		{
 			return false;
 		}

@@ -38,30 +38,16 @@ namespace SmartDataViewer
         [ProtoMember(10000)]
         public List<T> ConfigList;
 
-        public virtual T SearchByID(int id)
+        public virtual T SearchByOrderKey(int id)
         {
             for (int i = 0; i < ConfigList.Count; i++)
             {
-                if (ConfigList[i].ID == id)
+                if (ConfigList[i].GetOrderKey() == id)
                 {
                     return ConfigList[i];
                 }
             }
-
-            return null;
-        }
-
-        public virtual T SearchByNickName(string nickname)
-        {
-            for (int i = 0; i < ConfigList.Count; i++)
-            {
-                if (ConfigList[i].NickName == nickname)
-                {
-                    return ConfigList[i];
-                }
-            }
-
-            return null;
+            return default(T);
         }
 
 
@@ -70,7 +56,7 @@ namespace SmartDataViewer
             int index = 0;
             for (var i = 0; i < ConfigList.Count; i++)
             {
-                if (ConfigList[i].ID != id) continue;
+                if (ConfigList[i].GetOrderKey() != id) continue;
                 index = i;
                 break;
             }

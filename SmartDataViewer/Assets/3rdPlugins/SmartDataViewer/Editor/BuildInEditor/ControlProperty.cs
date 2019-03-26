@@ -35,8 +35,29 @@ namespace SmartDataViewer
     [Serializable]
     public class ControlProperty : IModel
     {
+        public int GetOrderKey()
+        {
+            return ID;
+        }
+
+        public void SetOrderKey(int value)
+        {
+            ID = value;
+        }
+        public string GetComments()
+        {
+            return NickName;
+        }
+        
+        [ConfigEditorField(11000)]
+        public int ID;
+
+        [ConfigEditorField(11001)] 
+        public string NickName;
+        
         public ControlProperty()
         {
+            NickName = "";
             Display = string.Empty;
             OutLinkDisplay = string.Empty;
             CanEditor = true;
@@ -44,12 +65,6 @@ namespace SmartDataViewer
             Width = 180;
             MaxWidth = 200;
             Linkage = string.Empty;
-
-//            OutLinkEditor = string.Empty;
-//            OutLinkSubClass = string.Empty;
-//            OutLinkClass = string.Empty;
-//            OutLinkFilePath = string.Empty;
-
         }
 
         public string Linkage;
@@ -73,12 +88,6 @@ namespace SmartDataViewer
         /// </summary>
         [ConfigEditorField(11014)]
         public int OutCodeGenEditorID;
-
-//        public string OutLinkEditor;
-//        public string OutLinkSubClass;
-//        public string OutLinkClass;
-//        public string OutLinkFilePath;
-
 
     }
 }

@@ -1,4 +1,4 @@
-//
+﻿//
 //   		Copyright 2017 KeyleXiao.
 //     		Contact : Keyle_xiao@hotmail.com 
 //
@@ -19,28 +19,28 @@ using UnityEditor;
 using SmartDataViewer.Editor;
 using SmartDataViewer.Editor.BuildInEditor;
 
-public class $[EDITOR_NAME] : ConfigEditorSchema<$[SUB_TYPE]>
+public class DemoEditor : ConfigEditorSchema<Demo>
 {
-	[MenuItem("$[EDITOR_PATH]/$[EDITOR_NAME]")]
+	[MenuItem("Test/DemoEditor")]
 	static public void OpenView()
 	{
-		$[EDITOR_NAME] w = UnityEngine.ScriptableObject.CreateInstance<$[EDITOR_NAME]>();
+		DemoEditor w = UnityEngine.ScriptableObject.CreateInstance<DemoEditor>();
 		w.ShowUtility();
 	}
 	
     public override CodeGen GetCodeGenInfo()
     {
-        return EditorConfig.GetCodeGenConfig().SearchByOrderKey($[CODE_GEN_ID]);
+        return EditorConfig.GetCodeGenConfig().SearchByOrderKey(42);
     }
 
-	public override $[SUB_TYPE] CreateValue()
+	public override Demo CreateValue()
 	{
-		$[SUB_TYPE] r = base.CreateValue();
+		Demo r = base.CreateValue();
 		return r;
 	}
 
 	public override void Initialize()
 	{
-		SetConfigType(new $[CLASS_TYPE]());
+		SetConfigType(new DemoConfig());
 	}
 }

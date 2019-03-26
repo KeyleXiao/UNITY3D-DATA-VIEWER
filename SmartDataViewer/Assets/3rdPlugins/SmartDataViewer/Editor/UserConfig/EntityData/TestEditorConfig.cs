@@ -8,31 +8,37 @@ using ProtoBuf;
 public class TestEditorConfig : ConfigBase<TestEditor> { }
 
 
-[ProtoContract,ProtoInclude(100,typeof(IModel)),Serializable]
+[ProtoContract,Serializable]
 public class TestEditor : IModel
 {
     public TestEditor()
     {
         Label = "";
-//        description = new List<string>();
-//        key = new List<string>();
-//        path = new List<string>();
+        NickName = "";
     }
 
     
     [ProtoMember(23)]
-    [ConfigEditorField(400)]
     public string Label;
-    
-//    [ProtoMember(24)]
-//    [ConfigEditorField(1)]
-//    public List<string> description;
-//    
-//    [ProtoMember(25)]
-//    [ConfigEditorField(2)]
-//    public List<string> key;
-//    
-//    [ProtoMember(26)]
-//    [ConfigEditorField(5)]
-//    public List<string> path;
+
+    public int GetOrderKey()
+    {
+        return ID;
+    }
+    public void SetOrderKey(int value)
+    {
+        ID = value;
+    }
+    public string GetComments()
+    {
+        return NickName;
+    }
+        
+    [ConfigEditorField(11000)]
+    [ProtoMember(24)]
+    public int ID;
+
+    [ConfigEditorField(11001)] 
+    [ProtoMember(25)]
+    public string NickName;
 }

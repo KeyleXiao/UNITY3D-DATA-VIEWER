@@ -199,8 +199,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             //先读取用户定义的 如果没有配置直接读取默认的
             currentEditorSetting =
-                EditorConfig.GetCustomEditorPropertyConfig().SearchByID(configSetting.EditorConfigID) ??
-                EditorConfig.GetDefaultEditorPropertyConfig().SearchByID(configSetting.EditorConfigID);
+                EditorConfig.GetCustomEditorPropertyConfig().SearchByOrderKey(configSetting.EditorConfigID) ??
+                EditorConfig.GetDefaultEditorPropertyConfig().SearchByOrderKey(configSetting.EditorConfigID);
 
 
             titleContent = new GUIContent(string.IsNullOrEmpty(currentEditorSetting.EditorTitle)
@@ -227,7 +227,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 if (infos.Length == 0)
                 {
                     int id = (int) ReflectionHelper.GetFieldTypeMapping(item.FieldType);
-                    f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByID(id);
+                    f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByOrderKey(id);
 
 
                     if (f.config_editor_setting == null)
@@ -246,14 +246,14 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                     //先查Custom配置
                     f.config_editor_setting =
-                        EditorConfig.GetCustomControlPropertyConfig().SearchByID(cefa.ControlPropertyID);
+                        EditorConfig.GetCustomControlPropertyConfig().SearchByOrderKey(cefa.ControlPropertyID);
 
                     //走属性默认配置
                     if (f.config_editor_setting == null && cefa.ControlPropertyID == 0)
                     {
                         int id = (int) ReflectionHelper.GetFieldTypeMapping(item.FieldType);
-                        f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByID(id);
-                        f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByID(id);
+                        f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByOrderKey(id);
+                        f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByOrderKey(id);
                     }
                     
 
@@ -261,7 +261,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     if (f.config_editor_setting == null && cefa.ControlPropertyID != 0)
                     {
                         f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig()
-                            .SearchByID(cefa.ControlPropertyID);
+                            .SearchByOrderKey(cefa.ControlPropertyID);
                     }
 
                     //如果默认配置被删除 为了防止报错 
@@ -320,10 +320,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public virtual T CreateValue()
         {
             T t = new T();
-            t.ID = (config_current.ConfigList.Count == 0) ? 1 : (config_current.ConfigList.Max(i => i.ID) + 1);
-            t.NickName = string.Empty;
-
-            Log(t.ID.ToString());
+            t.SetOrderKey((config_current.ConfigList.Count == 0) ? 1 : (config_current.ConfigList.Max(i => i.GetOrderKey()) + 1));
+            Log(t.GetOrderKey().ToString());
             return t;
         }
 
@@ -336,7 +334,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         public virtual IMultipleWindow OpenOutlinkWindow(int codeGenID)
         {
             //TODO: 这里先暂时这样处理
-            var editorName = EditorConfig.GetCodeGenConfig().SearchByID(codeGenID).EditorName;
+            var editorName = EditorConfig.GetCodeGenConfig().SearchByOrderKey(codeGenID).EditorName;
 
             IMultipleWindow e = CurrentAssembly.CreateInstance(editorName) as IMultipleWindow;
             return e;
@@ -551,14 +549,14 @@ namespace SmartDataViewer.Editor.BuildInEditor
 //            var temp = item as List<int>;
 //            var model = addValue as IModel;
 //            temp.Add(model.ID);
-            item.Add(addValue.ID);
+            item.Add(addValue.GetOrderKey());
         }
 
 
         public virtual void SetListItemValue(object item,IModel addValue,FieldInfo field)
         {
-            field.SetValue(item,addValue.ID);
-            ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, addValue.NickName)));//弹出消息提示  
+            field.SetValue(item,addValue.GetOrderKey());
+            ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, addValue.GetComments())));//弹出消息提示  
         }
 
         /// <summary>
@@ -572,6 +570,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
 
         //TODO: 增加Chache深度
+        //TODO: 修改为依赖函数查找KEY
         /// <summary>
         /// 获取外链编辑器的按钮上显示的字符，未指定则显示ID 
         /// </summary>
@@ -584,11 +583,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
             if (!outLinkRawData.ContainsKey(outLinkChacheKey))
                 return string.Empty;
 
-            if (string.IsNullOrEmpty(field)) field = "NickName";
+            if (string.IsNullOrEmpty(field)) field = "Comments";
 
             object rawData = outLinkRawData[outLinkChacheKey];
 
-            var searchMethod = rawData.GetType().GetMethod("SearchByID");
+            var searchMethod = rawData.GetType().GetMethod("SearchByOrderKey");
 
             var subData = searchMethod.Invoke(rawData, new object[] {id});
 
@@ -596,11 +595,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             if (subData == null) return Language.Select;
 
+            //var tempDisplayObj = subData.GetType().GetField(field).GetValue(subData);
             var tempDisplayObj = subData.GetType().GetField(field).GetValue(subData);
 
             if (tempDisplayObj == null || string.IsNullOrEmpty(tempDisplayObj.ToString()))
             {
-                field = "ID";
+                field = "OrderKey";
                 tempDisplayObj = subData.GetType().GetField(field).GetValue(subData);
             }
 
@@ -808,10 +808,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
 
                 //重写外联编辑器逻辑
-
-
                 var codeGenInfo = EditorConfig.GetCodeGenConfig()
-                    .SearchByID(Chache[i].config_editor_setting.OutCodeGenEditorID);
+                    .SearchByOrderKey(Chache[i].config_editor_setting.OutCodeGenEditorID);
 
                 if (codeGenInfo == null)
                 {
@@ -845,73 +843,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                 Log(string.Format("Loading OutLink Class [{0}] Data Success !", codeGenInfo.ClassType));
 
-//                if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor))
-//                {
-//                    if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
-//                    {
-//                        Chache[i].config_editor_setting.OutLinkEditor =
-//                            Chache[i].config_editor_setting.OutLinkClass + "Editor";
-//                    }
-//                    else if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
-//                    {
-//                        Chache[i].config_editor_setting.OutLinkEditor =
-//                            Chache[i].config_editor_setting.OutLinkSubClass + "ConfigEditor";
-//                    }
-//                    else
-//                    {
-//                        Log("Out link info is null ...");
-//                        continue;
-//                    }
-//                }
-//
-//                if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass))
-//                {
-//                    if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
-//                        Chache[i].config_editor_setting.OutLinkClass =
-//                            Chache[i].config_editor_setting.OutLinkSubClass + "Config";
-//                    else
-//                        Chache[i].config_editor_setting.OutLinkClass =
-//                            Chache[i].config_editor_setting.OutLinkEditor.Replace("Editor", "");
-//                }
-//
-//                if (string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkFilePath))
-//                {
-//                    if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkSubClass))
-//                        Chache[i].config_editor_setting.OutLinkFilePath =
-//                            Chache[i].config_editor_setting.OutLinkSubClass;
-//                    else
-//                        Chache[i].config_editor_setting.OutLinkFilePath = Chache[i].config_editor_setting.OutLinkClass
-//                            .Replace("ConfigEditor", "");
-//                }
-//
-//
-//                //TODO VERSION 2.0 Load Raw Data
-//                if (!string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkEditor) &&
-//                    !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkClass) &&
-//                    !string.IsNullOrEmpty(Chache[i].config_editor_setting.OutLinkFilePath)
-//                )
-//                {
-//                    string rawClass = Chache[i].config_editor_setting.OutLinkClass;
-//                    if (string.IsNullOrEmpty(rawClass))
-//                        rawClass = Chache[i].config_editor_setting.OutLinkSubClass + "Config";
-//                    Type classType = ReflectionHelper.GetCurrentAssemblyType(rawClass);
-//                    if (classType == null)
-//                    {
-//                        Log("Can't find calss " + rawClass);
-//                        continue;
-//                    }
-//
-//                    var modelRaw =
-//                        ConfigBase<IModel>.LoadConfig(classType, Chache[i].config_editor_setting.OutLinkFilePath);
-//                    if (modelRaw != null)
-//                    {
-//                        if (!outLinkRawData.ContainsKey(Chache[i].config_editor_setting.OutLinkClass))
-//                            outLinkRawData.Add(Chache[i].config_editor_setting.OutLinkClass, modelRaw);
-//
-//                        Log(string.Format("Loading OutLink Class [{0}] Data",
-//                            Chache[i].config_editor_setting.OutLinkClass));
-//                    }
-//                }
             }
         }
 
@@ -936,9 +867,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
 //                    -- 测试数据 --            
             {
                 if (showNotification)
-                    ShowNotification(new GUIContent(string.Format(Language.VerfiyMessageSuccess, data.ID)));
+                    ShowNotification(new GUIContent(string.Format(Language.VerfiyMessageSuccess, data.GetOrderKey())));
 
-                if (ErrorLine.Contains(data.ID)) ErrorLine.Remove(data.ID); //校验成功解除报错信息
+                if (ErrorLine.Contains(data.GetOrderKey())) ErrorLine.Remove(data.GetOrderKey()); //校验成功解除报错信息
             }
 
             return error;
@@ -955,7 +886,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             for (int i = 0; i < config_current.ConfigList.Count; i++)
             {
                 //跳过被删除的数据
-                if (deleteList.Contains(config_current.ConfigList[i].ID))
+                if (deleteList.Contains(config_current.ConfigList[i].GetOrderKey()))
                     continue;
 
                 //保存错误信息
@@ -1062,17 +993,17 @@ namespace SmartDataViewer.Editor.BuildInEditor
             if (field_name == "ID")
             {
                 if (GetFieldsOrder(field_name))
-                    config_current.ConfigList = config_current.ConfigList.OrderBy(x => x.ID).ToList();
+                    config_current.ConfigList = config_current.ConfigList.OrderBy(x => x.GetOrderKey()).ToList();
                 else
-                    config_current.ConfigList = config_current.ConfigList.OrderByDescending(x => x.ID).ToList();
+                    config_current.ConfigList = config_current.ConfigList.OrderByDescending(x => x.GetOrderKey()).ToList();
             }
 
             if (field_name == "NickName")
             {
                 if (GetFieldsOrder(field_name))
-                    config_current.ConfigList = config_current.ConfigList.OrderBy(x => x.NickName).ToList();
+                    config_current.ConfigList = config_current.ConfigList.OrderBy(x => x.GetComments()).ToList();
                 else
-                    config_current.ConfigList = config_current.ConfigList.OrderByDescending(x => x.NickName).ToList();
+                    config_current.ConfigList = config_current.ConfigList.OrderByDescending(x => x.GetComments()).ToList();
             }
         }
 
@@ -1148,9 +1079,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
             if (!string.IsNullOrEmpty(currentEditorSetting.SearchResourceName))
             {
                 currentEditorSetting.ItemMaxCount = config_current.ConfigList.Count(x =>
-                    x.NickName.ToLower().Contains(currentEditorSetting.SearchResourceName.ToLower().Trim()));
+                    x.GetComments().ToLower().Contains(currentEditorSetting.SearchResourceName.ToLower().Trim()));
                 Finallylist = config_current.ConfigList
-                    .Where(x => x.NickName.ToLower().Contains(currentEditorSetting.SearchResourceName.ToLower().Trim()))
+                    .Where(x => x.GetComments().ToLower().Contains(currentEditorSetting.SearchResourceName.ToLower().Trim()))
                     .Skip(currentEditorSetting.PageIndex * currentEditorSetting.PageAmount)
                     .Take(currentEditorSetting.PageAmount).ToList();
             }
@@ -1167,11 +1098,11 @@ namespace SmartDataViewer.Editor.BuildInEditor
             {
                 T item = Finallylist[i];
 
-                if (deleteList.Contains(item.ID))
+                if (deleteList.Contains(item.GetOrderKey()))
                     continue;
 
                 //Select effect diaplay
-                if (current_windowType == WindowType.CALLBACK && SelectDisplayEffectList.Contains(item.ID))
+                if (current_windowType == WindowType.CALLBACK && SelectDisplayEffectList.Contains(item.GetOrderKey()))
                     GUI.backgroundColor = Color.green;
                 else GUI.backgroundColor = Color.white;
 
@@ -1182,7 +1113,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 {
                     var rawData = schema.field_info.GetValue(item);
 
-                    if (ErrorLine.Contains(item.ID)) GUI.color = Color.red;
+                    if (ErrorLine.Contains(item.GetOrderKey())) GUI.color = Color.red;
                     RenderRawLine(schema, rawData, item);
                     GUI.color = Color.white;
 
@@ -1299,9 +1230,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     //要确认当前是何种模式
                     if (select_model == SelectModel.MUTI)
                     {
-                        SelectDisplayEffectList.Add(item.ID);
+                        SelectDisplayEffectList.Add(item.GetOrderKey());
                         select_callback(selector_raw_list, item);
-                        ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, item.NickName)));
+                        ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, item.GetComments())));
                     }
                     else
                     {
@@ -1329,7 +1260,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 if (GUILayout.Button(Language.Delete, GUI.skin.GetStyle("ButtonMid"),
                     new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.KitButtonWidth)}))
                 {
-                    deleteList.Add(item.ID);
+                    deleteList.Add(item.GetOrderKey());
                     ShowNotification(new GUIContent(Language.Success));
                 }
 
@@ -1347,7 +1278,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                         //Bug fix : 从指定位置删除插入
                         var insertPos = config_current.ConfigList.IndexOf(item);
                         config_current.ConfigList.Remove(item);
-                        PasteItem.ID = item.ID;
+                        PasteItem.SetOrderKey(item.GetOrderKey());//修改为函数插入
                         config_current.ConfigList.Insert(insertPos, DeepClone(PasteItem));
                     }
                 }

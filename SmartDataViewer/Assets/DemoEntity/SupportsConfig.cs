@@ -25,6 +25,26 @@ public class SupportsConfig : ConfigBase<Supports> { }
 [Serializable]
 public class Supports : IModel
 {
+	public int GetOrderKey()
+	{
+		return ID;
+	}
+	public void SetOrderKey(int value)
+	{
+		ID = value;
+	}
+
+	public string GetComments()
+	{
+		return NickName;
+	}
+        
+	[ConfigEditorField(11000)]
+	public int ID;
+
+	[ConfigEditorField(11001)] 
+	public string NickName;
+	
 	public Supports()
 	{
 		testFloat = 0;
