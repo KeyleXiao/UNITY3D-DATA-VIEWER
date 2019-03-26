@@ -7,6 +7,16 @@ namespace SmartDataViewer
 {
     public class UnityJsonContainer : ConfigContainerBase, IConfigContainer
     {
+        public T LoadConfig<T>(string path) 
+        {
+            var content = string.Empty;
+
+            if (!LoadText(path, ref content)) return default(T);
+
+            return JsonUtility.FromJson<T>(content);
+        }
+
+        
         public object LoadConfig(Type t, string path)
         {
             var content = string.Empty;

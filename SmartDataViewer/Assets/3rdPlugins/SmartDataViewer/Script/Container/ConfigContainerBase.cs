@@ -7,7 +7,6 @@ namespace SmartDataViewer
 {
     public class ConfigContainerBase 
     {
-
         public virtual bool LoadText(string path,ref string content)
         {
             if (!PathMapping.GetInstance().DecodePath(ref path))

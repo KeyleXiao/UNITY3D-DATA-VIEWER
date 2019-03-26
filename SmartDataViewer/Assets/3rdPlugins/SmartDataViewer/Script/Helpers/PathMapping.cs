@@ -26,16 +26,16 @@ namespace SmartDataViewer.Helpers
     /// </summary>
     public class PathMapping
     {
-        private Dictionary<string, string> PathChache;
+        private Dictionary<string, string> PathCache;
 
         private PathMapping()
         {
-            PathChache = new Dictionary<string, string>();
+            PathCache = new Dictionary<string, string>();
 
 #if UNITY_EDITOR
-            PathChache.Add("{EDITOR}", GetDirectorieRootInUnity("SmartDataViewer"));
+            PathCache.Add("{EDITOR}", GetDirectorieRootInUnity("SmartDataViewer"));
 #endif
-            PathChache.Add("{ROOT}", Application.dataPath);
+            PathCache.Add("{ROOT}", Application.dataPath);
             
             //---- 添加用户自定义的路径映射 ---- 
             
@@ -53,7 +53,7 @@ namespace SmartDataViewer.Helpers
 
         public string DecodePath(string url)
         {
-            foreach (var mapping in PathChache)
+            foreach (var mapping in PathCache)
             {
                 if (url.Contains(mapping.Key))
                 {
@@ -73,7 +73,7 @@ namespace SmartDataViewer.Helpers
         {
             bool isAbs = false;
             
-            foreach (var mapping in PathChache)
+            foreach (var mapping in PathCache)
             {
                 if (url.Contains(mapping.Key))
                 {
@@ -95,7 +95,7 @@ namespace SmartDataViewer.Helpers
         {
             string[] res =
                 Directory.GetDirectories(Application.dataPath, folderName , SearchOption.AllDirectories);
-            return res[0];
+            return res[0].Replace("\\", "/");
         }
 #endif
 

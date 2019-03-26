@@ -29,11 +29,10 @@ namespace SmartDataViewer
 			NickName = string.Empty;
 		}
 
-		[ProtoBuf.ProtoMember(100)]
-		[ConfigEditorField(11000)]
+		[ProtoBuf.ProtoMember(99)] [ConfigEditorField(11000)]
 		public int ID;
 
-		[ProtoBuf.ProtoMember(101)]
+		[ProtoBuf.ProtoMember(100)]
 		[ConfigEditorField(11001)]
 		public string NickName;
 	}

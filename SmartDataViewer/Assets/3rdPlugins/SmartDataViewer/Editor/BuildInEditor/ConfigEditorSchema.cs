@@ -25,7 +25,6 @@ using System.Reflection;
 using System.Linq;
 using System.Text;
 using SmartDataViewer.Helpers;
-using UnityEngine.Profiling;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
@@ -425,6 +424,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     // -- 打开面板 --
                     if (GUILayout.Button(Language.Add))
                     {
+                        var test = data.config_editor_setting;
                         var e = OpenOutlinkWindow(data.config_editor_setting.OutCodeGenEditorID);
                         if (e == null)
                         {
@@ -771,8 +771,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
             AssetDatabase.Refresh();
             FieldsOrder = new Dictionary<string, bool>();
 
-            config_current = ConfigContainerFactory.GetInstance(GetCodeGenInfo().ContainerType)
-                .LoadConfig<ConfigBase<T>>(GetCodeGenInfo().InOutPath);
+            var code_info = GetCodeGenInfo();//先获取加载配置信息 不然会debug很久的
+            config_current = ConfigContainerFactory.GetInstance(code_info.ContainerType).LoadConfig<ConfigBase<T>>(code_info.InOutPath);
 
             if (config_current == null)
                 config_current = new ConfigBase<T>();
@@ -1003,8 +1003,10 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 return;
             }
 
-            if (ConfigContainerFactory.GetInstance(GetCodeGenInfo().ContainerType)
-                .SaveToDisk(GetCodeGenInfo().InOutPath, config_current))
+            var code_info = GetCodeGenInfo();//请注意这里 一定要先获取代码生成信息
+
+            if (ConfigContainerFactory.GetInstance(code_info.ContainerType)
+                .SaveToDisk(code_info.InOutPath, config_current))
             {
                 AssetDatabase.Refresh();
                 ShowNotification(new GUIContent(Language.Success));

@@ -21,6 +21,7 @@ using SmartDataViewer.Helpers;
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization;
+using ProtoBuf;
 
 namespace SmartDataViewer
 {
@@ -34,7 +35,7 @@ namespace SmartDataViewer
         }
 
         
-        [ProtoBuf.ProtoMember(10000)]
+        [ProtoMember(10000)]
         public List<T> ConfigList;
 
         public virtual T SearchByID(int id)

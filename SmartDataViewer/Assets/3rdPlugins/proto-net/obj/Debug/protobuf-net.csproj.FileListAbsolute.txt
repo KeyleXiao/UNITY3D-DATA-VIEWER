@@ -1,7 +1,0 @@
-D:\TOOLS\protobuf-net\protobuf-net-master\protobuf-net\bin\Debug\Licence.txt
-D:\TOOLS\protobuf-net\protobuf-net-master\protobuf-net\bin\Debug\protobuf-net.xml
-D:\TOOLS\protobuf-net\protobuf-net-master\protobuf-net\bin\Debug\protobuf-net.dll
-D:\TOOLS\protobuf-net\protobuf-net-master\protobuf-net\bin\Debug\protobuf-net.pdb
-D:\TOOLS\protobuf-net\protobuf-net-master\protobuf-net\obj\Debug\protobuf-net.csprojResolveAssemblyReference.cache
-D:\TOOLS\protobuf-net\protobuf-net-master\protobuf-net\obj\Debug\protobuf-net.dll
-D:\TOOLS\protobuf-net\protobuf-net-master\protobuf-net\obj\Debug\protobuf-net.pdb

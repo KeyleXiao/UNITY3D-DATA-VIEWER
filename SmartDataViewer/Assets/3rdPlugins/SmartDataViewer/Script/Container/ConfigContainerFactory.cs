@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SmartDataViewer
 {
     public enum DataContainerType
     {
-        UNITY_JSON,
-        PROTOBUF
+        EDITOR_UNITY_JSON,
+        EDITOR_PROTOBUF,
+        RUNTIME_UNITY_JSON,
+        RUNTIME_PROTOBUF,
     }
     
 
@@ -16,36 +19,46 @@ namespace SmartDataViewer
         /// 缓存加载
         /// </summary>
         private Dictionary<DataContainerType, IConfigContainer> loader { get; set; }
+
         private DataContainerType DefaultContainer { get; set; }
 
         private ConfigContainerFactory()
         {
             loader = new Dictionary<DataContainerType, IConfigContainer>();
         }
+        
+        /// <summary>
+        /// 如果可以不要new多个当前工厂，在PB加载下出现多个实例会报错的
+        /// </summary>
+        /// <param name="containerType">加载类型</param>
+        public ConfigContainerFactory(DataContainerType containerType = DataContainerType.EDITOR_UNITY_JSON)
+        {
+            loader = new Dictionary<DataContainerType, IConfigContainer>();
+            SetLoader(containerType);
+        }
 
         private static ConfigContainerFactory instance { get; set; }
 
-        public static ConfigContainerFactory GetInstance(DataContainerType containerType = DataContainerType.UNITY_JSON)
+        public static ConfigContainerFactory GetInstance(DataContainerType containerType)
         {
             return (instance ?? (instance = new ConfigContainerFactory())).SetLoader(containerType);
         }
 
-
-
         public ConfigContainerFactory SetLoader(DataContainerType containerType)
         {
-            if (loader.ContainsKey(containerType))
-            {
-                DefaultContainer = containerType;
-                return this;
-            }
+            DefaultContainer = containerType;
+            
+            if (loader.ContainsKey(DefaultContainer)) return this;
 
             //---- 处理不同的配置加载逻辑 ----
-            if (containerType == DataContainerType.UNITY_JSON) loader.Add(containerType,new UnityJsonContainer());
-            if (containerType == DataContainerType.PROTOBUF) loader.Add(containerType,new ProtobufContainer());
             
-            
-            
+            #if UNITY_EDITOR
+            if (DefaultContainer == DataContainerType.EDITOR_UNITY_JSON) loader.Add(DefaultContainer,new UnityJsonContainer());
+            if (DefaultContainer == DataContainerType.EDITOR_PROTOBUF) loader.Add(DefaultContainer,new ProtobufContainer());
+            #endif
+
+            //运行时Protobuf解析
+            if (DefaultContainer == DataContainerType.RUNTIME_PROTOBUF) loader.Add(DefaultContainer,new RuntimeProtobufContainer());
 
             //---- 处理不同的配置加载逻辑 ----
             return this;
@@ -53,29 +66,57 @@ namespace SmartDataViewer
 
 
         /// <summary>
-        /// 建议使用 LoadConfig(Type t, string path) 函数
+        /// 加载配置 （建议使用）
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="content"></param>
         /// <typeparam name="V"></typeparam>
         /// <returns></returns>
-        public V LoadConfig<V>(string path) 
+        public T LoadConfig<T>(string content)
         {
-            return (V)loader[DefaultContainer].LoadConfig(typeof(V),path);
+            return loader[DefaultContainer].LoadConfig<T>(content);
         }
 
-        public object LoadConfig(Type t, string path)
+        /// <summary>
+        /// 加载配置
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public object LoadConfig(Type t, string content)
         {
-            return loader[DefaultContainer].LoadConfig(t,path);
+            return loader[DefaultContainer].LoadConfig(t,content);
         }
         
-        public  bool DeleteFromDisk(string path)
+        /// <summary>
+        /// 删除配置
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public  bool DeleteFromDisk(string content)
         {
-            return loader[DefaultContainer].DeleteFromDisk(path);
+            return loader[DefaultContainer].DeleteFromDisk(content);
         }
 
-        public  bool SaveToDisk(string path,object target)
+        /// <summary>
+        /// 保存到本地
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public  bool SaveToDisk(string content,object target)
         {
-            return loader[DefaultContainer].SaveToDisk(path,target);
+            return loader[DefaultContainer].SaveToDisk(content,target);
+        }
+
+        /// <summary>
+        /// 普通文本加载
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public bool LoadText(string path, ref string content)
+        {
+            return loader[DefaultContainer].LoadText(path,ref content);
         }
     }
 }

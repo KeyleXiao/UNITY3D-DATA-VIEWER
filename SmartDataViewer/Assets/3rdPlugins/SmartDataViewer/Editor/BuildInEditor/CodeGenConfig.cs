@@ -46,7 +46,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             EditorPath = "CustomEditor";
             InOutPath = string.Empty;
             CodeExportPath ="{ROOT}/Editor/Export/";
-            ContainerType = DataContainerType.UNITY_JSON;
+            ContainerType = DataContainerType.EDITOR_UNITY_JSON;
         }
 
         [ConfigEditorField(11015)]

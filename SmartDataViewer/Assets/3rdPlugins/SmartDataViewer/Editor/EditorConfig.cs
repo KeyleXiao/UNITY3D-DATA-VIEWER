@@ -58,7 +58,7 @@ namespace SmartDataViewer.Editor
 //            }
 //
 //            return ConfigCodeGen;
-            return ConfigContainerFactory.GetInstance().LoadConfig<CodeGenConfig>(CodeGenFilePath);
+            return ConfigContainerFactory.GetInstance(DataContainerType.EDITOR_UNITY_JSON).LoadConfig<CodeGenConfig>(CodeGenFilePath);
         }
 
         public static CustomControlPropertyConfig GetCustomControlPropertyConfig(bool reload = false)
@@ -69,7 +69,7 @@ namespace SmartDataViewer.Editor
 //            }
 //
 //            return ConfigCustomControlProperty;
-            return ConfigContainerFactory.GetInstance()
+            return ConfigContainerFactory.GetInstance(DataContainerType.EDITOR_UNITY_JSON)
                 .LoadConfig<CustomControlPropertyConfig>(CustomControlPropertyConfigPath);
         }
 
@@ -82,7 +82,7 @@ namespace SmartDataViewer.Editor
 //            }
 //
 //            return ConfigCustomEditorProperty;
-            return ConfigContainerFactory.GetInstance()
+            return ConfigContainerFactory.GetInstance(DataContainerType.EDITOR_UNITY_JSON)
                 .LoadConfig<CustomEditorPropertyConfig>(CustomEditorPropertyConfigPath);
         }
 
@@ -95,7 +95,7 @@ namespace SmartDataViewer.Editor
 //            }
 //
 //            return ConfigControlProperty;
-            return ConfigContainerFactory.GetInstance()
+            return ConfigContainerFactory.GetInstance(DataContainerType.EDITOR_UNITY_JSON)
                 .LoadConfig<DefaultControlPropertyConfig>(DefaultControlPropertyConfigPath);
         }
 
@@ -108,7 +108,7 @@ namespace SmartDataViewer.Editor
 //            }
 //
 //            return ConfigEditorProperty;
-            return ConfigContainerFactory.GetInstance()
+            return ConfigContainerFactory.GetInstance(DataContainerType.EDITOR_UNITY_JSON)
                 .LoadConfig<DefaultEditorPropertyConfig>(DefaultEditorPropertyConfigPath);
         }
     }
@@ -139,7 +139,7 @@ namespace SmartDataViewer.Editor
         public static readonly string Copy = @"C";
         public static readonly string Paste = @"P";
         public static readonly string Verfiy = @"V";
-        public static readonly string VerfiyMessageSuccess = @"ID: {0} 当前数据有效！";
+        public static readonly string VerfiyMessageSuccess = @"ID: {0} Is Verfied ！";
         public static readonly string Operation = @"Operation";
         public static readonly string Contract = @"Version 1.3.1 Beta  ";
         public static readonly string OnePageMaxNumber = "Max In Page";
