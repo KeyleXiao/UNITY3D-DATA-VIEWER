@@ -32,7 +32,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 	/// 泛化数据编辑器
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public partial class ConfigEditorSchema<T> : IMultipleWindow where T : IModel, new()
+	public partial class ConfigEditorSchema<T> : IMultipleWindow where T : new()
 	{
 		
         /// <summary>

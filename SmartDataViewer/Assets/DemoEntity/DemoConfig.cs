@@ -25,7 +25,7 @@ public class DemoConfig : ConfigBase<Demo> { }
 
 [ProtoContract]  
 [Serializable]
-public class Demo : IModel
+public class Demo 
 {
 	public Demo()
 	{

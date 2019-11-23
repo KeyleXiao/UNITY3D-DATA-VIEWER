@@ -9,7 +9,7 @@ public class TestEditorConfig : ConfigBase<TestEditor> { }
 
 
 [ProtoContract,Serializable]
-public class TestEditor : IModel
+public class TestEditor
 {
     public TestEditor()
     {

@@ -44,7 +44,7 @@ namespace SmartDataViewer.Editor.ModelDesign
     /// 节点内的字段信息
     /// </summary>
     [System.Serializable]
-    public class NodeFieldInfo:IModel
+    public class NodeFieldInfo
     {
         public int GetID()
         {

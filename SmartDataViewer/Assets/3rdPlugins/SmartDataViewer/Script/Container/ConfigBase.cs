@@ -27,7 +27,7 @@ namespace SmartDataViewer
 {
     [Serializable]
     [DataContract]
-    public class ConfigBase<T> 
+    public class ConfigBase<T> where T : new()
     {
         public ConfigBase()
         {
@@ -37,8 +37,5 @@ namespace SmartDataViewer
         
         [ProtoMember(10000)]
         public List<T> ConfigList;
-
-        
-
     }
 }

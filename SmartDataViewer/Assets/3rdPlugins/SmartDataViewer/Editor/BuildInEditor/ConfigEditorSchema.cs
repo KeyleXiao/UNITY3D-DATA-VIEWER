@@ -29,13 +29,10 @@ using SmartDataViewer.Helpers;
 namespace SmartDataViewer.Editor.BuildInEditor
 {
     /// <summary>
-
-
-    /// <summary>
     /// 泛化数据编辑器
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public partial class ConfigEditorSchema<T> : IMultipleWindow where T : IModel, new()
+    public partial class ConfigEditorSchema<T> : IMultipleWindow where T : new()
     {
         /// <summary>
         /// 当前编辑器配置
@@ -523,7 +520,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         /// </summary>
         /// <param name="item"></param>
         /// <param name="addValue"></param>
-        public virtual void SetListItemValue(List<int> item, IModel addValue)
+        public virtual void SetListItemValue(List<int> item, object addValue)
         {
 //            var temp = item as List<int>;
 //            var model = addValue as IModel;
@@ -532,7 +529,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         }
 
 
-        public virtual void SetListItemValue(object item,IModel addValue,FieldInfo field)
+        public virtual void SetListItemValue(object item,object addValue,FieldInfo field)
         {
 //            field.SetValue(item,addValue.GetID());
 //            ShowNotification(new GUIContent(string.Format(Language.SuccessAdd, addValue.GetComments())));//弹出消息提示  

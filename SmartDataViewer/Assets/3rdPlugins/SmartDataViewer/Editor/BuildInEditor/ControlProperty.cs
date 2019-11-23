@@ -85,7 +85,7 @@ namespace SmartDataViewer
     }
 
     [Serializable]
-    public class ControlProperty : IModel
+    public class ControlProperty 
     {
         public int GetID()
         {

@@ -18,10 +18,10 @@
 //using System;
 //using ProtoBuf;
 //
-namespace SmartDataViewer
-{
-	public interface IModel
-	{
-
-	}
-}
+//namespace SmartDataViewer
+//{
+//	public interface IModel
+//	{
+//
+//	}
+//}

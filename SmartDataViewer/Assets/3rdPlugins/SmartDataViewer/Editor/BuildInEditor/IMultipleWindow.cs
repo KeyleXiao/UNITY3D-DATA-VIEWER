@@ -30,8 +30,8 @@ namespace SmartDataViewer.Editor.BuildInEditor
 		}
 		
 		protected WindowType current_windowType = WindowType.INPUT;
-		protected Action<List<int>, IModel> select_callback { get; set; }
-		protected Action<object,IModel,FieldInfo> single_select_callback { get; set; }
+		protected Action<List<int>, object> select_callback { get; set; }
+		protected Action<object,object,FieldInfo> single_select_callback { get; set; }
 		protected SelectModel select_model { get; set; }
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 		protected FieldInfo selector_raw_field_single { get; set; }
 
 
-		public virtual void UpdateSelectModel(List<int> curren_raw_list, Action<List<int>, IModel> callback)
+		public virtual void UpdateSelectModel(List<int> curren_raw_list, Action<List<int>, object> callback)
 		{
 			select_callback = callback;
 			select_model = SelectModel.MUTI;
@@ -50,7 +50,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 			selector_raw_list = curren_raw_list;
 		}
 		
-		public virtual void UpdateSelectModel(object raw,FieldInfo field,Action<object,IModel,FieldInfo> callback)
+		public virtual void UpdateSelectModel(object raw,FieldInfo field,Action<object,object,FieldInfo> callback)
 		{
 			single_select_callback = callback;
 			select_model = SelectModel.SINGLE;

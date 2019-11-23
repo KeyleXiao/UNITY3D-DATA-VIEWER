@@ -58,7 +58,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
     }
 
     [Serializable]
-    public class CodeGen : IModel
+    public class CodeGen 
     {
         public int GetID()
         {

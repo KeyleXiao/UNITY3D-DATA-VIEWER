@@ -23,7 +23,7 @@ using UnityEngine;
 public class SupportsConfig : ConfigBase<Supports> { }
 
 [Serializable]
-public class Supports : IModel
+public class Supports 
 {
 	[ConfigEditorField(11000)]
 	public int ID;

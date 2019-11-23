@@ -46,7 +46,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
     
     
     [Serializable]
-    public class EditorProperty : IModel
+    public class EditorProperty 
     {
         public EditorProperty()
         {
