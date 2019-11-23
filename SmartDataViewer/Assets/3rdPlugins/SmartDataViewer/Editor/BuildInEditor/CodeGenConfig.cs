@@ -60,26 +60,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
     [Serializable]
     public class CodeGen 
     {
-        public int GetID()
-        {
-            return ID;
-        }
-        
-        public void SetID(int value)
-        {
-            ID = value;
-        }
-
-        public void SetComments(string value)
-        {
-            NickName = value;
-        }
-
-        public string GetComments()
-        {
-            return NickName;
-        }
-
         [ConfigEditorField(11000)]
         public int ID;
 
