@@ -24,26 +24,84 @@ namespace SmartDataViewer
     [ConfigEditor(10005)]
     public class DefaultControlPropertyConfig : ConfigBase<ControlProperty>
     {
+        
+        public virtual ControlProperty SearchByOrderKey(int id)
+        {
+            for (int i = 0; i < ConfigList.Count; i++)
+            {
+                if (ConfigList[i].ID == id)
+                {
+                    return ConfigList[i];
+                }
+            }
+            return new ControlProperty();
+        }
+
+
+        public virtual void Delete(int id)
+        {
+            int index = 0;
+            for (var i = 0; i < ConfigList.Count; i++)
+            {
+                if (ConfigList[i].ID != id) continue;
+                index = i;
+                break;
+            }
+
+            ConfigList.RemoveAt(index);
+        }
+
     }
 
     [Serializable]
     [ConfigEditor(10004)]
     public class CustomControlPropertyConfig : ConfigBase<ControlProperty>
     {
+        public virtual ControlProperty SearchByOrderKey(int id)
+        {
+            for (int i = 0; i < ConfigList.Count; i++)
+            {
+                if (ConfigList[i].ID == id)
+                {
+                    return ConfigList[i];
+                }
+            }
+            return new ControlProperty();
+        }
+
+
+        public virtual void Delete(int id)
+        {
+            int index = 0;
+            for (var i = 0; i < ConfigList.Count; i++)
+            {
+                if (ConfigList[i].ID != id) continue;
+                index = i;
+                break;
+            }
+
+            ConfigList.RemoveAt(index);
+        }
     }
 
     [Serializable]
     public class ControlProperty : IModel
     {
-        public int GetOrderKey()
+        public int GetID()
         {
             return ID;
         }
 
-        public void SetOrderKey(int value)
+        public void SetID(int value)
         {
             ID = value;
         }
+
+        public void SetComments(string value)
+        {
+            NickName = value;
+        }
+
         public string GetComments()
         {
             return NickName;

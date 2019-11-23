@@ -18,11 +18,24 @@
 using System;
 namespace SmartDataViewer
 {
+    public enum FiledProperty
+    {
+        DEFAULT,
+        ID,
+        NICK_NAME
+    }
+
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
     public sealed class ConfigEditorFieldAttribute : BaseAttribute
     {
         public int ControlPropertyID { get; set; }
-        
+        public FiledProperty CurrentFiledProperty { get; set; }
+
+
+        public ConfigEditorFieldAttribute(FiledProperty filedProperty)
+        {
+            CurrentFiledProperty = filedProperty;
+        }
 
         public ConfigEditorFieldAttribute(int controlPropertyID = 0)
         {

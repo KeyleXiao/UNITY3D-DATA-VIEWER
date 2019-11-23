@@ -27,7 +27,7 @@ namespace SmartDataViewer
 {
     [Serializable]
     [DataContract]
-    public class ConfigBase<T> where T : IModel
+    public class ConfigBase<T> 
     {
         public ConfigBase()
         {
@@ -38,32 +38,6 @@ namespace SmartDataViewer
         [ProtoMember(10000)]
         public List<T> ConfigList;
 
-        public virtual T SearchByOrderKey(int id)
-        {
-            for (int i = 0; i < ConfigList.Count; i++)
-            {
-                if (ConfigList[i].GetOrderKey() == id)
-                {
-                    return ConfigList[i];
-                }
-            }
-            return default(T);
-        }
-
-
-        public virtual void Delete(int id)
-        {
-            int index = 0;
-            for (var i = 0; i < ConfigList.Count; i++)
-            {
-                if (ConfigList[i].GetOrderKey() != id) continue;
-                index = i;
-                break;
-            }
-
-            ConfigList.RemoveAt(index);
-        }
-        
         
 
     }

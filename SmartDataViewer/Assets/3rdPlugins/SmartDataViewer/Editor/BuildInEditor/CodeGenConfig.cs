@@ -24,28 +24,55 @@ namespace SmartDataViewer.Editor.BuildInEditor
     [ConfigEditor(10001)]
     public class CodeGenConfig : ConfigBase<CodeGen>
     {
-        public override CodeGen SearchByOrderKey(int id)
+        public CodeGen SearchByOrderKey(int id)
         {
             if (id == -1)
             {
                 return new CodeGen{ID = -1,InOutPath = EditorConfig.CodeGenFilePath,ClassType = "SmartDataViewer.Editor.BuildInEditor.CodeGenConfig",SubType = "CodeGen"};
             }
             
-            return base.SearchByOrderKey(id);
+            for (int i = 0; i < ConfigList.Count; i++)
+            {
+                if (ConfigList[i].ID == id)
+                {
+                    return ConfigList[i];
+                }
+            }
+            return new CodeGen();
         }
+        
+
+        public virtual void Delete(int id)
+        {
+            int index = 0;
+            for (var i = 0; i < ConfigList.Count; i++)
+            {
+                if (ConfigList[i].ID != id) continue;
+                index = i;
+                break;
+            }
+
+            ConfigList.RemoveAt(index);
+        }
+
     }
 
     [Serializable]
     public class CodeGen : IModel
     {
-        public int GetOrderKey()
+        public int GetID()
         {
             return ID;
         }
         
-        public void SetOrderKey(int value)
+        public void SetID(int value)
         {
             ID = value;
+        }
+
+        public void SetComments(string value)
+        {
+            NickName = value;
         }
 
         public string GetComments()

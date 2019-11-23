@@ -15,17 +15,13 @@
 //     		limitations under the License.
 //
 
-using System;
-using ProtoBuf;
-
+//using System;
+//using ProtoBuf;
+//
 namespace SmartDataViewer
 {
 	public interface IModel
 	{
-		int GetOrderKey();
 
-		void SetOrderKey(int value);
-
-		string GetComments();
 	}
 }

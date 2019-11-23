@@ -25,20 +25,6 @@ public class SupportsConfig : ConfigBase<Supports> { }
 [Serializable]
 public class Supports : IModel
 {
-	public int GetOrderKey()
-	{
-		return ID;
-	}
-	public void SetOrderKey(int value)
-	{
-		ID = value;
-	}
-
-	public string GetComments()
-	{
-		return NickName;
-	}
-        
 	[ConfigEditorField(11000)]
 	public int ID;
 
@@ -60,6 +46,8 @@ public class Supports : IModel
 		testPointlist3 = new List<Vector3>();
 		testPointlist4 = new List<Vector4>();
 		floatList = new List<float>();
+		NickName = string.Empty;
+		ID = 0;
 	}
 	
 	

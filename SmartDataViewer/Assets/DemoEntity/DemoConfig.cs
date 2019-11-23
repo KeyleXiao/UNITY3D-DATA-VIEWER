@@ -23,7 +23,6 @@ using SmartDataViewer;
 [Serializable][ConfigEditor(2)]
 public class DemoConfig : ConfigBase<Demo> { }
 
-[ProtoInclude(29,typeof(IModel))]
 [ProtoContract]  
 [Serializable]
 public class Demo : IModel
@@ -34,6 +33,7 @@ public class Demo : IModel
 		list = new List<int>();
 		supports = new List<int>();
 		description = string.Empty;
+		NickName = string.Empty;
 	}
 
 	[ProtoMember(3)]
@@ -54,23 +54,11 @@ public class Demo : IModel
 	[ConfigEditorField(19)]
 	public int support;
 
-	public int GetOrderKey()
-	{
-		return ID;
-	}
-
-	public string GetComments()
-	{
-		return NickName;
-	}
-        
-	public void SetOrderKey(int value)
-	{
-		ID = value;
-	}
+	[ProtoMember(8)]
 	[ConfigEditorField(11000)]
 	public int ID;
 
+	[ProtoMember(9)]
 	[ConfigEditorField(11001)] 
 	public string NickName;
 }

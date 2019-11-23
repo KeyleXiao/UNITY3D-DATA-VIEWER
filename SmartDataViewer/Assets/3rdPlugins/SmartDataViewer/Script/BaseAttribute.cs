@@ -16,14 +16,15 @@
 //
 
 using System;
+using System.Collections.Generic;
 
 namespace SmartDataViewer
 {
     public class BaseAttribute : Attribute
     {
-        public static T GetCurrentAttribute<T>(object obj, bool inherited = true)
+        public static T GetFirstAttribute<T>(object obj, bool inherited = true)
         {
-            object[] o = obj.GetType().GetCustomAttributes(typeof(T), inherited);
+            var o = obj.GetType().GetCustomAttributes(typeof(T), inherited);
             if (o == null || o.Length < 1)
             {
                 return default(T);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
@@ -9,6 +10,17 @@ namespace SmartDataViewer.Editor.BuildInEditor
     [ConfigEditor(10002)]
     public class DefaultEditorPropertyConfig : ConfigBase<EditorProperty>
     {
+        public EditorProperty SearchByOrderKey(int id)
+        {
+            for (int i = 0; i < ConfigList.Count; i++)
+            {
+                if (ConfigList[i].ID == id)
+                {
+                    return ConfigList[i];
+                }
+            }
+            return new EditorProperty();
+        }
     }
     
     
@@ -19,6 +31,17 @@ namespace SmartDataViewer.Editor.BuildInEditor
     [ConfigEditor(10003)]
     public class CustomEditorPropertyConfig : ConfigBase<EditorProperty>
     {
+        public EditorProperty SearchByOrderKey(int id)
+        {
+            for (int i = 0; i < ConfigList.Count; i++)
+            {
+                if (ConfigList[i].ID == id)
+                {
+                    return ConfigList[i];
+                }
+            }
+            return new EditorProperty();
+        }
     }
     
     
@@ -32,12 +55,17 @@ namespace SmartDataViewer.Editor.BuildInEditor
             NickName = "";
         }
         
-        public void SetOrderKey(int value)
+        public void SetID(int value)
         {
             ID = value;
         }
-        
-        public int GetOrderKey()
+
+        public void SetComments(string value)
+        {
+            NickName = value;
+        }
+
+        public int GetID()
         {
             return ID;
         }

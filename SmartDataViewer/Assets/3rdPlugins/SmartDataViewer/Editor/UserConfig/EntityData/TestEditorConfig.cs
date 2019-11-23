@@ -15,25 +15,12 @@ public class TestEditor : IModel
     {
         Label = "";
         NickName = "";
+        ID = 0;
     }
-
     
     [ProtoMember(23)]
     public string Label;
 
-    public int GetOrderKey()
-    {
-        return ID;
-    }
-    public void SetOrderKey(int value)
-    {
-        ID = value;
-    }
-    public string GetComments()
-    {
-        return NickName;
-    }
-        
     [ConfigEditorField(11000)]
     [ProtoMember(24)]
     public int ID;
