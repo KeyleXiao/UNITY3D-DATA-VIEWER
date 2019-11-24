@@ -37,8 +37,9 @@ namespace SmartDataViewer
             CurrentFiledProperty = filedProperty;
         }
 
-        public ConfigEditorFieldAttribute(int controlPropertyID = 0)
+        public ConfigEditorFieldAttribute(int controlPropertyID = 0,FiledProperty filedProperty = FiledProperty.DEFAULT)
         {
+            CurrentFiledProperty = filedProperty;
             ControlPropertyID = controlPropertyID;
         }
     }

@@ -29,21 +29,27 @@ using SmartDataViewer.Editor.BuildInEditor;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
-
-	public class ConfigEditorLineChache
+	public class ConfigEditorLineCache<T> where T:new()
 	{
-		public ConfigEditorLineChache()
+		public ConfigEditorLineCache()
 		{
-			ColumnInfo = new List<ConfigEditorLineFieldChache>();		
+			ColumnInfo = new List<ConfigEditorLineFieldCache>();
+			SearchKey = string.Empty;
 		}
+		
+		public int HashCode { get; set; }
 
-		public List<ConfigEditorLineFieldChache> ColumnInfo { get; set; }
+		public string SearchKey { get; set; }
+
+		public T RawData { get; set; }
+
+		public List<ConfigEditorLineFieldCache> ColumnInfo { get; set; }
 	}
 
 	/// <summary>
 	/// 存储反射的行的列数据
 	/// </summary>
-	public class ConfigEditorLineFieldChache
+	public class ConfigEditorLineFieldCache
 	{
 		public ConfigEditorSchemaChache CurrentSchema { get; set; }
 		public int HashCode { get; set; }

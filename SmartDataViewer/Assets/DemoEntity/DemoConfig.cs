@@ -59,6 +59,6 @@ public class Demo
 	public int ID;
 
 	[ProtoMember(9)]
-	[ConfigEditorField(11001)] 
+	[ConfigEditorField(11001,FiledProperty.SEARCH_KEY)] 
 	public string NickName;
 }

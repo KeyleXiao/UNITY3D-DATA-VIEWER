@@ -17,14 +17,7 @@
 
 //TODO bug fix: 删除文件之后加载CodeGen直接报错 然而直接加载detail编辑 再切回来就正常了 主要是由于生成脚本编译引起的 现在CodeGen之后直接把界面关闭
 
-using System;
-using UnityEditor;
-using UnityEngine;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Linq;
-using System.Text;
-using SmartDataViewer.Helpers;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
@@ -32,8 +25,14 @@ namespace SmartDataViewer.Editor.BuildInEditor
 	/// </summary>
 	public class ConfigEditorSchemaChache
 	{
+		public ConfigEditorSchemaChache()
+		{
+			CurrentFiledProperty = FiledProperty.DEFAULT;
+		}
 		public FieldInfo field_info { get; set; }
 		public ControlProperty config_editor_setting { get; set; }
+		
+		public FiledProperty CurrentFiledProperty { get; set; }
 	}
 
 }

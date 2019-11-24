@@ -25,9 +25,9 @@ namespace SmartDataViewer.Editor.BuildInEditor
 	{
 		public ConfigEditorSchemaData()
 		{
-			CurrentClassFiledsChache = new List<ConfigEditorSchemaChache>();
-			LineFieldChache = new List<ConfigEditorLineFieldChache>();
-			LineChaches = new List<ConfigEditorLineChache>();
+			CurrentClassFieldsCache = new List<ConfigEditorSchemaChache>();
+			LineFieldsCache = new List<ConfigEditorLineFieldCache>();
+			LinesCache = new List<ConfigEditorLineCache<T>>();
 		}
 		
 		/// <summary>
@@ -48,16 +48,84 @@ namespace SmartDataViewer.Editor.BuildInEditor
 		/// <summary>
 		/// 缓存当前类反射字段信息
 		/// </summary>
-		public List<ConfigEditorSchemaChache> CurrentClassFiledsChache { get; set; }
-
+		public List<ConfigEditorSchemaChache> CurrentClassFieldsCache { get; set; }
+		
 		/// <summary>
 		/// 缓存行级别字段结构
 		/// </summary>
-		public List<ConfigEditorLineFieldChache> LineFieldChache { get; set; }
+		public List<ConfigEditorLineFieldCache> LineFieldsCache { get; set; }
 
 		/// <summary>
 		/// 缓存行列表
 		/// </summary>
-		public List<ConfigEditorLineChache> LineChaches { get; set; }
+		public List<ConfigEditorLineCache<T>> LinesCache { get; set; }
+
+		public bool LineFieldCacheContains(int hashcode)
+		{
+			for (int i = 0; i < LineFieldsCache.Count; i++)
+			{
+				if (LineFieldsCache[i].HashCode == hashcode)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+		
+		public bool LineCacheContains(int hashcode)
+		{
+			for (int i = 0; i < LinesCache.Count; i++)
+			{
+				if (LinesCache[i].HashCode == hashcode)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+
+
+		public void SyncData(T lineData)
+		{
+			var hash = lineData.GetHashCode();
+			if (LineCacheContains(hash)) return;
+				
+			var lineCache = new ConfigEditorLineCache<T>();
+			lineCache.HashCode = hash;
+			lineCache.RawData = lineData;
+				
+			foreach (var schema in CurrentClassFieldsCache)
+			{
+				var columnData = schema.field_info.GetValue(lineData);
+					
+				var column = new ConfigEditorLineFieldCache();
+				column.RawData = columnData;
+				column.CurrentSchema = schema;
+				column.HashCode = columnData.GetHashCode();
+				column.IsGenericType = columnData.GetType().IsGenericType;
+				column.Add = columnData.GetType().GetMethod("Add");
+				column.RemoveAt = columnData.GetType().GetMethod("RemoveAt");
+				column.Count = columnData.GetType().GetProperty("Count");
+				column.Item = columnData.GetType().GetProperty("Item");
+				
+				if (column.IsGenericType && schema.config_editor_setting.OutCodeGenEditorID == 0)
+					column.AttributeType = columnData.GetType().GetGenericArguments()[0];
+					
+				lineCache.ColumnInfo.Add(column);
+			}
+			
+			LinesCache.Add(lineCache);
+		}
+
+		public void SyncData()
+		{
+			LinesCache.Clear();
+			for (var i = 0; i < config_current.ConfigList.Count; i++)
+			{
+				SyncData(config_current.ConfigList[i]);
+			}
+		}
 	}
 }
