@@ -47,7 +47,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
         protected override void RenderExtensionHead()
         {
             GUILayout.Label("GenCode", EditorGUIStyle.GetTagButtonStyle(),
-                new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith)});
+                new GUILayoutOption[] {GUILayout.Width(Data.currentEditorSetting.ExtensionHeadTagWith)});
         }
 
 
@@ -142,7 +142,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 }
 
                 if (GUILayout.Button(disPlay,
-                    new GUILayoutOption[] {GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith)}))
+                    new GUILayoutOption[] {GUILayout.Width(Data.currentEditorSetting.ExtensionHeadTagWith)}))
                 {
                     WriteFile(item, path);
                 }
@@ -153,7 +153,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             {
                 if (GUILayout.Button(EditorGUIStyle.LoadEditorResource<Texture2D>("warning.png"),
                     new GUILayoutOption[]
-                        {GUILayout.Width(currentEditorSetting.ExtensionHeadTagWith), GUILayout.Height(18)}))
+                        {GUILayout.Width(Data.currentEditorSetting.ExtensionHeadTagWith), GUILayout.Height(18)}))
                 {
                     ShowNotification(new GUIContent(error));
                 }

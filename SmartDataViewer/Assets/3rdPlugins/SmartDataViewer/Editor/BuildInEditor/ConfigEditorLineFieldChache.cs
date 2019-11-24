@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -28,11 +29,23 @@ using SmartDataViewer.Editor.BuildInEditor;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
-	/// <summary>
-	/// 存储反射的行数据
-	/// </summary>
+
 	public class ConfigEditorLineChache
 	{
+		public ConfigEditorLineChache()
+		{
+			ColumnInfo = new List<ConfigEditorLineFieldChache>();		
+		}
+
+		public List<ConfigEditorLineFieldChache> ColumnInfo { get; set; }
+	}
+
+	/// <summary>
+	/// 存储反射的行的列数据
+	/// </summary>
+	public class ConfigEditorLineFieldChache
+	{
+		public ConfigEditorSchemaChache CurrentSchema { get; set; }
 		public int HashCode { get; set; }
 		public bool IsGenericType { get; set; }
 		public MethodInfo Add { get; set; }

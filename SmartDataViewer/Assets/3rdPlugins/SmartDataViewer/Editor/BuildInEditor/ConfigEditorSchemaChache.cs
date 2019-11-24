@@ -34,8 +34,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
 	{
 		public FieldInfo field_info { get; set; }
 		public ControlProperty config_editor_setting { get; set; }
-		
-
 	}
 
 }

@@ -22,7 +22,7 @@ namespace SmartDataViewer
     {
         DEFAULT,
         ID,
-        NICK_NAME
+        SEARCH_KEY
     }
 
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
@@ -38,11 +38,6 @@ namespace SmartDataViewer
         }
 
         public ConfigEditorFieldAttribute(int controlPropertyID = 0)
-        {
-            ControlPropertyID = controlPropertyID;
-        }
-        
-        public ConfigEditorFieldAttribute(ConfigEditorFieldType fieldType = ConfigEditorFieldType.DEFAULT,int controlPropertyID = 0)
         {
             ControlPropertyID = controlPropertyID;
         }

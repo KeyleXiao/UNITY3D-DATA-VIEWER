@@ -1,9 +1,9 @@
-﻿namespace SmartDataViewer
- {
-     public enum ConfigEditorFieldType
-     {
-         DEFAULT,
-         PRIMARY,
-         JOINT_PRIMARY
-     }
- }
+﻿//namespace SmartDataViewer
+// {
+//     public enum ConfigEditorFieldType
+//     {
+//         DEFAULT,
+//         PRIMARY,
+//         JOINT_PRIMARY
+//     }
+// }
