@@ -50,7 +50,7 @@ UNITY3D-DATA-VIEWER项目是客户端配置文件解决方案。它的初衷是�
 
 
 
-# Current Version 1.3.0 BETA
+# Current Version 1.3.2 BETA
 
 初次尝试请直接在UNITY菜单中选择 <code>SmartDataViewer/Code Generator -> GenCode列中的 Build按钮 </code> 即可在工程中创建编辑器导出路径 <code>Editor/Export/</code> 。其中有已经成功生成的编辑器脚本。
 
@@ -87,10 +87,9 @@ Type 1
 [Serializable][ConfigEditor(2)]
 public class DemoConfig : ConfigBase<Demo> { }
 
-[ProtoInclude(29,typeof(IModel))]
 [ProtoContract]  
 [Serializable]
-public class Demo : IModel
+public class Demo 
 {
 	public Demo()
 	{
@@ -127,7 +126,7 @@ Type 2
 public class SupportsConfig : ConfigBase<Supports> { }
 
 [Serializable]
-public class Supports : IModel
+public class Supports
 {
 	public Supports()
 	{
