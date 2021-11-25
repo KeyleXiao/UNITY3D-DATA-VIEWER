@@ -14,8 +14,6 @@
 //     		See the License for the specific language governing permissions and
 //     		limitations under the License.
 //
-
-
 using System;
 
 namespace SmartDataViewer
@@ -24,12 +22,23 @@ namespace SmartDataViewer
     [ConfigEditor(10005)]
     public class DefaultControlPropertyConfig : ConfigBase<ControlProperty>
     {
-        
         public virtual ControlProperty SearchByOrderKey(int id)
         {
             for (int i = 0; i < ConfigList.Count; i++)
             {
                 if (ConfigList[i].ID == id)
+                {
+                    return ConfigList[i];
+                }
+            }
+            return new ControlProperty();
+        }
+        
+        public virtual ControlProperty SearchByOrderFiledName(string name)
+        {
+            for (int i = 0; i < ConfigList.Count; i++)
+            {
+                if (ConfigList[i].FiledName == name)
                 {
                     return ConfigList[i];
                 }
@@ -52,37 +61,6 @@ namespace SmartDataViewer
         }
 
     }
-
-    // [Serializable]
-    // [ConfigEditor(10004)]
-    // public class CustomControlPropertyConfig : ConfigBase<ControlProperty>
-    // {
-    //     public virtual ControlProperty SearchByOrderKey(int id)
-    //     {
-    //         for (int i = 0; i < ConfigList.Count; i++)
-    //         {
-    //             if (ConfigList[i].ID == id)
-    //             {
-    //                 return ConfigList[i];
-    //             }
-    //         }
-    //         return new ControlProperty();
-    //     }
-    //
-    //
-    //     public virtual void Delete(int id)
-    //     {
-    //         int index = 0;
-    //         for (var i = 0; i < ConfigList.Count; i++)
-    //         {
-    //             if (ConfigList[i].ID != id) continue;
-    //             index = i;
-    //             break;
-    //         }
-    //
-    //         ConfigList.RemoveAt(index);
-    //     }
-    // }
 
     [Serializable]
     public class ControlProperty 
@@ -112,10 +90,13 @@ namespace SmartDataViewer
 
         [ConfigEditorField(11001)] 
         public string NickName;
+
+        [ConfigEditorField(11001)] 
+        public string FiledName;
         
         public ControlProperty()
         {
-            NickName = "";
+            FiledName = NickName = "";
             Display = string.Empty;
             OutLinkDisplay = string.Empty;
             CanEditor = true;

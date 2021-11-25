@@ -1,5 +1,4 @@
 ﻿using System;
-
 namespace SmartDataViewer
 {
     /// <summary>
@@ -20,29 +19,19 @@ namespace SmartDataViewer
             }
             return new EditorProperty();
         }
+        
+        public EditorProperty SearchByOrderCodeGenID(int id)
+        {
+            for (int i = 0; i < ConfigList.Count; i++)
+            {
+                if (ConfigList[i].CODE_GEN_ID == id)
+                {
+                    return ConfigList[i];
+                }
+            }
+            return new EditorProperty();
+        }
     }
-    
-    //
-    // /// <summary>
-    // /// 默认编辑器配置容器
-    // /// </summary>
-    // [System.Serializable]
-    // [ConfigEditor(10003)]
-    // public class CustomEditorPropertyConfig : ConfigBase<EditorProperty>
-    // {
-    //     public EditorProperty SearchByOrderKey(int id)
-    //     {
-    //         for (int i = 0; i < ConfigList.Count; i++)
-    //         {
-    //             if (ConfigList[i].ID == id)
-    //             {
-    //                 return ConfigList[i];
-    //             }
-    //         }
-    //         return new EditorProperty();
-    //     }
-    // }
-    //
     
     [Serializable]
     public class EditorProperty 
@@ -53,6 +42,7 @@ namespace SmartDataViewer
             SearchResourceName = string.Empty;
             NickName = "";
             SearchFiledName = "";
+            CODE_GEN_ID = -1;
         }
         
         public void SetID(int value)
@@ -74,6 +64,9 @@ namespace SmartDataViewer
         {
             return NickName;
         }
+
+        [ConfigEditorField(11000)]
+        public int CODE_GEN_ID;
         
         [ConfigEditorField(11000)]
         public int ID;
