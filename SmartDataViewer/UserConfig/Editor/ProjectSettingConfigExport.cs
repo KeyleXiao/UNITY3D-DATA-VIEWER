@@ -21,7 +21,7 @@ using SmartDataViewer.Editor.BuildInEditor;
 
 public class ProjectSettingViewer : ConfigEditorSchema<ProjectSetting>
 {
-    public static int CODE_GEN_ID = 2;
+    public static int CODE_GEN_ID = 11;
     
 	[MenuItem("SmartDataViewer/项目配置/ProjectSettingViewer")]
 	static public void OpenView()

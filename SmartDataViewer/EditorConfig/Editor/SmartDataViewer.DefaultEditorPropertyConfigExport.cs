@@ -19,14 +19,14 @@ using UnityEditor;
 using SmartDataViewer.Editor;
 using SmartDataViewer.Editor.BuildInEditor;
 
-public class ResMappingViewer : ConfigEditorSchema<ResMapping>
+public class DefaultEditorPropertyConfig : ConfigEditorSchema<SmartDataViewer.EditorProperty>
 {
-    public static int CODE_GEN_ID = 10;
+    public static int CODE_GEN_ID = 0;
     
-	[MenuItem("SmartDataViewer/项目配置/ResMappingViewer")]
+	[MenuItem("SmartDataViewer/BuildInConfig/DefaultEditorPropertyConfig")]
 	static public void OpenView()
 	{
-		ResMappingViewer w = UnityEngine.ScriptableObject.CreateInstance<ResMappingViewer>();
+		DefaultEditorPropertyConfig w = UnityEngine.ScriptableObject.CreateInstance<DefaultEditorPropertyConfig>();
 		w.ShowUtility();
 	}
 	
@@ -35,14 +35,14 @@ public class ResMappingViewer : ConfigEditorSchema<ResMapping>
         return EditorConfig.GetCodeGenConfig().SearchByOrderKey(CODE_GEN_ID);
     }
 
-	public override ResMapping CreateValue()
+	public override SmartDataViewer.EditorProperty CreateValue()
 	{
-		ResMapping r = base.CreateValue();
+		SmartDataViewer.EditorProperty r = base.CreateValue();
 		return r;
 	}
 
 	public override void Initialize()
 	{
-		SetConfigType(new ResMappingConfig());
+		SetConfigType(new SmartDataViewer.DefaultEditorPropertyConfig());
 	}
 }

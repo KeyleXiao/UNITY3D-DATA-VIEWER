@@ -31,83 +31,23 @@ namespace SmartDataViewer.Editor
         public static readonly string CodeGenFilePath = "{EDITOR}/Editor/Config/CodeGen.unityjson";
 
         public static readonly string DefaultControlPropertyConfigPath =
-            "{EDITOR}/Editor/Config/DefaultControlProperty.unityjson";
+            "{EDITOR}/EditorConfig/Config/DefaultControlProperty.unityjson";
 
         public static readonly string DefaultEditorPropertyConfigPath =
-            "{EDITOR}/Editor/Config/DefaultEditorPropertyConfig.unityjson";
-
-        public static readonly string CustomControlPropertyConfigPath =
-            "{EDITOR}/Editor/Config/CustomControlProperty.unityjson";
-
-        public static readonly string CustomEditorPropertyConfigPath =
-            "{EDITOR}/Editor/Config/CustomEditorPropertyConfig.unityjson";
-
-//        这里不要chache了 实时读取        
-//        private static DefaultControlPropertyConfig ConfigControlProperty {  get; set; }
-//        private static DefaultEditorPropertyConfig ConfigEditorProperty {  get; set; }
-//        private static CustomControlPropertyConfig ConfigCustomControlProperty {  get; set; }
-//        private static CustomEditorPropertyConfig ConfigCustomEditorProperty {  get; set; }
-//        private static CodeGenConfig ConfigCodeGen {  get; set; }
-
-
+            "{EDITOR}/EditorConfig/Config/DefaultEditorPropertyConfig.unityjson";
         public static CodeGenConfig GetCodeGenConfig(bool reload = false)
         {
-//            if (ConfigCodeGen == null || reload)
-//            {
-//                ConfigCodeGen = ConfigContainerFactory.GetInstance().LoadConfig<CodeGenConfig>(CodeGenFilePath);
-//            }
-//
-//            return ConfigCodeGen;
             return ConfigContainerFactory.GetInstance(DataContainerType.EDITOR_UNITY_JSON).LoadConfig<CodeGenConfig>(CodeGenFilePath);
-        }
-
-        public static CustomControlPropertyConfig GetCustomControlPropertyConfig(bool reload = false)
-        {
-//            if (ConfigCustomControlProperty == null || reload)
-//            {
-//                ConfigCustomControlProperty = ConfigContainerFactory.GetInstance().LoadConfig<CustomControlPropertyConfig>(CustomControlPropertyConfigPath);
-//            }
-//
-//            return ConfigCustomControlProperty;
-            return ConfigContainerFactory.GetInstance(DataContainerType.EDITOR_UNITY_JSON)
-                .LoadConfig<CustomControlPropertyConfig>(CustomControlPropertyConfigPath);
-        }
-
-        public static CustomEditorPropertyConfig GetCustomEditorPropertyConfig(bool reload = false)
-        {
-//            if (ConfigCustomEditorProperty == null || reload)
-//            {
-//                ConfigCustomEditorProperty = ConfigContainerFactory.GetInstance()
-//                    .LoadConfig<CustomEditorPropertyConfig>(CustomEditorPropertyConfigPath);
-//            }
-//
-//            return ConfigCustomEditorProperty;
-            return ConfigContainerFactory.GetInstance(DataContainerType.EDITOR_UNITY_JSON)
-                .LoadConfig<CustomEditorPropertyConfig>(CustomEditorPropertyConfigPath);
         }
 
         public static DefaultControlPropertyConfig GetDefaultControlPropertyConfig(bool reload = false)
         {
-//            if (ConfigControlProperty == null || reload)
-//            {
-//                ConfigControlProperty = ConfigContainerFactory.GetInstance()
-//                    .LoadConfig<DefaultControlPropertyConfig>(DefaultControlPropertyConfigPath);
-//            }
-//
-//            return ConfigControlProperty;
             return ConfigContainerFactory.GetInstance(DataContainerType.EDITOR_UNITY_JSON)
                 .LoadConfig<DefaultControlPropertyConfig>(DefaultControlPropertyConfigPath);
         }
 
         public static DefaultEditorPropertyConfig GetDefaultEditorPropertyConfig(bool reload = false)
         {
-//            if (ConfigEditorProperty == null || reload)
-//            {
-//                ConfigEditorProperty = ConfigContainerFactory.GetInstance()
-//                    .LoadConfig<DefaultEditorPropertyConfig>(DefaultEditorPropertyConfigPath);
-//            }
-//
-//            return ConfigEditorProperty;
             return ConfigContainerFactory.GetInstance(DataContainerType.EDITOR_UNITY_JSON)
                 .LoadConfig<DefaultEditorPropertyConfig>(DefaultEditorPropertyConfigPath);
         }

@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace SmartDataViewer.Editor.BuildInEditor
 {
@@ -99,6 +100,12 @@ namespace SmartDataViewer.Editor.BuildInEditor
 			foreach (var schema in CurrentClassFieldsCache)
 			{
 				var columnData = schema.field_info.GetValue(lineData);
+
+				if (columnData == null)
+				{
+					Debug.Log($"Please Check {lineData.GetType().Name}'s Filed ,should be set a default value !!!");
+					continue;
+				}
 					
 				var column = new ConfigEditorLineFieldCache();
 				column.RawData = columnData;

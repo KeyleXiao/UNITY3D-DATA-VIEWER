@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices.ComTypes;
 
-namespace SmartDataViewer.Editor.BuildInEditor
+namespace SmartDataViewer
 {
     /// <summary>
     /// 默认编辑器配置容器
@@ -23,27 +22,27 @@ namespace SmartDataViewer.Editor.BuildInEditor
         }
     }
     
-    
-    /// <summary>
-    /// 默认编辑器配置容器
-    /// </summary>
-    [System.Serializable]
-    [ConfigEditor(10003)]
-    public class CustomEditorPropertyConfig : ConfigBase<EditorProperty>
-    {
-        public EditorProperty SearchByOrderKey(int id)
-        {
-            for (int i = 0; i < ConfigList.Count; i++)
-            {
-                if (ConfigList[i].ID == id)
-                {
-                    return ConfigList[i];
-                }
-            }
-            return new EditorProperty();
-        }
-    }
-    
+    //
+    // /// <summary>
+    // /// 默认编辑器配置容器
+    // /// </summary>
+    // [System.Serializable]
+    // [ConfigEditor(10003)]
+    // public class CustomEditorPropertyConfig : ConfigBase<EditorProperty>
+    // {
+    //     public EditorProperty SearchByOrderKey(int id)
+    //     {
+    //         for (int i = 0; i < ConfigList.Count; i++)
+    //         {
+    //             if (ConfigList[i].ID == id)
+    //             {
+    //                 return ConfigList[i];
+    //             }
+    //         }
+    //         return new EditorProperty();
+    //     }
+    // }
+    //
     
     [Serializable]
     public class EditorProperty 
@@ -53,6 +52,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             EditorTitle = string.Empty;
             SearchResourceName = string.Empty;
             NickName = "";
+            SearchFiledName = "";
         }
         
         public void SetID(int value)

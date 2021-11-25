@@ -152,6 +152,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
                 if (GUILayout.Button(disPlay,
                     new GUILayoutOption[] {GUILayout.Width(Data.currentEditorSetting.ExtensionHeadTagWith)}))
                 {
+                    SaveConfig();
                     WriteFile(item, path);
                 }
 

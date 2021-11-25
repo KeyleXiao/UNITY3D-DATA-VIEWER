@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="HeadBar" style="height: 40px; width: 100%; align-items: center; justify-content: flex-start; flex-shrink: 1; flex-grow: 0; flex-direction: row;">
+        <ui:Button text="Discard" display-tooltip-when-elided="true" name="DiscardBtn" />
+        <ui:Button text="NewLine" display-tooltip-when-elided="true" name="NewlineBtn" />
+        <ui:Button text="SaveButton" display-tooltip-when-elided="true" name="SaveBtn" />
+    </ui:VisualElement>
+    <ui:ScrollView name="RawDataScrollView" style="width: 100%; height: 89%;" />
+    <ui:VisualElement name="FooterBar" style="height: 40px; width: 100%; align-items: center; justify-content: flex-start; flex-shrink: 1; flex-grow: 0; flex-direction: row;">
+        <ui:Button text="Discard" display-tooltip-when-elided="true" name="DiscardBtn" />
+        <ui:Button text="NewLine" display-tooltip-when-elided="true" name="NewlineBtn" />
+        <ui:Button text="SaveButton" display-tooltip-when-elided="true" name="SaveBtn" />
+    </ui:VisualElement>
+</ui:UXML>

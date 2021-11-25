@@ -148,7 +148,6 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
             //先读取用户定义的 如果没有配置直接读取默认的
             Data.currentEditorSetting =
-                EditorConfig.GetCustomEditorPropertyConfig().SearchByOrderKey(configSetting.EditorConfigID) ??
                 EditorConfig.GetDefaultEditorPropertyConfig().SearchByOrderKey(configSetting.EditorConfigID);
 
 
@@ -195,14 +194,14 @@ namespace SmartDataViewer.Editor.BuildInEditor
                     f.CurrentFiledProperty = cefa.CurrentFiledProperty;
                     //先查Custom配置
                     f.config_editor_setting =
-                        EditorConfig.GetCustomControlPropertyConfig().SearchByOrderKey(cefa.ControlPropertyID);
+                        EditorConfig.GetDefaultControlPropertyConfig().SearchByOrderKey(cefa.ControlPropertyID);
 
                     //走属性默认配置
                     if (f.config_editor_setting == null && cefa.ControlPropertyID == 0)
                     {
                         int id = (int) ReflectionHelper.GetFieldTypeMapping(item.FieldType);
                         f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByOrderKey(id);
-                        f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByOrderKey(id);
+                        // f.config_editor_setting = EditorConfig.GetDefaultControlPropertyConfig().SearchByOrderKey(id);
                     }
                     
 
