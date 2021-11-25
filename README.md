@@ -4,6 +4,11 @@ UNITY3D 可视化数据编辑器 / UNITY3D EDITOR DATA_VIEWER .
 
 UNITY3D-DATA-VIEWER项目是客户端配置文件解决方案。它的初衷是加速工作流程，<code>程序写好类策划就能配，运行就能跑!</code>
 
+# 更新日志 1.3.3
+* 去除必要的IModel约束，只需要一个ConfigBase作为容器
+* 优化目录结构，更清晰
+* 优化读取 添加async读取
+* 优化加载关联 生成类的同时将CodeGen的ID也加入
 
 # 特性
 * 节约程序大量编辑器开发时间。
@@ -17,56 +22,41 @@ UNITY3D-DATA-VIEWER项目是客户端配置文件解决方案。它的初衷是�
 
 
 ```
-└── SmartDataViewer
-    ├── Assets
-    │   ├── 3rdPlugins
-    │   │   ├── SmartDataViewer  编辑器源代码目录
-    │   │   │   ├── CTS                模版
-    │   │   │   ├── Config             内建配置
-    │   │   │   ├── Editor             内建编辑器目录
-    │   │   │   │   ├── BuildInEditor  
-    │   │   │   │   └── ModelDesign
-    │   │   │   ├── EditorResources    内建编辑器资源目录
-    │   │   │   └── Script             用户需要使用到的代码
-    │   │   │       ├── Container
-    │   │   │       └── Helpers
-    │   │   └── proto-net              使用protobuf需要用到到此库
-    │   │       ├── Compiler
-    │   │       ├── Meta
-    │   │       ├── Properties
-    │   │       ├── Serializers
-    │   │       ├── ServiceModel
-    │   │       ├── Web
-    │   │       └── obj
-    │   │           ├── Debug
-    │   │           └── Profile
-    │   ├── DemoEntity                 测试用的实体类
-    │   ├── Editor                     代码生成器导出目录
-    │   │   └── Export                 导出的编辑器代码会在这儿
-    │   └── Resources                  资源目录(可在生成器中修改)   
-    │       └── Config
-
+.SmartDataViewer
+├── Editor
+│   ├── BuildInEditor
+│   ├── CTS
+│   ├── Config
+│   ├── EditorResources
+│   ├── GUI
+│   └── ModelDesign
+├── EditorConfig
+│   ├── Config
+│   ├── Editor
+│   └── Entity
+├── Script
+│   ├── Container
+│   ├── DebugModule
+│   └── Helpers
+└── UserConfig
+    ├── Config
+    ├── Editor
+    └── Entity
 ```
 
 
+# Current Version 1.3.3 BETA
 
-# Current Version 1.3.2 BETA
-
-初次尝试请直接在UNITY菜单中选择 <code>SmartDataViewer/Code Generator -> GenCode列中的 Build按钮 </code> 即可在工程中创建编辑器导出路径 <code>Editor/Export/</code> 。其中有已经成功生成的编辑器脚本。
-
-
-您在Unity最上的菜单栏 <code>CustomEditor</code> 中看到对应的编辑器。
+初次尝试请直接在UNITY菜单中选择 <code>SmartDataViewer/Code Generator -> GenCode列中的 Build按钮 </code> 即可在工程中创建编辑器导出路径 <code>UserConfig/Editor/</code> 。其中有已经成功生成的编辑器脚本。
 
 
-## Video on YouTube
-
-视频暂时不录
+您在Unity最上的菜单栏  <code>SmartDataViewer</code> 中看到对应的编辑器。
 
 
 
 # 正确的打开姿势 / Tutorial
 ## 准备工作
-1. 在本项目中您只需要关注位于 <code>DemoEntity</code> 中的测试代码。
+1. 在本项目中您只需要关注位于 <code>UserConfig/Entity</code> 中的测试代码。
 2. 您如果选择不使用Protobuf则可以直接删除 <code>3rdPlugins</code> 文件夹中的 <code>proto-net</code> 内容。
 3. 在您决定移除protobuf的时候可以直接移除其相关的代码。
 
@@ -205,7 +195,7 @@ public class Supports
 
 ## 3.生成代码 / Click Build Button
 点击build按钮 则会在指定路径生成数据编辑器
-![点击Build后在Editor/Export目录中生成编辑器代码](Tutorial01.png)
+![点击Build后在UserConfig/Editor目录中生成编辑器代码](Tutorial01.png)
 
 
 ## 完成 / Complete
@@ -307,7 +297,7 @@ public class ConfigContainerFactory : IConfigContainer
 # Next Version 
 
 下个版本核心：
-1. 增加 Model Design 面板用来给策划设计实体类并且支持实体类代码生成，实现流程自动化。
+1. 优化编辑器本身配置项 行列 配置等。
 2. 补全更多的数据序列化格式。
 
 敬请期待。
