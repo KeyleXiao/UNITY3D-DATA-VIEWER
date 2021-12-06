@@ -313,7 +313,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
 
                 int deleteIndex = -1;
 
-                //Open Editor
+                //Load Editor
                 if (columnSchema.config_editor_setting.OutCodeGenEditorID != 0)
                 {
                     //处理外联添加逻辑
@@ -425,7 +425,7 @@ namespace SmartDataViewer.Editor.BuildInEditor
             }
             else
             {
-                //Open Editor
+                //Load Editor
                 if (columnSchema.config_editor_setting.OutCodeGenEditorID != 0)
                 {
 //                    data.field_info.SetValue(raw,GetSelectValueByFlag(raw.ID, data.field_info.Name, (int) value));

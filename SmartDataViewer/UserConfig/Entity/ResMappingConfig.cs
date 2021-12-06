@@ -11,7 +11,7 @@ public class ResMappingConfig : ConfigBase<ResMapping>
 	private Dictionary<string, ResMapping> urlMapping = new Dictionary<string, ResMapping>();
 	private Dictionary<string, ResMapping> guidMapping = new Dictionary<string, ResMapping>();
 	private Dictionary<int, ResMapping> idMapping = new Dictionary<int, ResMapping>();
-	private Dictionary<string, ResMapping> partMapping = new Dictionary<string, ResMapping>();
+	private Dictionary<string, List<ResMapping>> partMapping = new Dictionary<string, List<ResMapping>>();
 
 	public void ClearCache()
 	{
@@ -20,17 +20,45 @@ public class ResMappingConfig : ConfigBase<ResMapping>
 		idMapping.Clear();
 		partMapping.Clear();
 	}
-	
-	public bool UsePartGetResInfo(string part, out ResMapping item)
+
+	private void SyncPartMapping()
 	{
 		if (partMapping.Count == 0)
 		{
 			for (int i = 0; i < ConfigList.Count; i++)
 			{
-				partMapping[ConfigList[i].part] = ConfigList[i];
+				var key = ConfigList[i].part;
+				if (!partMapping.ContainsKey(key))
+				{
+					partMapping[key] = new List<ResMapping>();
+				}
+				partMapping[key].Add(ConfigList[i]);
 			}
 		}
-		return partMapping.TryGetValue(part,out item);
+	}
+
+	public bool UsePartGetResInfo(string part, out ResMapping item)
+	{
+		SyncPartMapping();
+
+		item = null;
+		
+		List<ResMapping> list = null;
+		
+		if (!partMapping.TryGetValue(part, out list))
+		{
+			return false;
+		}
+
+		item = list[0];
+		return true;
+	}
+	
+	public bool UsePartGetResInfo(string part, out List<ResMapping> items)
+	{
+		SyncPartMapping();
+		
+		return partMapping.TryGetValue(part,out items);
 	}
 	
 	public bool UseIDGetResInfo(int id, out ResMapping item)
