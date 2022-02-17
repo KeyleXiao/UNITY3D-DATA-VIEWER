@@ -21,6 +21,7 @@ using SmartDataViewer.Helpers;
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
 using ProtoBuf;
 
 namespace SmartDataViewer
@@ -37,5 +38,12 @@ namespace SmartDataViewer
         
         [ProtoMember(10000)]
         public List<T> ConfigList;
+
+        /// <summary>
+        /// 添加格式化统一调用
+        /// </summary>
+        public virtual void Format()
+        {
+        }
     }
 }
